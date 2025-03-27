@@ -1,0 +1,56 @@
+set(
+  IMGUI_SRC
+  ${IMGUI_DIR}/imgui.cpp
+  ${IMGUI_DIR}/imgui_demo.cpp
+  ${IMGUI_DIR}/imgui_draw.cpp
+  ${IMGUI_DIR}/imgui_tables.cpp
+  ${IMGUI_DIR}/imgui_widgets.cpp
+  ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+  ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+  )
+
+add_executable(
+  ${PROJECT_NAME}
+  main.cpp
+  ${IMGUI_SRC}
+  )
+
+target_include_directories(
+  ${PROJECT_NAME}
+  PRIVATE
+  ${glfw_SOURCE_DIR}/include/
+  ${IMGUI_DIR}
+  ${IMGUI_DIR}/backends/
+  ${luajit_BINARY_DIR}
+  )
+
+if(APPLE)
+  target_link_libraries(
+    ${PROJECT_NAME}
+    PRIVATE
+    glfw
+    -Wl,-export_dynamic
+    luajit::lib
+    luajit::header
+    "-framework OpenGL"
+    )
+elseif(UNIX)
+  target_link_libraries(
+    ${PROJECT_NAME}
+    PRIVATE
+    ${OPENGL_gl_LIBRARY}
+    glfw
+    -Wl,-E
+    luajit::lib
+    luajit::header
+    )
+else()
+  target_link_libraries(
+    ${PROJECT_NAME}
+    PRIVATE
+    ${OPENGL_gl_LIBRARY}
+    glfw
+    luajit::lib
+    luajit::header
+    )
+endif()
