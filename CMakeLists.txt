@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.20)
 project(
   lviz
   VERSION 0.0.1
-  LANGUAGES CXX
+  LANGUAGES C CXX
   )
 
 set(CMAKE_CXX_STANDARD 17)
@@ -22,10 +22,18 @@ if(EXISTS "${LOC_PATH}")
   build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles.")
 endif()
 
-set(LUAJIT_DIR ${CMAKE_BINARY_DIR}/deps/LuaJIT_Source CACHE STRING "Path of LuaJIT 2.1 source dir")
-set(IMGUI_DIR ${CMAKE_BINARY_DIR}/deps/imgui CACHE STRING "Path of ImGui source dir")
+if(MSVC)
+  option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+else(MSVC)
+  option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
+endif(MSVC)
 
 find_package(OpenGL)
+message("OpenGL: ${OPENGL_gl_LIBRARY}")
+
+set(GLAD_DIR ${CMAKE_SOURCE_DIR}/deps/glad CACHE STRING "Path of GLAD source dir")
+set(IMGUI_DIR ${CMAKE_BINARY_DIR}/deps/imgui CACHE STRING "Path of ImGui source dir")
+set(LUAJIT_DIR ${CMAKE_BINARY_DIR}/deps/LuaJIT_Source CACHE STRING "Path of LuaJIT 2.1 source dir")
 
 include(cmake/FetchGLFW.cmake)
 include(cmake/FetchImGui.cmake)

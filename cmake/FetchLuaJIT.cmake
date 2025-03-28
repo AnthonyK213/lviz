@@ -21,10 +21,6 @@ if(NOT luajit_source_POPULATED)
   FetchContent_Populate(LuaJIT_Source)
 endif()
 
-if(MSVC)
-  set(BUILD_SHARED_LIBS ON CACHE BOOL "")
-endif(MSVC)
-
 FetchContent_GetProperties(LuaJIT)
 if(NOT luajit_POPULATED)
   FetchContent_Populate(LuaJIT)
