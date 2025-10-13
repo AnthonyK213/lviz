@@ -36,6 +36,7 @@ set(IMGUI_DIR ${CMAKE_BINARY_DIR}/deps/imgui CACHE STRING "Path of ImGui source 
 set(LUAJIT_DIR ${CMAKE_BINARY_DIR}/deps/LuaJIT_Source CACHE STRING "Path of LuaJIT 2.1 source dir")
 
 include(cmake/FetchGLFW.cmake)
+include(cmake/FetchGLM.cmake)
 include(cmake/FetchImGui.cmake)
 include(cmake/FetchLuaJIT.cmake)
 

@@ -9,15 +9,27 @@ set(
   ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
   )
 
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/appl LVIZ_APPL_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/canvas LVIZ_CANVAS_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/context LVIZ_CONTEXT_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/ui LVIZ_UI_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/window LVIZ_WINDOW_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} LVIZ_SRC)
+
 add_executable(
-  ${PROJECT_NAME}
+  lviz
   ${GLAD_DIR}/src/glad.c
   ${IMGUI_SRC}
-  main.cpp
+  ${LVIZ_APPL_SRC}
+  ${LVIZ_CANVAS_SRC}
+  ${LVIZ_CONTEXT_SRC}
+  ${LVIZ_UI_SRC}
+  ${LVIZ_WINDOW_SRC}
+  ${LVIZ_SRC}
   )
 
 target_include_directories(
-  ${PROJECT_NAME}
+  lviz
   PRIVATE
   ${GLAD_DIR}/include/
   ${glfw_SOURCE_DIR}/include/
@@ -27,7 +39,7 @@ target_include_directories(
   )
 
 target_link_libraries(
-  ${PROJECT_NAME}
+  lviz
   PRIVATE
   OpenGL::GL
   glfw
@@ -35,7 +47,7 @@ target_link_libraries(
 
 if(APPLE)
   target_link_libraries(
-    ${PROJECT_NAME}
+    lviz
     PRIVATE
     -Wl,-export_dynamic
     luajit::lib
@@ -43,7 +55,7 @@ if(APPLE)
     )
 elseif(UNIX)
   target_link_libraries(
-    ${PROJECT_NAME}
+    lviz
     PRIVATE
     -Wl,-E
     luajit::lib
@@ -51,7 +63,7 @@ elseif(UNIX)
     )
 else()
   target_link_libraries(
-    ${PROJECT_NAME}
+    lviz
     PRIVATE
     luajit::lib
     luajit::header
@@ -60,12 +72,12 @@ endif()
 
 if(MSVC)
   add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
+    TARGET lviz POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "$<TARGET_PROPERTY:glfw,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
-        "$<TARGET_PROPERTY:${PROJECT_NAME},BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
+        "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "$<TARGET_PROPERTY:libluajit,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
-        "$<TARGET_PROPERTY:${PROJECT_NAME},BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
+        "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
     )
 endif(MSVC)
