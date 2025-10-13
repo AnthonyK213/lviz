@@ -1,5 +1,5 @@
-#ifndef _LVIZ_CONTEXT_CONTEXT_H
-#define _LVIZ_CONTEXT_CONTEXT_H
+#ifndef _LVIZ_RENDER_CONTEXT_H
+#define _LVIZ_RENDER_CONTEXT_H
 
 namespace lviz {
 namespace window {
@@ -8,7 +8,7 @@ class Window;
 
 } // namespace window
 
-namespace context {
+namespace render {
 
 class Context {
 public:
@@ -29,7 +29,7 @@ protected:
   window::Window *window_;
 };
 
-} // namespace context
+} // namespace render
 } // namespace lviz
 
 #endif

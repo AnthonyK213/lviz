@@ -3,7 +3,7 @@
 #include "../window/window.h"
 
 namespace lviz {
-namespace context {
+namespace render {
 
 Context::Context() : window_(nullptr) {}
 
@@ -14,6 +14,6 @@ bool Context::Init(window::Window *win) {
   return true;
 }
 
-} // namespace context
+} // namespace render
 
 } // namespace lviz

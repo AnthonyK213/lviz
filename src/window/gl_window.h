@@ -7,8 +7,8 @@
 
 #include "window.h"
 
-#include "../context/gl_context.h"
-#include "../context/ui_context.h"
+#include "../render/gl_context.h"
+#include "../render/ui_context.h"
 
 #include "../ui/panel.h"
 #include "../ui/view3d.h"
@@ -30,6 +30,14 @@ public:
 
   void Render();
 
+  ui::Panel *GetPanel() const {
+    return panel_.get();
+  }
+
+  ui::View3d *GetView3d() const {
+    return view3d_.get();
+  }
+
   virtual void *GetNativeWindow() const override {
     return window_;
   }
@@ -48,8 +56,8 @@ public:
 
 private:
   GLFWwindow *window_;
-  std::unique_ptr<context::UIContext> ui_ctx_;
-  std::unique_ptr<context::GLContext> gl_ctx_;
+  std::unique_ptr<render::UIContext> ui_ctx_;
+  std::unique_ptr<render::GLContext> gl_ctx_;
   std::unique_ptr<ui::Panel> panel_;
   std::unique_ptr<ui::View3d> view3d_;
   bool running_;

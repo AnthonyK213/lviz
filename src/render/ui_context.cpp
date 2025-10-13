@@ -9,7 +9,7 @@
 #include <imgui_impl_opengl3.h>
 
 namespace lviz {
-namespace context {
+namespace render {
 
 UIContext::UIContext() : Context() {}
 
@@ -86,5 +86,5 @@ void UIContext::Close() {
   ImGui::DestroyContext();
 }
 
-} // namespace context
+} // namespace render
 } // namespace lviz

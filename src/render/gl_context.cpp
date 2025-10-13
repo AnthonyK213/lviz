@@ -7,7 +7,7 @@
 #include <GLFW/glfw3.h>
 
 namespace lviz {
-namespace context {
+namespace render {
 
 static void onKeyCallback(GLFWwindow *window, int key, int scancode, int action,
                           int mods) {
@@ -88,5 +88,5 @@ void GLContext::Close() {
   glfwTerminate();
 }
 
-} // namespace context
+} // namespace render
 } // namespace lviz

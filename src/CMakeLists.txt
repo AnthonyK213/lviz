@@ -11,7 +11,7 @@ set(
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/appl LVIZ_APPL_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/canvas LVIZ_CANVAS_SRC)
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/context LVIZ_CONTEXT_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/render LVIZ_RENDER_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/ui LVIZ_UI_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/window LVIZ_WINDOW_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} LVIZ_SRC)
@@ -22,7 +22,7 @@ add_executable(
   ${IMGUI_SRC}
   ${LVIZ_APPL_SRC}
   ${LVIZ_CANVAS_SRC}
-  ${LVIZ_CONTEXT_SRC}
+  ${LVIZ_RENDER_SRC}
   ${LVIZ_UI_SRC}
   ${LVIZ_WINDOW_SRC}
   ${LVIZ_SRC}
@@ -34,6 +34,7 @@ target_include_directories(
   ${GLAD_DIR}/include/
   ${PLUGINS_DIR}/imgui/
   ${glfw_SOURCE_DIR}/include/
+  ${glm_SOURCE_DIR}
   ${IMGUI_DIR}
   ${IMGUI_DIR}/backends/
   ${luajit_BINARY_DIR}

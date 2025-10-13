@@ -4,8 +4,8 @@ namespace lviz {
 namespace window {
 
 GLWindow::GLWindow() : window_(nullptr), running_(false) {
-  ui_ctx_ = std::make_unique<context::UIContext>();
-  gl_ctx_ = std::make_unique<context::GLContext>();
+  ui_ctx_ = std::make_unique<render::UIContext>();
+  gl_ctx_ = std::make_unique<render::GLContext>();
 }
 
 GLWindow::~GLWindow() {

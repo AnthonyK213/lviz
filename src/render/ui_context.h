@@ -1,10 +1,10 @@
-#ifndef _LVIZ_CONTEXT_UI_CONTEXT_H
-#define _LVIZ_CONTEXT_UI_CONTEXT_H
+#ifndef _LVIZ_RENDER_UI_CONTEXT_H
+#define _LVIZ_RENDER_UI_CONTEXT_H
 
 #include "context.h"
 
 namespace lviz {
-namespace context {
+namespace render {
 
 class UIContext : public Context {
 public:
@@ -19,7 +19,7 @@ public:
   virtual void Close() override;
 };
 
-} // namespace context
+} // namespace render
 } // namespace lviz
 
 #endif
