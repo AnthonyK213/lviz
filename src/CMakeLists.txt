@@ -14,10 +14,9 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/canvas LVIZ_CANVAS_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/render LVIZ_RENDER_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/ui LVIZ_UI_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/window LVIZ_WINDOW_SRC)
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} LVIZ_SRC)
 
-add_executable(
-  lviz
+set(
+  LVIZ_SRC
   ${GLAD_DIR}/src/glad.c
   ${IMGUI_SRC}
   ${LVIZ_APPL_SRC}
@@ -25,8 +24,28 @@ add_executable(
   ${LVIZ_RENDER_SRC}
   ${LVIZ_UI_SRC}
   ${LVIZ_WINDOW_SRC}
-  ${LVIZ_SRC}
+  main.cpp
   )
+
+if (APPLE)
+  add_executable(
+    lviz
+    MACOSX_BUNDLE
+    ${LVIZ_SRC}
+    )
+
+  set_target_properties(
+    lviz
+    PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
+    )
+else()
+  add_executable(
+    lviz
+    WIN32
+    ${LVIZ_SRC}
+    lviz.exe.manifest
+    )
+endif()
 
 target_include_directories(
   lviz
