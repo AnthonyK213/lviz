@@ -1,6 +1,12 @@
 #ifndef _LVIZ_UI_PANEL_H
 #define _LVIZ_UI_PANEL_H
 
+#include <string>
+
+#include <imgui.h>
+
+#include <ImFileBrowser.h>
+
 namespace lviz {
 namespace ui {
 
@@ -13,6 +19,8 @@ public:
   void Render();
 
 private:
+  ImGui::FileBrowser file_dialog_;
+  std::string current_file_;
 };
 
 } // namespace ui

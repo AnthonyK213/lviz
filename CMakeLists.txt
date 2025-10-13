@@ -32,6 +32,7 @@ find_package(OpenGL)
 message("OpenGL: ${OPENGL_gl_LIBRARY}")
 
 set(GLAD_DIR ${CMAKE_SOURCE_DIR}/deps/glad CACHE STRING "Path of GLAD source dir")
+set(PLUGINS_DIR ${CMAKE_SOURCE_DIR}/deps/plugins CACHE STRING "Path of plugins")
 set(IMGUI_DIR ${CMAKE_BINARY_DIR}/deps/imgui CACHE STRING "Path of ImGui source dir")
 set(LUAJIT_DIR ${CMAKE_BINARY_DIR}/deps/LuaJIT_Source CACHE STRING "Path of LuaJIT 2.1 source dir")
 

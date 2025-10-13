@@ -32,6 +32,7 @@ target_include_directories(
   lviz
   PRIVATE
   ${GLAD_DIR}/include/
+  ${PLUGINS_DIR}/imgui/
   ${glfw_SOURCE_DIR}/include/
   ${IMGUI_DIR}
   ${IMGUI_DIR}/backends/
