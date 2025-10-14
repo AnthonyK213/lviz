@@ -15,5 +15,4 @@ bool Context::Init(window::Window *win) {
 }
 
 } // namespace render
-
 } // namespace lviz

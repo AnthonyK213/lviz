@@ -1,6 +1,8 @@
 #ifndef _LVIZ_WINDOW_GL_WINDOW_H
 #define _LVIZ_WINDOW_GL_WINDOW_H
 
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 #include <memory>
@@ -53,6 +55,8 @@ public:
   virtual void OnResize(int width, int height) override;
 
   virtual void OnClose() override;
+
+  void HandleInput();
 
 private:
   GLFWwindow *window_;

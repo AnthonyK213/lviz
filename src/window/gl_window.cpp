@@ -44,10 +44,33 @@ void GLWindow::OnScroll(double delta) {}
 
 void GLWindow::OnKey(int key, int scancode, int action, int mods) {}
 
-void GLWindow::OnResize(int width, int height) {}
+void GLWindow::OnResize(int width, int height) {
+  width_ = width;
+  height_ = height;
+
+  view3d_->Resize(width_, height_);
+
+  Render();
+}
 
 void GLWindow::OnClose() {
   running_ = false;
+}
+
+void GLWindow::HandleInput() {
+  double x, y;
+  glfwGetCursorPos(window_, &x, &y);
+
+  ui::MouseButton button = ui::MouseButton::None;
+
+  if (glfwGetMouseButton(window_, 0) == GLFW_PRESS)
+    button = ui::MouseButton::Left;
+  else if (glfwGetMouseButton(window_, 1) == GLFW_PRESS)
+    button = ui::MouseButton::Right;
+  else if (glfwGetMouseButton(window_, 2) == GLFW_PRESS)
+    button = ui::MouseButton::Middle;
+
+  view3d_->OnMouseMove(x, y, button);
 }
 
 } // namespace window

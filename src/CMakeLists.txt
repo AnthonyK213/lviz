@@ -41,9 +41,9 @@ if (APPLE)
 else()
   add_executable(
     lviz
-    WIN32
+    # WIN32
     ${LVIZ_SRC}
-    lviz.exe.manifest
+    # lviz.exe.manifest
     )
 endif()
 
