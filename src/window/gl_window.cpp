@@ -40,7 +40,9 @@ void GLWindow::Render() {
   gl_ctx_->PostRender();
 }
 
-void GLWindow::OnScroll(double delta) {}
+void GLWindow::OnScroll(double delta) {
+  view3d_->OnMouseWheel(delta);
+}
 
 void GLWindow::OnKey(int key, int scancode, int action, int mods) {}
 

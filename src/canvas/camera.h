@@ -27,19 +27,22 @@ public:
 
   void UpdateProjMatrix();
 
+  void UpdateViewCenter();
+
   void SetAspect(glm::f32 aspect);
 
-  void Pan();
+  void Pan(glm::f32 dx, glm::f32 dy);
 
-  void Orbit();
+  void Orbit(glm::f32 rz, glm::f32 pitch);
 
-  void Zoom();
+  void Zoom(glm::f32 delta);
 
 private:
   glm::mat4 view_mat_; /* Cached view matrix */
   glm::mat4 proj_mat_; /* Cached projection matrix */
 
   glm::mat4 pos_;
+  glm::vec3 cen_; /* Cached view center */
   glm::f32 dist_;
 
   glm::f32 fov_;

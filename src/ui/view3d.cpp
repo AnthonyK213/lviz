@@ -7,7 +7,8 @@
 namespace lviz {
 namespace ui {
 
-View3d::View3d() : camera_(nullptr), frame_buffer_(nullptr), size_(800, 600) {
+View3d::View3d()
+    : camera_(nullptr), frame_buffer_(nullptr), size_(800, 600), cursor_(0, 0) {
   frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
   frame_buffer_->CreateBuffers(800, 600);
 
@@ -35,7 +36,7 @@ View3d::View3d() : camera_(nullptr), frame_buffer_(nullptr), size_(800, 600) {
   glm::mat4 cam_pos = glm::make_mat4(cam_pos_data);
   glm::f32 cam_dist = 42.0f / sqrt3;
   camera_ = std::make_unique<canvas::Camera>(cam_pos, cam_dist, 45.0f, 1.3f,
-                                             0.1f, 100.0f);
+                                             0.1f, 1000.0f);
 }
 
 View3d::~View3d() {
@@ -85,9 +86,30 @@ void View3d::Resize(int width, int height) {
   frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
 }
 
-void View3d::OnMouseMove(double x, double y, ui::MouseButton button) {}
+void View3d::OnMouseMove(double x, double y, ui::MouseButton button) {
+  double dx = x - cursor_.x;
+  double dy = y - cursor_.y;
 
-void View3d::OnMouseWheel(double delta) {}
+  switch (button) {
+  case ui::MouseButton::Right:
+    camera_->Orbit(-dx * 0.008f, -dy * 0.008f);
+    break;
+
+  case ui::MouseButton::Middle:
+    camera_->Pan(-dx * 0.1f, dy * 0.1f);
+    break;
+
+  default:
+    break;
+  }
+
+  cursor_.x = (glm::f32)x;
+  cursor_.y = (glm::f32)y;
+}
+
+void View3d::OnMouseWheel(double delta) {
+  camera_->Zoom(-delta * 0.8f);
+}
 
 } // namespace ui
 } // namespace lviz

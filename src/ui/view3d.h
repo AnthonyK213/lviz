@@ -46,6 +46,7 @@ private:
   std::vector<glm::vec3> vertices_;
   std::vector<glm::u32> indices_;
   glm::vec2 size_;
+  glm::vec2 cursor_;
 };
 
 } // namespace ui
