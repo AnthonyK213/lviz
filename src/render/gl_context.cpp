@@ -39,18 +39,18 @@ bool GLContext::Init(window::Window *win) {
   if (!glfwInit())
     return false;
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // Create window with graphics context
   GLFWwindow *gl_win =
       glfwCreateWindow(win->GetWidth(), win->GetHeight(),
                        win->GetTitle().c_str(), nullptr, nullptr);
-  win->SetNativeWindow(gl_win);
-
   if (!gl_win)
     return false;
+
+  win->SetNativeWindow(gl_win);
 
   glfwSetWindowUserPointer(gl_win, win);
   glfwSetKeyCallback(gl_win, onKeyCallback);
