@@ -16,7 +16,7 @@ void GLVertexBuffer::CreateBuffers(const std::vector<glm::vec3> &vertices,
   glGenBuffers(1, &ibo_);
   glGenBuffers(1, &vbo_);
 
-  glBindVertexArray(vao_);
+  Bind();
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo_);
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3),
@@ -26,15 +26,14 @@ void GLVertexBuffer::CreateBuffers(const std::vector<glm::vec3> &vertices,
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(glm::u32),
                indices.data(), GL_STATIC_DRAW);
 
-  glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
+  glEnableVertexAttribArray(0);
 
   Unbind();
 }
 
 void GLVertexBuffer::DeleteBuffers() {
   glDisableVertexAttribArray(0);
-  glDisableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glDeleteBuffers(1, &ibo_);

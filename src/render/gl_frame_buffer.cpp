@@ -1,5 +1,7 @@
 #include "gl_frame_buffer.h"
 
+#include <iostream>
+
 namespace lviz {
 namespace render {
 
@@ -41,17 +43,50 @@ void GLFrameBuffer::CreateBuffers(int width, int height) {
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                             GL_RENDERBUFFER, depth_id_);
 
+#ifndef NDEBUG
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!"
+              << std::endl;
+#endif
+
   Unbind();
 }
 
 void GLFrameBuffer::DeleteBuffers() {
   if (fbo_) {
-    glDeleteFramebuffers(GL_FRAMEBUFFER, &fbo_);
-    glDeleteTextures(1, &tex_id_);
-    glDeleteRenderbuffers(1, &depth_id_);
-    fbo_ = 0;
-    tex_id_ = 0;
-    depth_id_ = 0;
+    // glDeleteFramebuffers(GL_FRAMEBUFFER, &fbo_);
+    // glDeleteTextures(1, &tex_id_);
+    // glDeleteRenderbuffers(1, &depth_id_);
+    // fbo_ = 0;
+    // tex_id_ = 0;
+    // depth_id_ = 0;
+
+    if (glIsFramebuffer(fbo_) == GL_TRUE) {
+      glDeleteFramebuffers(GL_FRAMEBUFFER, &fbo_);
+      fbo_ = 0;
+    } else {
+#ifndef NDEBUG
+      std::cout << "WARN:: Frame buffer is invalid!" << std::endl;
+#endif
+    }
+
+    if (glIsTexture(tex_id_) == GL_TRUE) {
+      glDeleteTextures(1, &tex_id_);
+      tex_id_ = 0;
+    } else {
+#ifndef NDEBUG
+      std::cout << "WARN:: Texture is invalid!" << std::endl;
+#endif
+    }
+
+    if (glIsRenderbuffer(depth_id_) == GL_TRUE) {
+      glDeleteRenderbuffers(1, &depth_id_);
+      depth_id_ = 0;
+    } else {
+#ifndef NDEBUG
+      std::cout << "WARN:: Render buffer is invalid!" << std::endl;
+#endif
+    }
   }
 }
 
