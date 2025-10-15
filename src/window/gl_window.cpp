@@ -22,7 +22,7 @@ bool GLWindow::Init(int width, int height, const std::string &titile) {
   ui_ctx_->Init(this);
 
   panel_ = std::make_unique<ui::Panel>();
-  view3d_ = std::make_unique<ui::View3d>();
+  view3d_ = std::make_unique<ui::View3d>(glm::vec2{width_, height_});
 
   running_ = true;
 

@@ -7,10 +7,11 @@
 namespace lviz {
 namespace ui {
 
-View3d::View3d()
-    : camera_(nullptr), frame_buffer_(nullptr), size_(800, 600), cursor_(0, 0) {
+View3d::View3d(const glm::vec2 &init_size)
+    : camera_(nullptr), frame_buffer_(nullptr), size_(init_size),
+      cursor_(0, 0) {
   frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
-  frame_buffer_->CreateBuffers(800, 600);
+  frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
 
   vertices_ = {{0, 0, 0}, {20, 0, 0}, {0, 40, 0}};
   indices_ = {0, 1, 2};

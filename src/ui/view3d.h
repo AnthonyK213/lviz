@@ -17,7 +17,7 @@ namespace ui {
 
 class View3d {
 public:
-  View3d();
+  View3d(const glm::vec2 &init_size = glm::vec2{800.0f, 600.0f});
 
   ~View3d();
 
