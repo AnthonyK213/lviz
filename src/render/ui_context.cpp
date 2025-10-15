@@ -25,13 +25,17 @@ bool UIContext::Init(window::Window *win) {
   (void)io;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+#ifdef LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT
   io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+#endif
 
   ImGuiStyle &style = ImGui::GetStyle();
+#ifdef LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
     style.WindowRounding = 0.0f;
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
   }
+#endif
 
   ImGui_ImplGlfw_InitForOpenGL((GLFWwindow *)window_->GetNativeWindow(), true);
   ImGui_ImplOpenGL3_Init(nullptr);
@@ -53,18 +57,22 @@ void UIContext::PreRender() {
   ImGuiViewport *viewport = ImGui::GetMainViewport();
   ImGui::SetNextWindowPos(viewport->Pos);
   ImGui::SetNextWindowSize(viewport->Size);
+#ifdef LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT
   ImGui::SetNextWindowViewport(viewport->ID);
+#endif
 
   ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
   ImGui::Begin("InvisibleWindow", nullptr, win_flags);
+
   ImGui::PopStyleVar(3);
 
   ImGuiID dock_space_id = ImGui::GetID("InvisibleWindowDockSpace");
-
   ImGui::DockSpace(dock_space_id, ImVec2(0.0f, 0.0f),
                    ImGuiDockNodeFlags_PassthruCentralNode);
+
   ImGui::End();
 }
 
@@ -72,14 +80,15 @@ void UIContext::PostRender() {
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+#ifdef LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT
   ImGuiIO &io = ImGui::GetIO();
-
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
     GLFWwindow *backup_current_context = glfwGetCurrentContext();
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
     glfwMakeContextCurrent(backup_current_context);
   }
+#endif
 }
 
 void UIContext::Close() {
