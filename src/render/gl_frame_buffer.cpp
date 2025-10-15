@@ -34,21 +34,12 @@ void GLFrameBuffer::CreateBuffers(int width, int height) {
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                          tex_id_, 0);
 
-  glGenTextures(1, &depth_id_);
-  glBindTexture(GL_TEXTURE_2D, depth_id_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, width_, height_, 0,
-               GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                         GL_TEXTURE_2D, depth_id_, 0);
-
-  GLenum buffers[4] = {GL_COLOR_ATTACHMENT0};
-  glDrawBuffers(tex_id_, buffers);
+  glGenRenderbuffers(1, &depth_id_);
+  glBindRenderbuffer(GL_RENDERBUFFER, depth_id_);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width_, height_);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                            GL_RENDERBUFFER, depth_id_);
 
   Unbind();
 }
@@ -57,7 +48,8 @@ void GLFrameBuffer::DeleteBuffers() {
   if (fbo_) {
     glDeleteFramebuffers(GL_FRAMEBUFFER, &fbo_);
     glDeleteTextures(1, &tex_id_);
-    glDeleteTextures(1, &depth_id_);
+    glDeleteRenderbuffers(1, &depth_id_);
+    fbo_ = 0;
     tex_id_ = 0;
     depth_id_ = 0;
   }

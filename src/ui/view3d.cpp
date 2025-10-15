@@ -108,7 +108,7 @@ void View3d::OnMouseMove(double x, double y, ui::MouseButton button) {
 }
 
 void View3d::OnMouseWheel(double delta) {
-  camera_->Zoom(-delta * 0.8f);
+  camera_->Zoom(-delta);
 }
 
 } // namespace ui

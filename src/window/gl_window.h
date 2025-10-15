@@ -48,6 +48,8 @@ public:
     window_ = (GLFWwindow *)win;
   }
 
+  void WaitEvents() const;
+
   virtual void OnScroll(double delta) override;
 
   virtual void OnKey(int key, int scancode, int action, int mods) override;

@@ -29,7 +29,7 @@ void GLVertexBuffer::CreateBuffers(const std::vector<glm::vec3> &vertices,
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
 
-  glBindVertexArray(0);
+  Unbind();
 }
 
 void GLVertexBuffer::DeleteBuffers() {

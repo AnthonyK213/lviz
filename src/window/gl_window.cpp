@@ -40,6 +40,10 @@ void GLWindow::Render() {
   gl_ctx_->PostRender();
 }
 
+void GLWindow::WaitEvents() const {
+  glfwWaitEvents();
+}
+
 void GLWindow::OnScroll(double delta) {
   view3d_->OnMouseWheel(delta);
 }

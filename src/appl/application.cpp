@@ -21,6 +21,7 @@ Application::Application(const std::string &app_name) {
 
 void Application::Run() {
   while (window_->IsRunning()) {
+    window_->WaitEvents();
     window_->Render();
     window_->HandleInput();
   }
