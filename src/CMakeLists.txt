@@ -36,14 +36,19 @@ if (APPLE)
 
   set_target_properties(
     lviz
-    PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
+    PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/rc/Info.plist
+    )
+elseif(WIN32)
+  add_executable(
+    lviz
+    WIN32
+    ${LVIZ_SRC}
+    rc/lviz.rc
     )
 else()
   add_executable(
     lviz
-    # WIN32
     ${LVIZ_SRC}
-    # lviz.exe.manifest
     )
 endif()
 

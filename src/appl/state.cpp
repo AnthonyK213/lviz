@@ -10,6 +10,9 @@ State::~State() {
 }
 
 bool State::Init() {
+  if (lua_)
+    return false;
+
   lua_ = luaL_newstate();
 
   if (!lua_)
