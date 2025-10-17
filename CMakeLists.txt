@@ -40,5 +40,6 @@ include(cmake/FetchGLFW.cmake)
 include(cmake/FetchGLM.cmake)
 include(cmake/FetchImGui.cmake)
 include(cmake/FetchLuaJIT.cmake)
+include(cmake/FetchLuaBridge3.cmake)
 
 add_subdirectory(src)

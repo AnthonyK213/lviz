@@ -1,20 +1,44 @@
 #include "gl_window.h"
 
+#include <lua.hpp>
+
+#include <LuaBridge/LuaBridge.h>
+
 namespace lviz {
 namespace window {
 
-static void redirectOutput(lua_State *L) {}
+static void bindGLM(lua_State *L) {
+  luabridge::getGlobalNamespace(L)
+      .beginNamespace("lviz")
+      .beginNamespace("glm")
+      .beginClass<glm::vec3>("vec3")
+      .addConstructor<void(), void(float, float, float)>()
+      .endClass()
+      .endNamespace()
+      .endNamespace();
+}
 
 static void bindView3d(lua_State *L, ui::View3d *view3d) {
-  lua_getglobal(L, "lviz");
-
-  lua_pushstring(L, "view3d");
-  lua_newtable(L);
-  lua_settable(L, -3);
-
-  /* TODO: Register view3d as lightuserdata */
-
-  /* TODO: Bind methods of View3d */
+  luabridge::getGlobalNamespace(L)
+      .beginNamespace("lviz")
+      .beginNamespace("view3d")
+      .addFunction("DrawPoint",
+                   [view3d](const glm::vec3 &point) -> bool {
+                     return view3d->DrawPoint(point);
+                   })
+      .addFunction(
+          "DrawLine",
+          [view3d](const glm::vec3 &point1, const glm::vec3 &point2) -> bool {
+            return view3d->DrawLine(point1, point2);
+          })
+      .addFunction("DrawTriangle",
+                   [view3d](const glm::vec3 &point1, const glm::vec3 &point2,
+                            const glm::vec3 &point3) -> bool {
+                     return view3d->DrawTriangle(point1, point2, point3);
+                   })
+      .addFunction("Purge", [view3d]() { return view3d->Purge(); })
+      .endNamespace()
+      .endNamespace();
 }
 
 GLWindow::GLWindow() : window_(nullptr), running_(false) {
@@ -46,9 +70,7 @@ bool GLWindow::Init(int width, int height, const std::string &titile) {
     return false;
 
   lua_State *L = state_->GetLuaState();
-  lua_newtable(L);
-  lua_setglobal(L, "lviz");
-  redirectOutput(L);
+  bindGLM(L);
   bindView3d(L, view3d_.get());
 
   running_ = true;

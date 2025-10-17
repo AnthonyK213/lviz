@@ -62,6 +62,7 @@ target_include_directories(
   ${IMGUI_DIR}
   ${IMGUI_DIR}/backends/
   ${luajit_BINARY_DIR}
+  ${luabridge3_SOURCE_DIR}/Source
   )
 
 target_link_libraries(
