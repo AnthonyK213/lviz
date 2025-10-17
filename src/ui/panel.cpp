@@ -1,5 +1,7 @@
 #include "panel.h"
 
+#include "../window/gl_window.h"
+
 #include <imgui.h>
 
 #include <iostream>
@@ -7,7 +9,8 @@
 namespace lviz {
 namespace ui {
 
-Panel::Panel() : file_dialog_(), current_file_() {
+Panel::Panel(window::Window *parent)
+    : parent_(parent), file_dialog_(), current_file_() {
   file_dialog_.SetTitle("Open script");
   file_dialog_.SetFileFilters({".lua"});
 }
@@ -22,8 +25,13 @@ void Panel::Render() {
   }
 
   if (ImGui::Button("Run script")) {
-    /* TODO: Run the script */
-    std::cout << current_file_ << std::endl;
+    auto gl_win = dynamic_cast<window::GLWindow *>(parent_);
+    if (gl_win) {
+      appl::State *state = gl_win->GetState();
+      std::string error{};
+      if (!state->DoFile(current_file_, error))
+        std::cout << error << std::endl;
+    }
   }
 
   ImGui::End();

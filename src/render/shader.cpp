@@ -8,12 +8,36 @@
 namespace lviz {
 namespace render {
 
-static GLuint getCompiledShader(int shader_type,
-                                const std::string &shader_source) {
+static const char *VERT_SHADER = R"(
+#version 330 core
+
+layout(location = 0) in vec3 aPosition;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+out vec3 WorldPos;
+
+void main() {
+  gl_Position = projection * view * model * vec4(aPosition, 1.0f);
+}
+)";
+
+static const char *FRAG_SHADER = R"(
+#version 330 core
+
+out vec4 FragColor;
+
+void main() {
+  FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+}
+)";
+
+static GLuint getCompiledShader(int shader_type, const char *shader_source) {
   GLuint shader_id = glCreateShader(shader_type);
 
-  const char *c_source = shader_source.c_str();
-  glShaderSource(shader_id, 1, &c_source, nullptr);
+  glShaderSource(shader_id, 1, &shader_source, nullptr);
   glCompileShader(shader_id);
 
   GLint result;
@@ -36,84 +60,10 @@ static GLuint getCompiledShader(int shader_type,
 Shader::Shader() : prog_id_(0) {}
 
 bool Shader::Load() {
-  //   const std::string vert = R"(
-  // #version 330 core
-
-  // layout(location = 0) in vec3 aPosition;
-  // layout(location = 1) in vec3 aNormal;
-
-  // uniform mat4 model;
-  // uniform mat4 view;
-  // uniform mat4 projection;
-  // uniform vec4 color;
-
-  // out vec3 WorldPos;
-  // out vec3 Normal;
-  // out vec4 Color;
-
-  // void main() {
-  //   Color = color;
-  //   WorldPos = vec3(model * vec4(aPosition, 1.0));
-  //   Normal = aNormal;
-
-  //   gl_Position = projection * view * model * vec4(aPosition, 1.0f);
-  // })";
-
-  //   const std::string frag = R"(
-  // #version 330
-
-  // struct DirLight {
-  //   vec3 position;
-  //   vec3 color;
-  //   float strength;
-  // };
-
-  // uniform mat4 model;
-  // uniform DirLight dirLight;
-
-  // in vec4 Color;
-  // in vec3 WorldPos;
-  // in vec3 Normal;
-
-  // out vec4 fOutput;
-
-  // void main () {
-  //   mat3 normalMatrix = transpose(inverse(mat3(model)));
-  //   vec3 normal = normalize(normalMatrix * Normal);
-  //   vec3 light_diff = dirLight.position - vec3(model * vec4(WorldPos, 1));
-  //   float luminance = dot(normal, light_diff) / (length(light_diff) *
-  //   length(normal)); fOutput = vec4(luminance * dirLight.color, 1.0f) *
-  //   dirLight.strength;
-  // })";
-
-  const std::string vert = R"(
-#version 330 core
-
-layout(location = 0) in vec3 aPosition;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
-out vec3 WorldPos;
-
-void main() {
-  gl_Position = projection * view * model * vec4(aPosition, 1.0f);
-})";
-
-  const std::string frag = R"(
-#version 330 core
-
-out vec4 FragColor;
-
-void main() {
-  FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-})";
-
   prog_id_ = glCreateProgram();
 
-  GLuint vs = getCompiledShader(GL_VERTEX_SHADER, vert);
-  GLuint fs = getCompiledShader(GL_FRAGMENT_SHADER, frag);
+  GLuint vs = getCompiledShader(GL_VERTEX_SHADER, VERT_SHADER);
+  GLuint fs = getCompiledShader(GL_FRAGMENT_SHADER, FRAG_SHADER);
 
   glAttachShader(prog_id_, vs);
   glAttachShader(prog_id_, fs);

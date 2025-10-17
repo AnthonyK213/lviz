@@ -8,7 +8,7 @@ namespace window {
 
 class Window {
 public:
-  virtual ~Window();
+  virtual ~Window() = default;
 
   const std::string &GetTitle() const {
     return title_;

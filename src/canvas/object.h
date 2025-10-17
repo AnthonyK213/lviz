@@ -8,6 +8,8 @@ namespace canvas {
 
 class Object {
 public:
+  virtual ~Object() = default;
+
   virtual void UpdateShader(render::Shader *shader) = 0;
 };
 

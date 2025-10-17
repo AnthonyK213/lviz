@@ -8,17 +8,24 @@
 #include <ImFileBrowser.h>
 
 namespace lviz {
+namespace window {
+
+class Window;
+
+}
+
 namespace ui {
 
 class Panel {
 public:
-  Panel();
+  Panel(window::Window *parent);
 
   ~Panel();
 
   void Render();
 
 private:
+  window::Window *parent_;
   ImGui::FileBrowser file_dialog_;
   std::string current_file_;
 };

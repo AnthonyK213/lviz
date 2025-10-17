@@ -9,6 +9,7 @@
 
 #include "window.h"
 
+#include "../appl/state.h"
 #include "../render/gl_context.h"
 #include "../render/ui_context.h"
 
@@ -32,12 +33,8 @@ public:
 
   void Render();
 
-  ui::Panel *GetPanel() const {
-    return panel_.get();
-  }
-
-  ui::View3d *GetView3d() const {
-    return view3d_.get();
+  appl::State *GetState() const {
+    return state_.get();
   }
 
   virtual void *GetNativeWindow() const override {
@@ -64,6 +61,7 @@ private:
   GLFWwindow *window_;
   std::unique_ptr<render::UIContext> ui_ctx_;
   std::unique_ptr<render::GLContext> gl_ctx_;
+  std::unique_ptr<appl::State> state_;
   std::unique_ptr<ui::Panel> panel_;
   std::unique_ptr<ui::View3d> view3d_;
   bool running_;

@@ -3,9 +3,24 @@
 namespace lviz {
 namespace window {
 
+static void redirectOutput(lua_State *L) {}
+
+static void bindView3d(lua_State *L, ui::View3d *view3d) {
+  lua_getglobal(L, "lviz");
+
+  lua_pushstring(L, "view3d");
+  lua_newtable(L);
+  lua_settable(L, -3);
+
+  /* TODO: Register view3d as lightuserdata */
+
+  /* TODO: Bind methods of View3d */
+}
+
 GLWindow::GLWindow() : window_(nullptr), running_(false) {
   ui_ctx_ = std::make_unique<render::UIContext>();
   gl_ctx_ = std::make_unique<render::GLContext>();
+  state_ = std::make_unique<appl::State>();
 }
 
 GLWindow::~GLWindow() {
@@ -18,11 +33,23 @@ bool GLWindow::Init(int width, int height, const std::string &titile) {
   height_ = height;
   title_ = titile;
 
-  gl_ctx_->Init(this);
-  ui_ctx_->Init(this);
+  if (!gl_ctx_->Init(this))
+    return false;
 
-  panel_ = std::make_unique<ui::Panel>();
-  view3d_ = std::make_unique<ui::View3d>(glm::vec2{width_, height_});
+  if (!ui_ctx_->Init(this))
+    return false;
+
+  panel_ = std::make_unique<ui::Panel>(this);
+  view3d_ = std::make_unique<ui::View3d>(this, glm::vec2{width_, height_});
+
+  if (!state_->Init())
+    return false;
+
+  lua_State *L = state_->GetLuaState();
+  lua_newtable(L);
+  lua_setglobal(L, "lviz");
+  redirectOutput(L);
+  bindView3d(L, view3d_.get());
 
   running_ = true;
 

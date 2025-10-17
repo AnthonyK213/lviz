@@ -1,5 +1,5 @@
-#ifndef _LVIZ_RENDER_GL_VERTEX_BUFFER_H
-#define _LVIZ_RENDER_GL_VERTEX_BUFFER_H
+#ifndef _LVIZ_RENDER_GL_VERTEX_INDEX_BUFFER_H
+#define _LVIZ_RENDER_GL_VERTEX_INDEX_BUFFER_H
 
 #include <glad/glad.h>
 
@@ -10,13 +10,14 @@
 namespace lviz {
 namespace render {
 
-class GLVertexBuffer {
+class GLVertexIndexBuffer {
 public:
-  GLVertexBuffer();
+  GLVertexIndexBuffer();
 
-  ~GLVertexBuffer();
+  ~GLVertexIndexBuffer();
 
-  void CreateBuffers(const std::vector<glm::vec3> &vertices);
+  void CreateBuffers(const std::vector<glm::vec3> &vertices,
+                     const std::vector<glm::u32> &indices);
 
   void DeleteBuffers();
 
@@ -29,6 +30,7 @@ public:
 private:
   GLuint vbo_;
   GLuint vao_;
+  GLuint ibo_;
 };
 
 } // namespace render

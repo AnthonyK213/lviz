@@ -1,5 +1,7 @@
 #include "view3d.h"
 
+#include "../canvas/polyline.h"
+
 #include <imgui.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -7,17 +9,11 @@
 namespace lviz {
 namespace ui {
 
-View3d::View3d(const glm::vec2 &init_size)
-    : camera_(nullptr), frame_buffer_(nullptr), size_(init_size),
-      cursor_(0, 0) {
+View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
+    : parent_(parent), camera_(nullptr), frame_buffer_(nullptr),
+      shader_(nullptr), geometries_(), size_(init_size), cursor_(0, 0) {
   frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
   frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
-
-  vertices_ = {{0, 0, 0}, {20, 0, 0}, {0, 40, 0}};
-  indices_ = {0, 1, 2};
-
-  vertex_buffer_ = std::make_unique<render::GLVertexBuffer>();
-  vertex_buffer_->CreateBuffers(vertices_, indices_);
 
   shader_ = std::make_unique<render::Shader>();
   shader_->Load();
@@ -55,7 +51,10 @@ void View3d::Render() {
   camera_->UpdateShader(shader_.get());
 
   frame_buffer_->Bind();
-  vertex_buffer_->Draw(indices_.size());
+  for (const std::unique_ptr<canvas::Geometry> &geom : geometries_) {
+    geom->UpdateShader(shader_.get());
+    geom->Draw();
+  }
   frame_buffer_->Unbind();
 
   uint64_t tex_id = frame_buffer_->GetTexture();
@@ -65,13 +64,18 @@ void View3d::Render() {
   ImGui::End();
 }
 
-void View3d::Purge() {}
+void View3d::Purge() {
+  geometries_.clear();
+}
 
 bool View3d::DrawPoint(const glm::vec3 &point) {
   return true;
 }
 
-bool View3d::DrawLineSegment(const glm::vec3 &point1, const glm::vec3 &point2) {
+bool View3d::DrawLine(const glm::vec3 &point1, const glm::vec3 &point2) {
+  std::vector<glm::vec3> vertices{point1, point2};
+  auto line = std::make_unique<canvas::Polyline>(std::move(vertices));
+  geometries_.push_back(std::move(line));
   return true;
 }
 

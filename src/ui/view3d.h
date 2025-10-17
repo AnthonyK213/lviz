@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 
 #include "../canvas/camera.h"
+#include "../canvas/geometry.h"
 #include "../render/gl_frame_buffer.h"
-#include "../render/gl_vertex_buffer.h"
 #include "../render/shader.h"
 #include "input.h"
 
@@ -13,11 +13,18 @@
 #include <vector>
 
 namespace lviz {
+namespace window {
+
+class Window;
+
+}
+
 namespace ui {
 
 class View3d {
 public:
-  View3d(const glm::vec2 &init_size = glm::vec2{800.0f, 600.0f});
+  View3d(window::Window *parent,
+         const glm::vec2 &init_size = glm::vec2{800.0f, 600.0f});
 
   ~View3d();
 
@@ -27,7 +34,7 @@ public:
 
   bool DrawPoint(const glm::vec3 &point);
 
-  bool DrawLineSegment(const glm::vec3 &point1, const glm::vec3 &point2);
+  bool DrawLine(const glm::vec3 &point1, const glm::vec3 &point2);
 
   bool DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
                     const glm::vec3 &point3);
@@ -39,12 +46,11 @@ public:
   void OnMouseWheel(double delta);
 
 private:
+  window::Window *parent_;
   std::unique_ptr<canvas::Camera> camera_;
   std::unique_ptr<render::GLFrameBuffer> frame_buffer_;
-  std::unique_ptr<render::GLVertexBuffer> vertex_buffer_;
   std::unique_ptr<render::Shader> shader_;
-  std::vector<glm::vec3> vertices_;
-  std::vector<glm::u32> indices_;
+  std::vector<std::unique_ptr<canvas::Geometry>> geometries_;
   glm::vec2 size_;
   glm::vec2 cursor_;
 };

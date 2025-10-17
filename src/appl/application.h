@@ -5,7 +5,6 @@
 #include <string>
 
 #include "../window/gl_window.h"
-#include "state.h"
 
 namespace lviz {
 namespace appl {
@@ -18,7 +17,6 @@ public:
 
 private:
   std::unique_ptr<window::GLWindow> window_;
-  std::unique_ptr<State> state_;
 };
 
 } // namespace appl
