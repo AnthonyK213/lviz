@@ -1,6 +1,7 @@
 #include "view3d.h"
 
 #include "../canvas/polyline.h"
+#include "../canvas/triangle.h"
 
 #include <imgui.h>
 
@@ -81,6 +82,8 @@ bool View3d::DrawLine(const glm::vec3 &point1, const glm::vec3 &point2) {
 
 bool View3d::DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
                           const glm::vec3 &point3) {
+  auto triangle = std::make_unique<canvas::Triangle>(point1, point2, point3);
+  geometries_.push_back(std::move(triangle));
   return true;
 }
 

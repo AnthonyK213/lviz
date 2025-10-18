@@ -36,7 +36,7 @@ static void bindView3d(lua_State *L, ui::View3d *view3d) {
                             const glm::vec3 &point3) -> bool {
                      return view3d->DrawTriangle(point1, point2, point3);
                    })
-      .addFunction("Purge", [view3d]() { return view3d->Purge(); })
+      .addFunction("Purge", [view3d]() { view3d->Purge(); })
       .endNamespace()
       .endNamespace();
 }

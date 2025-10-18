@@ -8,7 +8,7 @@ namespace canvas {
 Polyline::Polyline(std::vector<glm::vec3> &&vertices)
     : vertex_buffer_(nullptr), vertices_(std::move(vertices)) {
   vertex_buffer_ = std::make_unique<render::GLVertexBuffer>();
-  vertex_buffer_->CreateBuffers(vertices_);
+  vertex_buffer_->CreateBuffers(vertices_.size(), vertices_.data());
 }
 
 Polyline::~Polyline() {}

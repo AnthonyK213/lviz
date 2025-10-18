@@ -5,8 +5,6 @@
 
 #include <glm/glm.hpp>
 
-#include <vector>
-
 namespace lviz {
 namespace render {
 
@@ -16,7 +14,7 @@ public:
 
   ~GLVertexBuffer();
 
-  void CreateBuffers(const std::vector<glm::vec3> &vertices);
+  void CreateBuffers(int n_vertices, const glm::vec3 vertices[]);
 
   void DeleteBuffers();
 
