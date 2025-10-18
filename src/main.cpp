@@ -5,8 +5,8 @@
 #include "appl/application.h"
 
 #ifdef WIN32
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                   LPSTR lpCmdLine, int nShowCmd)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
+                   _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 #else
 int main(int argc, char const *argv[])
 #endif
