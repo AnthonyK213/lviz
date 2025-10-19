@@ -1,5 +1,6 @@
 #include "panel.h"
 
+#include "../appl/application.h"
 #include "../window/gl_window.h"
 
 #include <imgui.h>
@@ -27,7 +28,7 @@ void Panel::Render() {
   if (ImGui::Button("Run script")) {
     auto gl_win = dynamic_cast<window::GLWindow *>(parent_);
     if (gl_win) {
-      appl::State *state = gl_win->GetState();
+      appl::State *state = gl_win->GetApp()->GetState();
       std::string error{};
       if (!state->DoFile(current_file_, error))
         std::cout << error << std::endl;

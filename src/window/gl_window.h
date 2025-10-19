@@ -9,7 +9,6 @@
 
 #include "window.h"
 
-#include "../appl/state.h"
 #include "../render/gl_context.h"
 #include "../render/ui_context.h"
 
@@ -21,7 +20,7 @@ namespace window {
 
 class GLWindow : public Window {
 public:
-  GLWindow();
+  GLWindow(appl::Application *app);
 
   ~GLWindow();
 
@@ -33,8 +32,8 @@ public:
 
   void Render();
 
-  appl::State *GetState() const {
-    return state_.get();
+  ui::View3d *GetView3d() const {
+    return view3d_.get();
   }
 
   virtual void *GetNativeWindow() const override {
@@ -61,7 +60,6 @@ private:
   GLFWwindow *window_;
   std::unique_ptr<render::UIContext> ui_ctx_;
   std::unique_ptr<render::GLContext> gl_ctx_;
-  std::unique_ptr<appl::State> state_;
   std::unique_ptr<ui::Panel> panel_;
   std::unique_ptr<ui::View3d> view3d_;
   bool running_;

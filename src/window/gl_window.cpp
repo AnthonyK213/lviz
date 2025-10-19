@@ -1,50 +1,13 @@
 #include "gl_window.h"
 
-#include <lua.hpp>
-
-#include <LuaBridge/LuaBridge.h>
-
 namespace lviz {
 namespace window {
 
-static void bindGLM(lua_State *L) {
-  luabridge::getGlobalNamespace(L)
-      .beginNamespace("lviz")
-      .beginNamespace("glm")
-      .beginClass<glm::vec3>("vec3")
-      .addConstructor<void(), void(float, float, float)>()
-      .endClass()
-      .endNamespace()
-      .endNamespace();
-}
-
-static void bindView3d(lua_State *L, ui::View3d *view3d) {
-  luabridge::getGlobalNamespace(L)
-      .beginNamespace("lviz")
-      .beginNamespace("view3d")
-      .addFunction("DrawPoint",
-                   [view3d](const glm::vec3 &point) -> bool {
-                     return view3d->DrawPoint(point);
-                   })
-      .addFunction(
-          "DrawLine",
-          [view3d](const glm::vec3 &point1, const glm::vec3 &point2) -> bool {
-            return view3d->DrawLine(point1, point2);
-          })
-      .addFunction("DrawTriangle",
-                   [view3d](const glm::vec3 &point1, const glm::vec3 &point2,
-                            const glm::vec3 &point3) -> bool {
-                     return view3d->DrawTriangle(point1, point2, point3);
-                   })
-      .addFunction("Purge", [view3d]() { view3d->Purge(); })
-      .endNamespace()
-      .endNamespace();
-}
-
-GLWindow::GLWindow() : window_(nullptr), running_(false) {
+GLWindow::GLWindow(appl::Application *app)
+    : Window(app), window_(nullptr), ui_ctx_(nullptr), gl_ctx_(nullptr),
+      panel_(nullptr), view3d_(nullptr), running_(false) {
   ui_ctx_ = std::make_unique<render::UIContext>();
   gl_ctx_ = std::make_unique<render::GLContext>();
-  state_ = std::make_unique<appl::State>();
 }
 
 GLWindow::~GLWindow() {
@@ -65,13 +28,6 @@ bool GLWindow::Init(int width, int height, const std::string &titile) {
 
   panel_ = std::make_unique<ui::Panel>(this);
   view3d_ = std::make_unique<ui::View3d>(this, glm::vec2{width_, height_});
-
-  if (!state_->Init())
-    return false;
-
-  lua_State *L = state_->GetLuaState();
-  bindGLM(L);
-  bindView3d(L, view3d_.get());
 
   running_ = true;
 

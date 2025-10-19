@@ -1,11 +1,69 @@
 #include "application.h"
+#include "../bind/glm.h"
+#include "../bind/view3d.h"
+
+#if defined(_WIN32)
+#elif defined(__linux__)
+#elif defined(__APPLE__)
+#include <pwd.h>
+#include <sys/types.h>
+#include <unistd.h>
+#endif
+
+#include <iostream>
+#include <optional>
 
 namespace lviz {
 namespace appl {
 
-Application::Application(const std::string &app_name) {
-  window_ = std::make_unique<window::GLWindow>();
+static std::optional<std::filesystem::path> getAppLocalDataLocation() {
+#if defined(_WIN32)
+  return {};
+#elif defined(__linux__)
+  return {};
+#elif defined(__APPLE__)
+  uid_t uid = getuid();
+  struct passwd *pw = getpwuid(uid);
+  if (pw) {
+    return std::filesystem::path(pw->pw_dir) / ".local" / "share" / "lviz";
+  } else {
+    return {};
+  }
+#else
+  return {};
+#endif
+}
+
+Application::Application(const std::string &app_name)
+    : window_(nullptr), manager_(nullptr), state_(nullptr) {
+  std::optional<std::filesystem::path> app_local = getAppLocalDataLocation();
+  if (app_local) {
+    if (!std::filesystem::is_directory(app_local.value())) {
+      if (!std::filesystem::create_directories(app_local.value())) {
+        app_local.reset();
+      }
+    }
+  }
+
+  window_ = std::make_unique<window::GLWindow>(this);
   window_->Init(1024, 720, app_name);
+
+  state_ = std::make_unique<State>();
+  state_->Init();
+  bind::BindGLM(state_->GetLuaState());
+  bind::BindView3d(state_->GetLuaState(), window_->GetView3d());
+
+  if (!app_local) {
+    std::cout << "AppLocalDataLocation was not found" << std::endl;
+  } else {
+    std::filesystem::path ext_dir = app_local.value() / "extensions";
+    if (std::filesystem::is_directory(ext_dir) ||
+        std::filesystem::create_directory(ext_dir)) {
+      manager_ = std::make_unique<ExtensionManager>(ext_dir, this);
+      manager_->Init();
+      manager_->Load();
+    }
+  }
 }
 
 void Application::Run() {

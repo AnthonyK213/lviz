@@ -4,7 +4,12 @@
 namespace lviz {
 namespace ui {
 
-enum class MouseButton { None = 0, Left, Right, Middle };
+enum class MouseButton {
+  None = 0,
+  Left,
+  Right,
+  Middle,
+};
 
 } // namespace ui
 } // namespace lviz

@@ -4,18 +4,24 @@
 #include <string>
 
 namespace lviz {
+namespace appl {
+
+class Application;
+
+} // namespace appl
+
 namespace window {
 
 class Window {
 public:
   virtual ~Window() = default;
 
-  const std::string &GetTitle() const {
-    return title_;
+  appl::Application *GetApp() const {
+    return app_;
   }
 
-  void GetTitle(const std::string &title) {
-    title_ = title;
+  const std::string &GetTitle() const {
+    return title_;
   }
 
   int GetWidth() const {
@@ -39,6 +45,10 @@ public:
   virtual void OnClose() = 0;
 
 protected:
+  Window(appl::Application *app) : app_(app), title_(), width_(0), height_(0) {}
+
+protected:
+  appl::Application *app_;
   std::string title_;
   int width_;
   int height_;
