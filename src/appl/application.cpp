@@ -1,13 +1,16 @@
-#include "application.h"
-#include "../bind/bind.h"
-
 #if defined(_WIN32)
+#include <ShlObj.h>
+#include <Windows.h>
 #elif defined(__linux__)
 #elif defined(__APPLE__)
 #include <pwd.h>
 #include <sys/types.h>
 #include <unistd.h>
 #endif
+
+#include "application.h"
+
+#include "../bind/bind.h"
 
 #include <iostream>
 #include <optional>
@@ -17,7 +20,21 @@ namespace appl {
 
 static std::optional<std::filesystem::path> getAppLocalDataLocation() {
 #if defined(_WIN32)
-  return {};
+  PWSTR path = nullptr;
+  HRESULT result =
+      SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &path);
+  if (SUCCEEDED(result)) {
+    int buffer_size =
+        WideCharToMultiByte(CP_ACP, 0, path, -1, nullptr, 0, nullptr, nullptr);
+    std::string local_app_data_path;
+    local_app_data_path.resize(buffer_size - 1);
+    WideCharToMultiByte(CP_ACP, 0, path, -1, &local_app_data_path[0],
+                        buffer_size, nullptr, nullptr);
+    CoTaskMemFree(path);
+    return std::filesystem::path(local_app_data_path) / "lviz";
+  } else {
+    return {};
+  }
 #elif defined(__linux__)
   return {};
 #elif defined(__APPLE__)

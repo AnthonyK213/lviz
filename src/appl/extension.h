@@ -33,7 +33,7 @@ public:
   }
 
   std::string GetName() const {
-    return dir_.filename();
+    return dir_.filename().string();
   }
 
   void Load(ExtensionManager *manager);
