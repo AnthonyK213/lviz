@@ -1,6 +1,5 @@
 #include "application.h"
-#include "../bind/glm.h"
-#include "../bind/view3d.h"
+#include "../bind/bind.h"
 
 #if defined(_WIN32)
 #elif defined(__linux__)
@@ -50,8 +49,8 @@ Application::Application(const std::string &app_name)
 
   state_ = std::make_unique<State>();
   state_->Init();
-  bind::BindGLM(state_->GetLuaState());
-  bind::BindView3d(state_->GetLuaState(), window_->GetView3d());
+
+  manager_ = std::make_unique<ExtensionManager>(this);
 
   if (!app_local) {
     std::cout << "AppLocalDataLocation was not found" << std::endl;
@@ -59,11 +58,15 @@ Application::Application(const std::string &app_name)
     std::filesystem::path ext_dir = app_local.value() / "extensions";
     if (std::filesystem::is_directory(ext_dir) ||
         std::filesystem::create_directory(ext_dir)) {
-      manager_ = std::make_unique<ExtensionManager>(ext_dir, this);
-      manager_->Init();
+      manager_->Init(ext_dir);
       manager_->Load();
     }
   }
+
+  bind::BindGLM(state_->GetLuaState());
+  bind::BindView3d(state_->GetLuaState(), window_->GetView3d());
+  bind::BindExtension(state_->GetLuaState());
+  bind::BindExtensionManager(state_->GetLuaState(), manager_.get());
 }
 
 void Application::Run() {

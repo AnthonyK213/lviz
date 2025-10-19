@@ -28,6 +28,14 @@ public:
     return loaded_;
   }
 
+  std::string GetPath() const {
+    return dir_.string();
+  }
+
+  std::string GetName() const {
+    return dir_.filename();
+  }
+
   void Load(ExtensionManager *manager);
 
 private:

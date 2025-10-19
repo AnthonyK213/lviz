@@ -14,19 +14,21 @@ class Application;
 
 class ExtensionManager {
 public:
-  explicit ExtensionManager(const std::filesystem::path &ext_dir,
-                            Application *app);
+  explicit ExtensionManager(Application *app);
 
   Application *GetApp() const {
     return app_;
   }
 
-  bool Init();
+  const std::list<Extension> &GetExtensions() const {
+    return exts_;
+  }
+
+  bool Init(const std::filesystem::path &dir);
 
   bool Load();
 
 private:
-  std::filesystem::path ext_dir_;
   Application *app_;
   std::list<Extension> exts_;
 };

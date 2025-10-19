@@ -3,15 +3,13 @@
 namespace lviz {
 namespace appl {
 
-ExtensionManager::ExtensionManager(const std::filesystem::path &ext_dir,
-                                   Application *app)
-    : ext_dir_(ext_dir), app_(app) {}
+ExtensionManager::ExtensionManager(Application *app) : app_(app), exts_() {}
 
-bool ExtensionManager::Init() {
-  if (!std::filesystem::is_directory(ext_dir_))
+bool ExtensionManager::Init(const std::filesystem::path &dir) {
+  if (!std::filesystem::is_directory(dir))
     return false;
 
-  for (const auto &entry : std::filesystem::directory_iterator(ext_dir_)) {
+  for (const auto &entry : std::filesystem::directory_iterator(dir)) {
     if (entry.is_directory()) {
       exts_.emplace_back(entry.path());
     }
