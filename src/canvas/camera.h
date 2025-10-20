@@ -29,7 +29,7 @@ public:
 
   void UpdateViewCenter();
 
-  void SetAspect(glm::f32 aspect);
+  void SetAspect(glm::f32 x, glm::f32 y);
 
   void Pan(glm::f32 dx, glm::f32 dy);
 

@@ -16,9 +16,10 @@ Camera::Camera(const glm::mat4 &pos, glm::f32 dist, glm::f32 fov,
 
 void Camera::UpdateShader(render::Shader *shader) {
   glm::mat4 model{1.0f};
-  shader->SetMat4(model, "model");
-  shader->SetMat4(view_mat_, "view");
-  shader->SetMat4(proj_mat_, "projection");
+  shader->SetMat4("model", model);
+  shader->SetMat4("view", view_mat_);
+  shader->SetMat4("projection", proj_mat_);
+  shader->SetVec3("viewPos", glm::vec3(pos_[3]));
 }
 
 void Camera::UpdateViewMatrix() {
@@ -35,8 +36,8 @@ void Camera::UpdateViewCenter() {
   cen_ = o - z * dist_;
 }
 
-void Camera::SetAspect(glm::f32 aspect) {
-  aspect_ = aspect;
+void Camera::SetAspect(glm::f32 x, glm::f32 y) {
+  aspect_ = x / y;
   UpdateProjMatrix();
 }
 

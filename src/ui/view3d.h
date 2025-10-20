@@ -5,6 +5,7 @@
 
 #include "../canvas/camera.h"
 #include "../canvas/geometry.h"
+#include "../canvas/light.h"
 #include "../render/gl_frame_buffer.h"
 #include "../render/shader.h"
 #include "input.h"
@@ -52,6 +53,7 @@ public:
 private:
   window::Window *parent_;
   std::unique_ptr<canvas::Camera> camera_;
+  std::unique_ptr<canvas::Light> light_;
   std::unique_ptr<render::GLFrameBuffer> frame_buffer_;
   std::unique_ptr<render::Shader> shader_;
   std::vector<std::unique_ptr<canvas::Geometry>> geometries_;

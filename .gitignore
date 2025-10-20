@@ -12,3 +12,4 @@ CMake*.json
 
 # Misc 
 .DS_Store
+.luarc.json

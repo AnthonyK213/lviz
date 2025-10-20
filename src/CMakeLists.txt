@@ -99,6 +99,13 @@ else()
     )
 endif()
 
+add_custom_command(
+  TARGET lviz POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+      "$<TARGET_PROPERTY:lviz,SOURCE_DIR>/../runtime"
+      "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/runtime"
+  )
+
 if(MSVC)
   add_custom_command(
     TARGET lviz POST_BUILD

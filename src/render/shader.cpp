@@ -3,6 +3,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <fstream>
+#include <iostream>
 #include <string>
 
 namespace lviz {
@@ -24,7 +25,7 @@ static GLuint getCompiledShader(int shader_type, const char *shader_source) {
     GLchar *str_info_log = new GLchar[length + 1];
     glGetShaderInfoLog(shader_id, length, &length, str_info_log);
 
-    std::fprintf(stderr, "Compile error in shader: %s\n", str_info_log);
+    std::cerr << "Compile error in shader: " << str_info_log << std::endl;
     delete[] str_info_log;
   }
 
@@ -59,7 +60,12 @@ void Shader::Use() const {
   glUseProgram(prog_id_);
 }
 
-void Shader::SetMat4(const glm::mat4 &mat4, const std::string &name) {
+void Shader::SetVec3(const std::string &name, const glm::vec3 &vec3) {
+  GLint myLoc = glGetUniformLocation(prog_id_, name.c_str());
+  glUniform3fv(myLoc, 1, glm::value_ptr(vec3));
+}
+
+void Shader::SetMat4(const std::string &name, const glm::mat4 &mat4) {
   GLint myLoc = glGetUniformLocation(prog_id_, name.c_str());
   glUniformMatrix4fv(myLoc, 1, GL_FALSE, glm::value_ptr(mat4));
 }

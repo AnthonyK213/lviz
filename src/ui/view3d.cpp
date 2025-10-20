@@ -34,16 +34,19 @@ void main() {
 static const char *FRAG_SHADER = R"(
 #version 330 core
 
+uniform vec3 viewPos;
+uniform vec3 lightPos;
+uniform vec3 lightColor;
+
 in vec3 FragPos;
 in vec3 Normal;
 
 out vec4 FragColor;
 
 void main() {
-  vec3 lightPos = vec3(90.0f, -120.0f, 150.0f);
-  vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
   float mateiralAmbient = 0.1f;
-  vec3 materialDiffuse = vec3(1.0f, 0.5f, 0.2f);
+  float materialSpecular = 0.5f;
+  vec3 materialDiffuse = vec3(0.25f, 0.80f, 0.92f);
 
   // Ambient
   vec3 ambient = mateiralAmbient * lightColor;
@@ -55,15 +58,20 @@ void main() {
   vec3 diffuse = diff * lightColor;
 
   // Specular
+  vec3 viewDir = normalize(viewPos - FragPos);
+  vec3 reflectDir = reflect(-lightDir, norm);
+  float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32);
+  vec3 specular = materialSpecular * spec * lightColor;
 
-  vec3 result = (ambient + diffuse) * materialDiffuse;
+  vec3 result = (ambient + diffuse + spec) * materialDiffuse;
   FragColor = vec4(result, 1.0f);
 }
 )";
 
 View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
-    : parent_(parent), camera_(nullptr), frame_buffer_(nullptr),
-      shader_(nullptr), geometries_(), size_(init_size), cursor_(0, 0) {
+    : parent_(parent), camera_(nullptr), light_(nullptr),
+      frame_buffer_(nullptr), shader_(nullptr), geometries_(), size_(init_size),
+      cursor_(0, 0) {
   frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
   frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
 
@@ -85,6 +93,8 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
   glm::f32 cam_dist = 42.0f / sqrt3;
   camera_ = std::make_unique<canvas::Camera>(cam_pos, cam_dist, 45.0f, 1.3f,
                                              0.1f, 1000.0f);
+
+  light_ = std::make_unique<canvas::Light>(glm::vec3(90.0f, -120.0f, 150.0f));
 }
 
 View3d::~View3d() {}
@@ -96,8 +106,9 @@ void View3d::Render() {
   size_ = {region_size.x, region_size.y};
 
   shader_->Use();
-  camera_->SetAspect(size_.x / size_.y);
+  camera_->SetAspect(size_.x, size_.y);
   camera_->UpdateShader(shader_.get());
+  light_->UpdateShader(shader_.get());
 
   frame_buffer_->Bind();
   for (const std::unique_ptr<canvas::Geometry> &geom : geometries_) {

@@ -18,7 +18,9 @@ public:
 
   void Use() const;
 
-  void SetMat4(const glm::mat4 &mat4, const std::string &name);
+  void SetVec3(const std::string &name, const glm::vec3 &vec3);
+
+  void SetMat4(const std::string &name, const glm::mat4 &mat4);
 
 private:
   GLuint prog_id_;
