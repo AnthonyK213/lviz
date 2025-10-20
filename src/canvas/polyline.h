@@ -15,7 +15,7 @@ namespace canvas {
 
 class Polyline : public Geometry {
 public:
-  Polyline(std::vector<glm::vec3> &&vertices);
+  Polyline(const std::vector<glm::vec3> &coords);
 
   ~Polyline();
 
@@ -25,7 +25,7 @@ public:
 
 private:
   std::unique_ptr<render::GLVertexBuffer> vertex_buffer_;
-  std::vector<glm::vec3> vertices_;
+  std::vector<canvas::Vertex> vertices_;
 };
 
 } // namespace canvas

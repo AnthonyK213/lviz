@@ -12,17 +12,11 @@ namespace render {
 
 class Shader {
 public:
-  Shader();
+  Shader(const char *vertex_shader, const char *fragment_shader);
 
-  GLuint GetProgId() const {
-    return prog_id_;
-  }
-
-  bool Load();
+  ~Shader();
 
   void Use() const;
-
-  void Unload();
 
   void SetMat4(const glm::mat4 &mat4, const std::string &name);
 

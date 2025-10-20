@@ -10,14 +10,64 @@
 namespace lviz {
 namespace ui {
 
+static const char *VERT_SHADER = R"(
+#version 330 core
+
+layout(location = 0) in vec3 aCoord;
+layout(location = 1) in vec3 aNormal;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+out vec3 FragPos;
+out vec3 Normal;
+
+void main() {
+  FragPos = vec3(model * vec4(aCoord, 1.0f));
+  Normal = mat3(transpose(inverse(model))) * aNormal;
+
+  gl_Position = projection * view * model * vec4(aCoord, 1.0f);
+}
+)";
+
+static const char *FRAG_SHADER = R"(
+#version 330 core
+
+in vec3 FragPos;
+in vec3 Normal;
+
+out vec4 FragColor;
+
+void main() {
+  vec3 lightPos = vec3(90.0f, -120.0f, 150.0f);
+  vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
+  float mateiralAmbient = 0.1f;
+  vec3 materialDiffuse = vec3(1.0f, 0.5f, 0.2f);
+
+  // Ambient
+  vec3 ambient = mateiralAmbient * lightColor;
+
+  // Diffuse
+  vec3 norm = normalize(Normal);
+  vec3 lightDir = normalize(lightPos - FragPos);
+  float diff = max(dot(norm, lightDir), 0.0f);
+  vec3 diffuse = diff * lightColor;
+
+  // Specular
+
+  vec3 result = (ambient + diffuse) * materialDiffuse;
+  FragColor = vec4(result, 1.0f);
+}
+)";
+
 View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
     : parent_(parent), camera_(nullptr), frame_buffer_(nullptr),
       shader_(nullptr), geometries_(), size_(init_size), cursor_(0, 0) {
   frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
   frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
 
-  shader_ = std::make_unique<render::Shader>();
-  shader_->Load();
+  shader_ = std::make_unique<render::Shader>(VERT_SHADER, FRAG_SHADER);
 
   const glm::f32 sqrt2 = 1.f / std::sqrt(2.f);
   const glm::f32 sqrt3 = 1.f / std::sqrt(3.f);
@@ -37,9 +87,7 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
                                              0.1f, 1000.0f);
 }
 
-View3d::~View3d() {
-  shader_->Unload();
-}
+View3d::~View3d() {}
 
 void View3d::Render() {
   ImGui::Begin("View3d");
@@ -83,6 +131,15 @@ bool View3d::DrawLine(const glm::vec3 &point1, const glm::vec3 &point2) {
 bool View3d::DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
                           const glm::vec3 &point3) {
   auto triangle = std::make_unique<canvas::Triangle>(point1, point2, point3);
+  geometries_.push_back(std::move(triangle));
+  return true;
+}
+
+bool View3d::DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
+                          const glm::vec3 &point3, const glm::vec3 &normal1,
+                          const glm::vec3 &normal2, const glm::vec3 &normal3) {
+  auto triangle = std::make_unique<canvas::Triangle>(point1, point2, point3,
+                                                     normal1, normal2, normal3);
   geometries_.push_back(std::move(triangle));
   return true;
 }

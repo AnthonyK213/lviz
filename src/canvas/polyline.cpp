@@ -2,11 +2,19 @@
 
 #include <glad/glad.h>
 
+#include <algorithm>
+#include <iterator>
+
 namespace lviz {
 namespace canvas {
 
-Polyline::Polyline(std::vector<glm::vec3> &&vertices)
-    : vertex_buffer_(nullptr), vertices_(std::move(vertices)) {
+Polyline::Polyline(const std::vector<glm::vec3> &coords)
+    : vertex_buffer_(nullptr), vertices_() {
+  vertices_.reserve(coords.size());
+  std::transform(coords.cbegin(), coords.cend(), std::back_inserter(vertices_),
+                 [](const glm::vec3 &coord) {
+                   return Vertex{coord, glm::vec3(0.0f, 0.0f, 1.0f)};
+                 });
   vertex_buffer_ = std::make_unique<render::GLVertexBuffer>();
   vertex_buffer_->CreateBuffers(vertices_.size(), vertices_.data());
 }

@@ -39,6 +39,10 @@ public:
   bool DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
                     const glm::vec3 &point3);
 
+  bool DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
+                    const glm::vec3 &point3, const glm::vec3 &normal1,
+                    const glm::vec3 &normal2, const glm::vec3 &normal3);
+
   void Resize(int width, int height);
 
   void OnMouseMove(double x, double y, ui::MouseButton button);

@@ -15,6 +15,10 @@ public:
   Triangle(const glm::vec3 &point1, const glm::vec3 &point2,
            const glm::vec3 &point3);
 
+  Triangle(const glm::vec3 &point1, const glm::vec3 &point2,
+           const glm::vec3 &point3, const glm::vec3 &normal1,
+           const glm::vec3 &normal2, const glm::vec3 &normal3);
+
   ~Triangle();
 
   virtual void UpdateShader(render::Shader *shader) override;
@@ -23,7 +27,7 @@ public:
 
 private:
   std::unique_ptr<render::GLVertexBuffer> vertex_buffer_;
-  glm::vec3 vertices_[3];
+  Vertex vertices_[3];
 };
 
 } // namespace canvas

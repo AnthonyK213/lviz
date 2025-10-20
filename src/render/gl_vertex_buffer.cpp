@@ -9,7 +9,8 @@ GLVertexBuffer::~GLVertexBuffer() {
   DeleteBuffers();
 }
 
-void GLVertexBuffer::CreateBuffers(int n_vertices, const glm::vec3 vertices[]) {
+void GLVertexBuffer::CreateBuffers(int n_vertices,
+                                   const canvas::Vertex vertices[]) {
   glGenVertexArrays(1, &vao_);
 
   glGenBuffers(1, &vbo_);
@@ -17,11 +18,16 @@ void GLVertexBuffer::CreateBuffers(int n_vertices, const glm::vec3 vertices[]) {
   Bind();
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-  glBufferData(GL_ARRAY_BUFFER, n_vertices * sizeof(glm::vec3), vertices,
+  glBufferData(GL_ARRAY_BUFFER, n_vertices * sizeof(canvas::Vertex), vertices,
                GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(canvas::Vertex),
+                        (void *)0);
   glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(canvas::Vertex),
+                        (void *)offsetof(canvas::Vertex, normal));
+  glEnableVertexAttribArray(1);
 
   Unbind();
 }

@@ -8,32 +8,6 @@
 namespace lviz {
 namespace render {
 
-static const char *VERT_SHADER = R"(
-#version 330 core
-
-layout(location = 0) in vec3 aPosition;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
-out vec3 WorldPos;
-
-void main() {
-  gl_Position = projection * view * model * vec4(aPosition, 1.0f);
-}
-)";
-
-static const char *FRAG_SHADER = R"(
-#version 330 core
-
-out vec4 FragColor;
-
-void main() {
-  FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-}
-)";
-
 static GLuint getCompiledShader(int shader_type, const char *shader_source) {
   GLuint shader_id = glCreateShader(shader_type);
 
@@ -57,13 +31,12 @@ static GLuint getCompiledShader(int shader_type, const char *shader_source) {
   return shader_id;
 }
 
-Shader::Shader() : prog_id_(0) {}
-
-bool Shader::Load() {
+Shader::Shader(const char *vertex_shader, const char *fragment_shader)
+    : prog_id_(0) {
   prog_id_ = glCreateProgram();
 
-  GLuint vs = getCompiledShader(GL_VERTEX_SHADER, VERT_SHADER);
-  GLuint fs = getCompiledShader(GL_FRAGMENT_SHADER, FRAG_SHADER);
+  GLuint vs = getCompiledShader(GL_VERTEX_SHADER, vertex_shader);
+  GLuint fs = getCompiledShader(GL_FRAGMENT_SHADER, fragment_shader);
 
   glAttachShader(prog_id_, vs);
   glAttachShader(prog_id_, fs);
@@ -73,20 +46,21 @@ bool Shader::Load() {
 
   glDeleteShader(vs);
   glDeleteShader(fs);
+}
 
-  return true;
+Shader::~Shader() {
+  if (prog_id_) {
+    glDeleteProgram(prog_id_);
+    prog_id_ = 0;
+  }
 }
 
 void Shader::Use() const {
   glUseProgram(prog_id_);
 }
 
-void Shader::Unload() {
-  glDeleteProgram(prog_id_);
-}
-
 void Shader::SetMat4(const glm::mat4 &mat4, const std::string &name) {
-  GLint myLoc = glGetUniformLocation(GetProgId(), name.c_str());
+  GLint myLoc = glGetUniformLocation(prog_id_, name.c_str());
   glUniformMatrix4fv(myLoc, 1, GL_FALSE, glm::value_ptr(mat4));
 }
 

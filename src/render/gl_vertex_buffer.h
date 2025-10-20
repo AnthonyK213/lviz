@@ -5,6 +5,8 @@
 
 #include <glm/glm.hpp>
 
+#include "../canvas/vertex.h"
+
 namespace lviz {
 namespace render {
 
@@ -14,7 +16,7 @@ public:
 
   ~GLVertexBuffer();
 
-  void CreateBuffers(int n_vertices, const glm::vec3 vertices[]);
+  void CreateBuffers(int n_vertices, const canvas::Vertex vertices[]);
 
   void DeleteBuffers();
 
