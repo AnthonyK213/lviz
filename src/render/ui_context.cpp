@@ -40,6 +40,9 @@ bool UIContext::Init(window::Window *win) {
     io.IniFilename = nullptr;
   }
 
+  io.ConfigDpiScaleFonts = true;
+  io.ConfigDpiScaleViewports = true;
+
   ImGuiStyle &style = ImGui::GetStyle();
 #ifdef LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
