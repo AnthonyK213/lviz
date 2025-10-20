@@ -8,18 +8,23 @@
 #include "extension_manager.h"
 #include "state.h"
 
+#include <filesystem>
+#include <optional>
+
 namespace lviz {
 namespace appl {
 
 class Application {
 public:
-  Application(const std::string &app_name);
+  Application();
 
   State *GetState() const {
     return state_.get();
   }
 
   void Run();
+
+  static std::optional<std::filesystem::path> GetAppLocalDataLocation();
 
 private:
   std::unique_ptr<window::GLWindow> window_;

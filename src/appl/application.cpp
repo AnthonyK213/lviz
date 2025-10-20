@@ -18,41 +18,9 @@
 namespace lviz {
 namespace appl {
 
-static std::optional<std::filesystem::path> getAppLocalDataLocation() {
-#if defined(_WIN32)
-  PWSTR path = nullptr;
-  HRESULT result =
-      SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &path);
-  if (SUCCEEDED(result)) {
-    int buffer_size =
-        WideCharToMultiByte(CP_ACP, 0, path, -1, nullptr, 0, nullptr, nullptr);
-    std::string local_app_data_path;
-    local_app_data_path.resize(buffer_size - 1);
-    WideCharToMultiByte(CP_ACP, 0, path, -1, &local_app_data_path[0],
-                        buffer_size, nullptr, nullptr);
-    CoTaskMemFree(path);
-    return std::filesystem::path(local_app_data_path) / "lviz";
-  } else {
-    return {};
-  }
-#elif defined(__linux__)
-  return {};
-#elif defined(__APPLE__)
-  uid_t uid = getuid();
-  struct passwd *pw = getpwuid(uid);
-  if (pw) {
-    return std::filesystem::path(pw->pw_dir) / ".local" / "share" / "lviz";
-  } else {
-    return {};
-  }
-#else
-  return {};
-#endif
-}
-
-Application::Application(const std::string &app_name)
+Application::Application()
     : window_(nullptr), manager_(nullptr), state_(nullptr) {
-  std::optional<std::filesystem::path> app_local = getAppLocalDataLocation();
+  std::optional<std::filesystem::path> app_local = GetAppLocalDataLocation();
   if (app_local) {
     if (!std::filesystem::is_directory(app_local.value())) {
       if (!std::filesystem::create_directories(app_local.value())) {
@@ -62,7 +30,7 @@ Application::Application(const std::string &app_name)
   }
 
   window_ = std::make_unique<window::GLWindow>(this);
-  window_->Init(1024, 720, app_name);
+  window_->Init(1024, 720, "lviz");
 
   state_ = std::make_unique<State>();
   state_->Init();
@@ -92,6 +60,38 @@ void Application::Run() {
     window_->Render();
     window_->HandleInput();
   }
+}
+
+std::optional<std::filesystem::path> Application::GetAppLocalDataLocation() {
+#if defined(_WIN32)
+  PWSTR path = nullptr;
+  HRESULT result =
+      SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &path);
+  if (SUCCEEDED(result)) {
+    int buffer_size =
+        WideCharToMultiByte(CP_ACP, 0, path, -1, nullptr, 0, nullptr, nullptr);
+    std::string local_app_data_path;
+    local_app_data_path.resize(buffer_size - 1);
+    WideCharToMultiByte(CP_ACP, 0, path, -1, &local_app_data_path[0],
+                        buffer_size, nullptr, nullptr);
+    CoTaskMemFree(path);
+    return std::filesystem::path(local_app_data_path) / "lviz";
+  } else {
+    return {};
+  }
+#elif defined(__linux__)
+  return {};
+#elif defined(__APPLE__)
+  uid_t uid = getuid();
+  struct passwd *pw = getpwuid(uid);
+  if (pw) {
+    return std::filesystem::path(pw->pw_dir) / ".local" / "share" / "lviz";
+  } else {
+    return {};
+  }
+#else
+  return {};
+#endif
 }
 
 } // namespace appl

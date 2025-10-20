@@ -11,7 +11,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 int main(int argc, char const *argv[])
 #endif
 {
-  lviz::appl::Application app{"lviz"};
+  lviz::appl::Application app{};
   app.Run();
   return 0;
 }

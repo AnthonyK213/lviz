@@ -1,5 +1,6 @@
 #include "ui_context.h"
 
+#include "../appl/application.h"
 #include "../window/window.h"
 
 #include <glad/glad.h>
@@ -28,6 +29,16 @@ bool UIContext::Init(window::Window *win) {
 #ifdef LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT
   io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 #endif
+
+  auto app_local = appl::Application::GetAppLocalDataLocation();
+  if (app_local && std::filesystem::is_directory(app_local.value())) {
+    std::string ini_path = (app_local.value() / "imgui.ini").string();
+    char *c_ini_path = new char[ini_path.length() + 1];
+    std::strcpy(c_ini_path, ini_path.c_str());
+    io.IniFilename = c_ini_path; /* Let it leak... */
+  } else {
+    io.IniFilename = nullptr;
+  }
 
   ImGuiStyle &style = ImGui::GetStyle();
 #ifdef LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT
