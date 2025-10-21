@@ -34,8 +34,8 @@ void GLVertexBuffer::CreateBuffers(int n_vertices,
 
 void GLVertexBuffer::DeleteBuffers() {
   glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glDeleteBuffers(1, &vbo_);
   glDeleteVertexArrays(1, &vao_);
 }

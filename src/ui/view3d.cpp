@@ -44,7 +44,7 @@ in vec3 Normal;
 out vec4 FragColor;
 
 void main() {
-  float mateiralAmbient = 0.1f;
+  float mateiralAmbient = 0.2f;
   float materialSpecular = 0.5f;
   vec3 materialDiffuse = vec3(0.25f, 0.80f, 0.92f);
 
@@ -95,6 +95,7 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
                                              0.1f, 1000.0f);
 
   light_ = std::make_unique<canvas::Light>(glm::vec3(90.0f, -120.0f, 150.0f));
+  light_->AttachToCamera(camera_.get(), glm::vec3(-0.35f, 0.35f, 0.0f));
 }
 
 View3d::~View3d() {}

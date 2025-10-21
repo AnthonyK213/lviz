@@ -15,12 +15,20 @@ public:
 
   virtual void UpdateShader(render::Shader *shader) override;
 
+  const glm::mat4 &GetPosition() const {
+    return pos_;
+  }
+
   const glm::mat4 &GetViewMatrix() const {
     return view_mat_;
   }
 
   const glm::mat4 &GetProjMatrix() const {
     return proj_mat_;
+  }
+
+  float GetDistance() const {
+    return dist_;
   }
 
   void UpdateViewMatrix();
