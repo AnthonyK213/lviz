@@ -5,6 +5,7 @@
 
 #include "../canvas/camera.h"
 #include "../canvas/geometry.h"
+#include "../canvas/grid.h"
 #include "../canvas/light.h"
 #include "../render/gl_frame_buffer.h"
 #include "../render/shader.h"
@@ -56,6 +57,7 @@ private:
   std::unique_ptr<canvas::Light> light_;
   std::unique_ptr<render::GLFrameBuffer> frame_buffer_;
   std::unique_ptr<render::Shader> shader_;
+  std::unique_ptr<canvas::Grid> grid_;
   std::vector<std::unique_ptr<canvas::Geometry>> geometries_;
   glm::vec2 size_;
   glm::vec2 cursor_;

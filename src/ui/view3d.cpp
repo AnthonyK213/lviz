@@ -10,7 +10,7 @@
 namespace lviz {
 namespace ui {
 
-static const char *VERT_SHADER = R"(
+static const char *VIEW3D_VS = R"(
 #version 330 core
 
 layout(location = 0) in vec3 aCoord;
@@ -31,7 +31,7 @@ void main() {
 }
 )";
 
-static const char *FRAG_SHADER = R"(
+static const char *VIEW3D_FS = R"(
 #version 330 core
 
 uniform vec3 viewPos;
@@ -70,12 +70,12 @@ void main() {
 
 View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
     : parent_(parent), camera_(nullptr), light_(nullptr),
-      frame_buffer_(nullptr), shader_(nullptr), geometries_(), size_(init_size),
-      cursor_(0, 0) {
+      frame_buffer_(nullptr), shader_(nullptr), grid_(nullptr), geometries_(),
+      size_(init_size), cursor_(0, 0) {
   frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
   frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
 
-  shader_ = std::make_unique<render::Shader>(VERT_SHADER, FRAG_SHADER);
+  shader_ = std::make_unique<render::Shader>(VIEW3D_VS, VIEW3D_FS);
 
   const glm::f32 sqrt2 = 1.f / std::sqrt(2.f);
   const glm::f32 sqrt3 = 1.f / std::sqrt(3.f);
@@ -96,6 +96,8 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
 
   light_ = std::make_unique<canvas::Light>(glm::vec3(90.0f, -120.0f, 150.0f));
   light_->AttachToCamera(camera_.get(), glm::vec3(-0.35f, 0.35f, 0.0f));
+
+  grid_ = std::make_unique<canvas::Grid>();
 }
 
 View3d::~View3d() {}
@@ -116,6 +118,7 @@ void View3d::Render() {
     geom->UpdateShader(shader_.get());
     geom->Draw();
   }
+  grid_->Draw(camera_.get());
   frame_buffer_->Unbind();
 
   uint64_t tex_id = frame_buffer_->GetTexture();

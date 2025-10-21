@@ -27,8 +27,16 @@ public:
     return proj_mat_;
   }
 
-  float GetDistance() const {
+  glm::f32 GetDistance() const {
     return dist_;
+  }
+
+  glm::f32 GetNear() const {
+    return near_;
+  }
+
+  glm::f32 GetFar() const {
+    return far_;
   }
 
   void UpdateViewMatrix();

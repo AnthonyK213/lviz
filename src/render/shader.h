@@ -18,6 +18,8 @@ public:
 
   void Use() const;
 
+  void Numbers(const std::string &name, glm::u32 n_num, const glm::f32 *num);
+
   void SetVec3(const std::string &name, const glm::vec3 &vec3);
 
   void SetMat4(const std::string &name, const glm::mat4 &mat4);
