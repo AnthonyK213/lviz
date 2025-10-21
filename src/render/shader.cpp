@@ -60,10 +60,10 @@ void Shader::Use() const {
   glUseProgram(prog_id_);
 }
 
-void Shader::Numbers(const std::string &name, glm::u32 n_num,
-                     const glm::f32 *num) {
+void Shader::SetNums(const std::string &name, glm::u32 n_nums,
+                     const glm::f32 *nums) {
   GLint myLoc = glGetUniformLocation(prog_id_, name.c_str());
-  glUniform1fv(myLoc, n_num, num);
+  glUniform1fv(myLoc, n_nums, nums);
 }
 
 void Shader::SetVec3(const std::string &name, const glm::vec3 &vec3) {

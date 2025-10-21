@@ -45,7 +45,7 @@ void main() {
 static const char *GRID_FS = R"(
 #version 330 core
 
-uniform float[2] aNearFar;
+uniform float[2] camNearFar;
 uniform mat4 view;
 uniform mat4 projection;
 
@@ -54,54 +54,51 @@ in vec3 Far;
 
 out vec4 FragColor;
 
-vec4 gen_grid(vec3 point, float scale, bool is_axis) {
-  vec2 coord = point.xy * scale;
+vec4 grid_color(vec3 point) {
+  vec2 coord = point.xy;
   vec2 dd = fwidth(coord);
-  vec2 uv = fract(coord - 0.5) - 0.5;
-  vec2 grid = abs(uv) / dd;
-  float line = min(grid.x, grid.y);
-  float min_x = min(dd.x, 1.0);
-  float min_y = min(dd.y, 1.0);
-  vec4 col = vec4(0.3);
-  col.a = 1.0 - min(line, 1.0);
+  float minX = min(dd.x, 1.0);
+  float minY = min(dd.y, 1.0);
 
-  if (-1.0 * min_x < point.x && point.x < 0.1 * min_x && is_axis)
-    col.rgb = vec3(0.427, 0.909, 0.486);
-  if (-1.0 * min_y < point.y && point.y < 0.1 * min_y && is_axis)
-    col.rgb = vec3(0.984, 0.380, 0.490);
-
-  return col;
+  if (-minY < point.y && point.y < minY) {
+    return vec4(0.985, 0.382, 0.486, 1.0); // x-axis
+  } else if (-minX < point.x && point.x < minX) {
+    return vec4(0.382, 0.985, 0.486, 1.0); // y-axis
+  } else {
+    vec2 uv = fract(coord - 0.5) - 0.5;
+    vec2 grid = abs(uv) / dd;
+    float line = min(grid.x, grid.y);
+    return vec4(vec3(0.2), 1.0 - min(line, 1.0));
+  }
 }
 
 float compute_depth(vec3 point) {
-  vec4 clip_space = projection * view * vec4(point, 1.0);
-  float clip_space_depth = clip_space.z / clip_space.w;
+  vec4 clipSpace = projection * view * vec4(point, 1.0);
+  float clipSpaceDepth = clipSpace.z / clipSpace.w;
   float far = gl_DepthRange.far;
   float near = gl_DepthRange.near;
-  float depth = (((far - near) * clip_space_depth) + near + far) / 2.0;
+  float depth = (((far - near) * clipSpaceDepth) + near + far) / 2.0;
   return depth;
 }
 
 float compute_fade(vec3 point) {
-  vec4 clip_space = projection * view * vec4(point, 1.0);
-  float clip_space_depth = (clip_space.z / clip_space.w) * 2.0 - 1.0;
-  float near = aNearFar[0];
-  float far = aNearFar[1];
-  float linear_depth = (2.0 * near * far) / (far + near - clip_space_depth * (far - near));
-  return linear_depth / far;
+  vec4 clipSpace = projection * view * vec4(point, 1.0);
+  float clipSpaceDepth = (clipSpace.z / clipSpace.w) * 2.0 - 1.0;
+  float near = camNearFar[0];
+  float far = camNearFar[1];
+  float linearDepth = (2.0 * near * far) / (far + near - clipSpaceDepth * (far - near));
+  return linearDepth / far;
 }
 
 void main() {
   float t = -Near.z / (Far.z - Near.z);
-  vec3 R =  Near + t * (Far - Near);
-  float is_on = float(t > 0);
+  vec3 point =  Near + t * (Far - Near);
 
-  float fade = smoothstep(0.3, 0.0, compute_fade(R));
-  FragColor = gen_grid(R, 1, true);
-  FragColor *= fade;
-  FragColor *= is_on;
+  FragColor = grid_color(point);
+  FragColor *= smoothstep(0.3, 0.0, compute_fade(point));
+  FragColor *= float(t > 0);
 
-  gl_FragDepth = compute_depth(R);
+  gl_FragDepth = compute_depth(point);
 }
 )";
 
@@ -139,13 +136,12 @@ Grid::~Grid() {
 }
 
 void Grid::Draw(Camera *camera) {
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_BLEND);
-
   shader_->Use();
-  camera->UpdateShader(shader_.get());
+
   glm::f32 near_far[2] = {camera->GetNear(), camera->GetFar()};
-  shader_->Numbers("aNearFar", 2, near_far);
+  shader_->SetNums("camNearFar", 2, near_far);
+  shader_->SetMat4("view", camera->GetViewMatrix());
+  shader_->SetMat4("projection", camera->GetProjMatrix());
 
   glBindVertexArray(vao_);
   glDrawElements(GL_TRIANGLES, sizeof(GRID_INDICES) / sizeof(glm::u32),

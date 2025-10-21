@@ -18,7 +18,7 @@ public:
 
   void Use() const;
 
-  void Numbers(const std::string &name, glm::u32 n_num, const glm::f32 *num);
+  void SetNums(const std::string &name, glm::u32 n_nums, const glm::f32 *nums);
 
   void SetVec3(const std::string &name, const glm::vec3 &vec3);
 
