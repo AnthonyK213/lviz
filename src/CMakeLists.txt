@@ -29,6 +29,10 @@ set(
   main.cpp
   )
 
+if (${LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT})
+  add_definitions(-DLVIZ_ENABLE_IMGUI_MULTI_VIEWPORT)
+endif()
+
 if (APPLE)
   add_executable(
     lviz
