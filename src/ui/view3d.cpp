@@ -68,6 +68,15 @@ void main() {
 }
 )";
 
+inline static glm::mat4 createCameraPos(const glm::vec3 &cam_orig) {
+  glm::vec3 cam_x = glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), cam_orig);
+  glm::vec3 cam_y = glm::cross(cam_orig, cam_x);
+  return glm::mat4{glm::vec4(glm::normalize(cam_x), 0.0f),
+                   glm::vec4(glm::normalize(cam_y), 0.0f),
+                   glm::vec4(glm::normalize(cam_orig), 0.0f),
+                   glm::vec4(cam_orig, 1.0f)};
+}
+
 View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
     : parent_(parent), camera_(nullptr), light_(nullptr),
       frame_buffer_(nullptr), shader_(nullptr), grid_(nullptr), geometries_(),
@@ -77,20 +86,9 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
 
   shader_ = std::make_unique<render::Shader>(VIEW3D_VS, VIEW3D_FS);
 
-  const glm::f32 sqrt2 = 1.f / std::sqrt(2.f);
-  const glm::f32 sqrt3 = 1.f / std::sqrt(3.f);
-  const glm::f32 sqrt6 = 1.f / std::sqrt(6.f);
-
-  /* clang-format off */
-  glm::f32 cam_pos_data[16] = {
-    -sqrt2, sqrt2, 0.0f, 0.0f,
-    -sqrt6, -sqrt6, 2.0f * sqrt6, 0.0f,
-    sqrt3, sqrt3, sqrt3, 0.0f,
-    42.0f, 42.0f, 42.0f, 1.0f,
-  };
-  /* clang-format on */
-  glm::mat4 cam_pos = glm::make_mat4(cam_pos_data);
-  glm::f32 cam_dist = 42.0f / sqrt3;
+  glm::vec3 cam_orig{40.0f, -20.0f, 20.0f};
+  glm::mat4 cam_pos = createCameraPos(cam_orig);
+  glm::f32 cam_dist = glm::length(cam_orig);
   camera_ = std::make_unique<canvas::Camera>(cam_pos, cam_dist, 45.0f, 1.3f,
                                              0.1f, 1000.0f);
 
