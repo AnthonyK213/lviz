@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.20)
 
 project(
   lviz
@@ -28,7 +28,7 @@ else(MSVC)
   option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 endif(MSVC)
 
-find_package(OpenGL)
+find_package(OpenGL REQUIRED)
 message("OpenGL: ${OPENGL_gl_LIBRARY}")
 
 set(GLAD_DIR ${CMAKE_SOURCE_DIR}/deps/glad CACHE STRING "Path of GLAD source dir")

@@ -1,8 +1,7 @@
 #if defined(_WIN32)
 #include <ShlObj.h>
 #include <Windows.h>
-#elif defined(__linux__)
-#elif defined(__APPLE__)
+#elif defined(__linux__) || defined(__APPLE__)
 #include <pwd.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -79,13 +78,13 @@ std::optional<std::filesystem::path> Application::GetAppLocalDataLocation() {
   } else {
     return {};
   }
-#elif defined(__linux__)
-  return {};
-#elif defined(__APPLE__)
-  uid_t uid = getuid();
-  struct passwd *pw = getpwuid(uid);
-  if (pw) {
-    return std::filesystem::path(pw->pw_dir) / ".local" / "share" / "lviz";
+#elif defined(__linux__) || defined(__APPLE__)
+  const char *home_dir = std::getenv("HOME");
+  if (!home_dir) {
+    home_dir = getpwuid(getuid())->pw_dir;
+  }
+  if (home_dir) {
+    return std::filesystem::path(home_dir) / ".local" / "share" / "lviz";
   } else {
     return {};
   }

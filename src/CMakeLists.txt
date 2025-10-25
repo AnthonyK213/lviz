@@ -1,7 +1,6 @@
 set(
   IMGUI_SRC
   ${IMGUI_DIR}/imgui.cpp
-  ${IMGUI_DIR}/imgui_demo.cpp
   ${IMGUI_DIR}/imgui_draw.cpp
   ${IMGUI_DIR}/imgui_tables.cpp
   ${IMGUI_DIR}/imgui_widgets.cpp
@@ -77,6 +76,16 @@ target_link_libraries(
   OpenGL::GL
   glfw
   )
+
+if(UNIX AND NOT APPLE)
+  find_package(X11 REQUIRED)
+  message("X11: ${X11_LIBRARIES}")
+  target_link_libraries(
+    lviz
+    PRIVATE
+    ${X11_LIBRARIES}
+    )
+endif()
 
 if(APPLE)
   target_link_libraries(

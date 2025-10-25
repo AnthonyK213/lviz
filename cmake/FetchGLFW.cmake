@@ -7,6 +7,12 @@ FetchContent_Declare(
   SOURCE_DIR ${CMAKE_BINARY_DIR}/deps/glfw
   )
 
+# Currently only support X11 windows.
+if(UNIX AND NOT APPLE)
+  set(GLFW_BUILD_X11 TRUE CACHE BOOL "")
+  set(GLFW_BUILD_WAYLAND FALSE CACHE BOOL "")
+endif()
+
 FetchContent_GetProperties(glfw)
 if(NOT glfw_source_POPULATED)
   FetchContent_Populate(glfw)
