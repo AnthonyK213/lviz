@@ -28,12 +28,11 @@ else(MSVC)
   option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 endif(MSVC)
 
-find_package(OpenGL REQUIRED)
-message("OpenGL: ${OPENGL_gl_LIBRARY}")
+set(OpenGL_GL_PREFERENCE "GLVND")
 
-set(GLAD_DIR ${CMAKE_SOURCE_DIR}/deps/glad CACHE STRING "Path of GLAD source dir")
-set(PLUGINS_DIR ${CMAKE_SOURCE_DIR}/deps/plugins CACHE STRING "Path of plugins")
-set(IMGUI_DIR ${CMAKE_BINARY_DIR}/deps/imgui CACHE STRING "Path of ImGui source dir")
+# find_package(OpenGL REQUIRED)
+# message("OpenGL: ${OPENGL_gl_LIBRARY}")
+
 set(LUAJIT_DIR ${CMAKE_BINARY_DIR}/deps/LuaJIT_Source CACHE STRING "Path of LuaJIT 2.1 source dir")
 
 include(cmake/FetchGLFW.cmake)
@@ -42,4 +41,30 @@ include(cmake/FetchImGui.cmake)
 include(cmake/FetchLuaJIT.cmake)
 include(cmake/FetchLuaBridge3.cmake)
 
+# GLAD
+set(GLAD_DIR ${CMAKE_SOURCE_DIR}/deps/glad)
+add_library(glad STATIC ${GLAD_DIR}/src/glad.c)
+target_include_directories(glad PUBLIC ${GLAD_DIR}/include/)
+
+# ImGui
+set(IMGUI_DIR ${CMAKE_BINARY_DIR}/deps/imgui)
+add_library(
+  imgui
+  STATIC
+  ${IMGUI_DIR}/imgui.cpp
+  ${IMGUI_DIR}/imgui_draw.cpp
+  ${IMGUI_DIR}/imgui_tables.cpp
+  ${IMGUI_DIR}/imgui_widgets.cpp
+  ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+  ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+  )
+target_include_directories(
+  imgui
+  PUBLIC
+  ${IMGUI_DIR}
+  ${IMGUI_DIR}/backends/
+  ${glfw_SOURCE_DIR}/include/
+  )
+
+# lviz
 add_subdirectory(src)

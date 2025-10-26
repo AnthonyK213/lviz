@@ -1,12 +1,7 @@
-set(
-  IMGUI_SRC
-  ${IMGUI_DIR}/imgui.cpp
-  ${IMGUI_DIR}/imgui_draw.cpp
-  ${IMGUI_DIR}/imgui_tables.cpp
-  ${IMGUI_DIR}/imgui_widgets.cpp
-  ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
-  ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
-  )
+# Macro definitions.
+if (${LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT})
+  add_definitions(-DLVIZ_ENABLE_IMGUI_MULTI_VIEWPORT)
+endif()
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/appl LVIZ_APPL_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/bind LVIZ_BIND_SRC)
@@ -17,8 +12,6 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/window LVIZ_WINDOW_SRC)
 
 set(
   LVIZ_SRC
-  ${GLAD_DIR}/src/glad.c
-  ${IMGUI_SRC}
   ${LVIZ_APPL_SRC}
   ${LVIZ_BIND_SRC}
   ${LVIZ_CANVAS_SRC}
@@ -28,65 +21,37 @@ set(
   main.cpp
   )
 
-if (${LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT})
-  add_definitions(-DLVIZ_ENABLE_IMGUI_MULTI_VIEWPORT)
-endif()
-
 if (APPLE)
-  add_executable(
-    lviz
-    MACOSX_BUNDLE
-    ${LVIZ_SRC}
-    )
-
+  add_executable(lviz MACOSX_BUNDLE ${LVIZ_SRC})
   set_target_properties(
     lviz
     PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/rc/Info.plist
     )
 elseif(WIN32)
-  add_executable(
-    lviz
-    WIN32
-    ${LVIZ_SRC}
-    rc/lviz.rc
-    )
+  add_executable(lviz WIN32 ${LVIZ_SRC} rc/lviz.rc)
 else()
-  add_executable(
-    lviz
-    ${LVIZ_SRC}
-    )
+  add_executable(lviz ${LVIZ_SRC})
 endif()
 
 target_include_directories(
   lviz
   PRIVATE
-  ${GLAD_DIR}/include/
-  ${PLUGINS_DIR}/imgui/
-  ${glfw_SOURCE_DIR}/include/
+  ${CMAKE_SOURCE_DIR}/deps/plugins/imgui/
   ${glm_SOURCE_DIR}
-  ${IMGUI_DIR}
-  ${IMGUI_DIR}/backends/
   ${luajit_BINARY_DIR}
   ${luabridge3_SOURCE_DIR}/Source
   )
 
-target_link_libraries(
-  lviz
-  PRIVATE
-  OpenGL::GL
-  glfw
-  )
+target_link_libraries(lviz PRIVATE glad glfw imgui)
 
+# Link X11 on Linux.
 if(UNIX AND NOT APPLE)
   find_package(X11 REQUIRED)
   message("X11: ${X11_LIBRARIES}")
-  target_link_libraries(
-    lviz
-    PRIVATE
-    ${X11_LIBRARIES}
-    )
+  target_link_libraries(lviz PRIVATE ${X11_LIBRARIES})
 endif()
 
+# Link LuaJIT, should export dynamic symbols on unix-like platform.
 if(APPLE)
   target_link_libraries(
     lviz
