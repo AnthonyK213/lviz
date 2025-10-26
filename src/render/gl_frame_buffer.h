@@ -14,8 +14,6 @@ public:
 
   void CreateBuffers(int width, int height);
 
-  void DeleteBuffers();
-
   void Bind();
 
   void Unbind();
@@ -23,6 +21,9 @@ public:
   GLuint GetTexture() const {
     return tex_id_;
   }
+
+private:
+  void deleteBuffers();
 
 private:
   GLuint fbo_;

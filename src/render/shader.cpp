@@ -9,6 +9,10 @@
 namespace lviz {
 namespace render {
 
+static GLint getUniLoc(GLuint prog_id, const std::string &name) {
+  return glGetUniformLocation(prog_id, name.c_str());
+}
+
 static GLuint getCompiledShader(int shader_type, const char *shader_source) {
   GLuint shader_id = glCreateShader(shader_type);
 
@@ -60,20 +64,22 @@ void Shader::Use() const {
   glUseProgram(prog_id_);
 }
 
+void Shader::SetBool(const std::string &name, bool value) {
+  glUniform1i(getUniLoc(prog_id_, name), (GLint)value);
+}
+
 void Shader::SetNums(const std::string &name, glm::u32 n_nums,
                      const glm::f32 *nums) {
-  GLint myLoc = glGetUniformLocation(prog_id_, name.c_str());
-  glUniform1fv(myLoc, n_nums, nums);
+  glUniform1fv(getUniLoc(prog_id_, name), n_nums, nums);
 }
 
 void Shader::SetVec3(const std::string &name, const glm::vec3 &vec3) {
-  GLint myLoc = glGetUniformLocation(prog_id_, name.c_str());
-  glUniform3fv(myLoc, 1, glm::value_ptr(vec3));
+  glUniform3fv(getUniLoc(prog_id_, name), 1, glm::value_ptr(vec3));
 }
 
 void Shader::SetMat4(const std::string &name, const glm::mat4 &mat4) {
-  GLint myLoc = glGetUniformLocation(prog_id_, name.c_str());
-  glUniformMatrix4fv(myLoc, 1, GL_FALSE, glm::value_ptr(mat4));
+  glUniformMatrix4fv(getUniLoc(prog_id_, name), 1, GL_FALSE,
+                     glm::value_ptr(mat4));
 }
 
 } // namespace render

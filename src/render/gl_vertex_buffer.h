@@ -3,32 +3,17 @@
 
 #include <glad/glad.h>
 
-#include <glm/glm.hpp>
-
-#include "../canvas/vertex.h"
-
 namespace lviz {
 namespace render {
 
 class GLVertexBuffer {
 public:
-  GLVertexBuffer();
+  virtual ~GLVertexBuffer() = default;
 
-  ~GLVertexBuffer();
+  virtual void Draw(GLenum mode) = 0;
 
-  void CreateBuffers(int n_vertices, const canvas::Vertex vertices[]);
-
-  void DeleteBuffers();
-
-  void Bind();
-
-  void Unbind();
-
-  void Draw(GLenum mode, int index_count);
-
-private:
-  GLuint vbo_;
-  GLuint vao_;
+protected:
+  GLVertexBuffer() = default;
 };
 
 } // namespace render

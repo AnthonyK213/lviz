@@ -1,36 +1,35 @@
 #ifndef _LVIZ_RENDER_GL_VERTEX_INDEX_BUFFER_H
 #define _LVIZ_RENDER_GL_VERTEX_INDEX_BUFFER_H
 
-#include <glad/glad.h>
+#include "gl_vertex_buffer.h"
 
 #include <glm/glm.hpp>
 
-#include <vector>
+#include "../canvas/vertex.h"
 
 namespace lviz {
 namespace render {
 
-class GLVertexIndexBuffer {
+class GLVertexIndexBuffer : public GLVertexBuffer {
 public:
-  GLVertexIndexBuffer();
+  GLVertexIndexBuffer(int n_vertices, const canvas::Vertex vertices[],
+                      int n_indices, const glm::u32 indices[]);
 
   ~GLVertexIndexBuffer();
 
-  void CreateBuffers(const std::vector<glm::vec3> &vertices,
-                     const std::vector<glm::u32> &indices);
+  virtual void Draw(GLenum mode) override;
 
-  void DeleteBuffers();
+private:
+  void createBuffers(int n_vertices, const canvas::Vertex vertices[],
+                     int n_indices, const glm::u32 indices[]);
 
-  void Bind();
-
-  void Unbind();
-
-  void Draw(GLenum mode, int index_count);
+  void deleteBuffers();
 
 private:
   GLuint vbo_;
   GLuint vao_;
   GLuint ibo_;
+  int count_;
 };
 
 } // namespace render

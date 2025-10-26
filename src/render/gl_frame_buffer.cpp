@@ -9,14 +9,14 @@ GLFrameBuffer::GLFrameBuffer()
     : fbo_(0), tex_id_(0), depth_id_(0), width_(0), height_(0) {}
 
 GLFrameBuffer::~GLFrameBuffer() {
-  DeleteBuffers();
+  deleteBuffers();
 }
 
 void GLFrameBuffer::CreateBuffers(int width, int height) {
   width_ = width;
   height_ = height;
 
-  DeleteBuffers();
+  deleteBuffers();
 
   glGenFramebuffers(1, &fbo_);
   glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
@@ -47,10 +47,20 @@ void GLFrameBuffer::CreateBuffers(int width, int height) {
               << std::endl;
 #endif
 
-  Unbind();
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GLFrameBuffer::DeleteBuffers() {
+void GLFrameBuffer::Bind() {
+  glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
+  glViewport(0, 0, width_, height_);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void GLFrameBuffer::Unbind() {
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void GLFrameBuffer::deleteBuffers() {
   if (fbo_) {
 #ifndef NDEBUG
     if (glIsFramebuffer(fbo_) == GL_TRUE) {
@@ -82,16 +92,6 @@ void GLFrameBuffer::DeleteBuffers() {
     depth_id_ = 0;
 #endif
   }
-}
-
-void GLFrameBuffer::Bind() {
-  glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
-  glViewport(0, 0, width_, height_);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void GLFrameBuffer::Unbind() {
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 } // namespace render

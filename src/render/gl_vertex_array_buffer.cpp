@@ -1,21 +1,31 @@
-#include "gl_vertex_buffer.h"
+#include "gl_vertex_array_buffer.h"
 
 namespace lviz {
 namespace render {
 
-GLVertexBuffer::GLVertexBuffer() : vbo_(0), vao_(0) {}
-
-GLVertexBuffer::~GLVertexBuffer() {
-  DeleteBuffers();
+GLVertexArrayBuffer::GLVertexArrayBuffer(int n_vertices,
+                                         const canvas::Vertex vertices[])
+    : GLVertexBuffer(), vbo_(0), vao_(0), count_(0) {
+  createBuffers(n_vertices, vertices);
 }
 
-void GLVertexBuffer::CreateBuffers(int n_vertices,
-                                   const canvas::Vertex vertices[]) {
+GLVertexArrayBuffer::~GLVertexArrayBuffer() {
+  deleteBuffers();
+}
+
+void GLVertexArrayBuffer::Draw(GLenum mode) {
+  glBindVertexArray(vao_);
+  glDrawArrays(mode, 0, count_);
+  glBindVertexArray(0);
+}
+
+void GLVertexArrayBuffer::createBuffers(int n_vertices,
+                                        const canvas::Vertex vertices[]) {
   glGenVertexArrays(1, &vao_);
 
   glGenBuffers(1, &vbo_);
 
-  Bind();
+  glBindVertexArray(vao_);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo_);
   glBufferData(GL_ARRAY_BUFFER, n_vertices * sizeof(canvas::Vertex), vertices,
@@ -29,31 +39,17 @@ void GLVertexBuffer::CreateBuffers(int n_vertices,
                         (void *)offsetof(canvas::Vertex, normal));
   glEnableVertexAttribArray(1);
 
-  Unbind();
+  glBindVertexArray(0);
+
+  count_ = n_vertices;
 }
 
-void GLVertexBuffer::DeleteBuffers() {
+void GLVertexArrayBuffer::deleteBuffers() {
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glDeleteBuffers(1, &vbo_);
   glDeleteVertexArrays(1, &vao_);
-}
-
-void GLVertexBuffer::Bind() {
-  glBindVertexArray(vao_);
-}
-
-void GLVertexBuffer::Unbind() {
-  glBindVertexArray(0);
-}
-
-void GLVertexBuffer::Draw(GLenum mode, int index_count) {
-  Bind();
-
-  glDrawArrays(mode, 0, index_count);
-
-  Unbind();
 }
 
 } // namespace render
