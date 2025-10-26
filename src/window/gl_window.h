@@ -58,8 +58,8 @@ public:
 
 private:
   GLFWwindow *window_;
-  std::unique_ptr<render::UIContext> ui_ctx_;
   std::unique_ptr<render::GLContext> gl_ctx_;
+  std::unique_ptr<render::UIContext> ui_ctx_;
   std::unique_ptr<ui::Panel> panel_;
   std::unique_ptr<ui::View3d> view3d_;
   bool running_;

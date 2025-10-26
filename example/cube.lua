@@ -29,5 +29,6 @@ local facets = {
 }
 
 for _, facet in ipairs(facets) do
-  lviz.view3d.DrawTriangle(vertices[facet[1]], vertices[facet[2]], vertices[facet[3]])
+  local triangle = lviz.canvas.Triangle(vertices[facet[1]], vertices[facet[2]], vertices[facet[3]])
+  lviz.view3d.AddGeometry(triangle)
 end

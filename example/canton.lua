@@ -12,17 +12,22 @@ local height = H * 0.5
 for i = 0, N - 1 do
   local a1 = sector * i
   local a2 = sector * (i + offset)
-  lviz.view3d.DrawLine(
+  local column = lviz.canvas.Polyline {
     lviz.glm.vec3(R1 * math.cos(a1), R1 * math.sin(a1), -height),
-    lviz.glm.vec3(R2 * math.cos(a2), R2 * math.sin(a2), height))
+    lviz.glm.vec3(R2 * math.cos(a2), R2 * math.sin(a2), height)
+  }
+  lviz.view3d.AddGeometry(column)
 end
 
-lviz.view3d.DrawLine(
+local tip = lviz.canvas.Polyline {
   lviz.glm.vec3(0, 0, height),
-  lviz.glm.vec3(0, 0, height * 1.5))
+  lviz.glm.vec3(0, 0, height * 1.5)
+}
+lviz.view3d.AddGeometry(tip)
 
 local sqrt3 = math.sqrt(3)
-lviz.view3d.DrawTriangle(
+local base = lviz.canvas.Triangle(
   lviz.glm.vec3(-sqrt3 * R1, -R1, -height),
   lviz.glm.vec3(sqrt3 * R1, -R1, -height),
   lviz.glm.vec3(0, 2 * R1, -height))
+lviz.view3d.AddGeometry(base)

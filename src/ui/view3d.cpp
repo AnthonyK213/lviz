@@ -112,7 +112,7 @@ void View3d::Render() {
   light_->UpdateShader(shader_.get());
 
   frame_buffer_->Bind();
-  for (const std::unique_ptr<canvas::Geometry> &geom : geometries_) {
+  for (const canvas::handle<canvas::Geometry> &geom : geometries_) {
     geom->UpdateShader(shader_.get());
     geom->Draw();
   }
@@ -130,30 +130,8 @@ void View3d::Purge() {
   geometries_.clear();
 }
 
-bool View3d::DrawPoint(const glm::vec3 &point) {
-  return true;
-}
-
-bool View3d::DrawLine(const glm::vec3 &point1, const glm::vec3 &point2) {
-  std::vector<glm::vec3> vertices{point1, point2};
-  auto line = std::make_unique<canvas::Polyline>(std::move(vertices));
-  geometries_.push_back(std::move(line));
-  return true;
-}
-
-bool View3d::DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
-                          const glm::vec3 &point3) {
-  auto triangle = std::make_unique<canvas::Triangle>(point1, point2, point3);
-  geometries_.push_back(std::move(triangle));
-  return true;
-}
-
-bool View3d::DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
-                          const glm::vec3 &point3, const glm::vec3 &normal1,
-                          const glm::vec3 &normal2, const glm::vec3 &normal3) {
-  auto triangle = std::make_unique<canvas::Triangle>(point1, point2, point3,
-                                                     normal1, normal2, normal3);
-  geometries_.push_back(std::move(triangle));
+bool View3d::AddGeometry(const canvas::handle<canvas::Geometry> &geom) {
+  geometries_.push_back(geom);
   return true;
 }
 

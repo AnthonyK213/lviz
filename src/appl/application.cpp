@@ -48,9 +48,15 @@ Application::Application()
   }
 
   bind::BindGLM(state_->GetLuaState());
-  bind::BindView3d(state_->GetLuaState(), window_->GetView3d());
-  bind::BindExtension(state_->GetLuaState());
-  bind::BindExtensionManager(state_->GetLuaState(), manager_.get());
+  bind::BindCanvas(state_->GetLuaState());
+  bind::BindAppl(state_->GetLuaState(), manager_.get());
+  bind::BindUI(state_->GetLuaState(), window_->GetView3d());
+}
+
+Application::~Application() {
+  state_ = nullptr; // Destruct before window_.
+  manager_ = nullptr;
+  window_ = nullptr;
 }
 
 void Application::Run() {

@@ -6,6 +6,7 @@
 #include "../canvas/camera.h"
 #include "../canvas/geometry.h"
 #include "../canvas/grid.h"
+#include "../canvas/handle.h"
 #include "../canvas/light.h"
 #include "../render/gl_frame_buffer.h"
 #include "../render/shader.h"
@@ -34,16 +35,7 @@ public:
 
   void Purge();
 
-  bool DrawPoint(const glm::vec3 &point);
-
-  bool DrawLine(const glm::vec3 &point1, const glm::vec3 &point2);
-
-  bool DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
-                    const glm::vec3 &point3);
-
-  bool DrawTriangle(const glm::vec3 &point1, const glm::vec3 &point2,
-                    const glm::vec3 &point3, const glm::vec3 &normal1,
-                    const glm::vec3 &normal2, const glm::vec3 &normal3);
+  bool AddGeometry(const canvas::handle<canvas::Geometry> &geom);
 
   void Resize(int width, int height);
 
@@ -58,7 +50,7 @@ private:
   std::unique_ptr<render::GLFrameBuffer> frame_buffer_;
   std::unique_ptr<render::Shader> shader_;
   std::unique_ptr<canvas::Grid> grid_;
-  std::vector<std::unique_ptr<canvas::Geometry>> geometries_;
+  std::vector<canvas::handle<canvas::Geometry>> geometries_;
   glm::vec2 size_;
   glm::vec2 cursor_;
 };

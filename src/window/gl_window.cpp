@@ -4,13 +4,15 @@ namespace lviz {
 namespace window {
 
 GLWindow::GLWindow(appl::Application *app)
-    : Window(app), window_(nullptr), ui_ctx_(nullptr), gl_ctx_(nullptr),
+    : Window(app), window_(nullptr), gl_ctx_(nullptr), ui_ctx_(nullptr),
       panel_(nullptr), view3d_(nullptr), running_(false) {
-  ui_ctx_ = std::make_unique<render::UIContext>();
   gl_ctx_ = std::make_unique<render::GLContext>();
+  ui_ctx_ = std::make_unique<render::UIContext>();
 }
 
 GLWindow::~GLWindow() {
+  panel_ = nullptr;
+  view3d_ = nullptr; // Destruct before gl_ctx_.
   ui_ctx_->Close();
   gl_ctx_->Close();
 }

@@ -18,6 +18,8 @@ class Application {
 public:
   Application();
 
+  ~Application();
+
   State *GetState() const {
     return state_.get();
   }

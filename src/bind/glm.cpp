@@ -2,8 +2,6 @@
 
 #include <glm/glm.hpp>
 
-#include <LuaBridge/LuaBridge.h>
-
 void lviz::bind::BindGLM(lua_State *L) {
   luabridge::getGlobalNamespace(L)
       .beginNamespace("lviz")
