@@ -55,7 +55,7 @@ bool GLContext::Init(window::Window *win) {
   glfwSetWindowUserPointer(gl_win, win);
   glfwSetKeyCallback(gl_win, onKeyCallback);
   glfwSetScrollCallback(gl_win, onScrollCallback);
-  glfwSetWindowSizeCallback(gl_win, onWindowSizeCallback);
+  glfwSetFramebufferSizeCallback(gl_win, onWindowSizeCallback);
   glfwSetWindowCloseCallback(gl_win, onWindowCloseCallback);
   glfwMakeContextCurrent(gl_win);
   glfwSwapInterval(1); // Enable vsync

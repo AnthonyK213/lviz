@@ -18,7 +18,7 @@ Polyline::Polyline(const std::vector<glm::vec3> &vertices)
                    return Vertex{coord, glm::vec3(0.0f, 0.0f, 1.0f)};
                  });
   vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(
-      vertices_.size(), vertices_.data());
+      static_cast<int>(vertices_.size()), vertices_.data());
 }
 
 } // namespace canvas

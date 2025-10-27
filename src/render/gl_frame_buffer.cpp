@@ -43,7 +43,7 @@ void GLFrameBuffer::CreateBuffers(int width, int height) {
 
 #ifndef NDEBUG
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-    std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!"
+    std::cerr << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!"
               << std::endl;
 #endif
 
@@ -67,21 +67,21 @@ void GLFrameBuffer::deleteBuffers() {
       glDeleteFramebuffers(1, &fbo_);
       fbo_ = 0;
     } else {
-      std::cout << "WARN:: Frame buffer is invalid!" << std::endl;
+      std::cerr << "WARN:: Frame buffer is invalid!" << std::endl;
     }
 
     if (glIsTexture(tex_id_) == GL_TRUE) {
       glDeleteTextures(1, &tex_id_);
       tex_id_ = 0;
     } else {
-      std::cout << "WARN:: Texture is invalid!" << std::endl;
+      std::cerr << "WARN:: Texture is invalid!" << std::endl;
     }
 
     if (glIsRenderbuffer(depth_id_) == GL_TRUE) {
       glDeleteRenderbuffers(1, &depth_id_);
       depth_id_ = 0;
     } else {
-      std::cout << "WARN:: Render buffer is invalid!" << std::endl;
+      std::cerr << "WARN:: Render buffer is invalid!" << std::endl;
     }
 #else
     glDeleteFramebuffers(1, &fbo_);
