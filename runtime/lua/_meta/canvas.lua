@@ -16,6 +16,10 @@ lviz.canvas.Geometry = {}
 ---@class lviz.canvas.Curve : lviz.canvas.Geometry
 lviz.canvas.Curve = {}
 
+---@class lviz.canvas.Circle : lviz.canvas.Curve
+---@overload fun(center: lviz.glm.vec3, normal: lviz.glm.vec3, radius: number):lviz.canvas.Circle
+lviz.canvas.Circle = {}
+
 ---@class lviz.canvas.Line : lviz.canvas.Curve
 ---@overload fun(point1: lviz.glm.vec3, point2: lviz.glm.vec3):lviz.canvas.Line
 lviz.canvas.Line = {}

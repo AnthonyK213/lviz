@@ -14,9 +14,8 @@ Polyline::Polyline(const std::vector<glm::vec3> &vertices)
     : Curve(), vertices_() {
   vertices_.reserve(vertices.size());
   std::transform(vertices.cbegin(), vertices.cend(),
-                 std::back_inserter(vertices_), [](const glm::vec3 &coord) {
-                   return Vertex{coord, glm::vec3(0.0f, 0.0f, 1.0f)};
-                 });
+                 std::back_inserter(vertices_),
+                 [](const glm::vec3 &coord) { return Vertex{coord}; });
   vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(
       static_cast<int>(vertices_.size()), vertices_.data());
 }

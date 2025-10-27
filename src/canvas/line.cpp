@@ -9,8 +9,8 @@ namespace canvas {
 
 Line::Line(const glm::vec3 &point1, const glm::vec3 &point2)
     : Curve(), vertices_() {
-  vertices_[0] = Vertex{point1, glm::vec3(0.0f, 0.0f, 1.0f)};
-  vertices_[1] = Vertex{point2, glm::vec3(0.0f, 0.0f, 1.0f)};
+  vertices_[0] = {point1};
+  vertices_[1] = {point2};
   vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(2, vertices_);
 }
 
