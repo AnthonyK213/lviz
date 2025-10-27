@@ -16,6 +16,10 @@ lviz.canvas.Geometry = {}
 ---@class lviz.canvas.Curve : lviz.canvas.Geometry
 lviz.canvas.Curve = {}
 
+---@class lviz.canvas.Line : lviz.canvas.Curve
+---@overload fun(point1: lviz.glm.vec3, point2: lviz.glm.vec3):lviz.canvas.Line
+lviz.canvas.Line = {}
+
 ---@class lviz.canvas.Polyline : lviz.canvas.Curve
 ---@overload fun(vertices: lviz.glm.vec3[]):lviz.canvas.Polyline
 lviz.canvas.Polyline = {}

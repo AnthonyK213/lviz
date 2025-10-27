@@ -16,9 +16,13 @@ void GLFrameBuffer::CreateBuffers(int width, int height) {
   width_ = width;
   height_ = height;
 
-  deleteBuffers();
+  if (!fbo_)
+    glGenFramebuffers(1, &fbo_);
 
-  glGenFramebuffers(1, &fbo_);
+  glDeleteTextures(1, &tex_id_);
+  glDeleteRenderbuffers(1, &depth_id_);
+  tex_id_ = depth_id_ = 0;
+
   glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
 
   glGenTextures(1, &tex_id_);
