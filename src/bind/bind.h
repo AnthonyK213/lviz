@@ -41,7 +41,7 @@ class View3d;
 
 namespace bind {
 
-void BindGLM(lua_State *L);
+void BindGP(lua_State *L);
 
 void BindCanvas(lua_State *L);
 

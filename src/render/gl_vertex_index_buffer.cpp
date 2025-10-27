@@ -40,7 +40,8 @@ void GLVertexIndexBuffer::createBuffers(int n_vertices,
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, n_indices * sizeof(glm::u32), indices,
                GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(canvas::Vertex),
+                        (void *)0);
   glEnableVertexAttribArray(0);
 
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(canvas::Vertex),

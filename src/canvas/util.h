@@ -1,5 +1,5 @@
-#ifndef _LVIZ_CANVAS_MATH_H
-#define _LVIZ_CANVAS_MATH_H
+#ifndef _LVIZ_CANVAS_UTIL_H
+#define _LVIZ_CANVAS_UTIL_H
 
 #include <cmath>
 #include <glm/glm.hpp>

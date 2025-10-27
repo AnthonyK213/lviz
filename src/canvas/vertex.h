@@ -1,20 +1,20 @@
 #ifndef _LVIZ_CANVAS_VERTEX_H
 #define _LVIZ_CANVAS_VERTEX_H
 
-#include <glm/glm.hpp>
+#include "../gp/glm.h"
 
 namespace lviz {
 namespace canvas {
 
 struct Vertex {
-  glm::vec3 coord;
-  glm::vec3 normal;
+  gp::Pnt coord;
+  gp::Vec normal;
 
   Vertex() : coord(), normal() {}
 
-  Vertex(const glm::vec3 &coord) : coord(coord), normal() {}
+  Vertex(const gp::Pnt &coord) : coord(coord), normal() {}
 
-  Vertex(const glm::vec3 &coord, const glm::vec3 &normal)
+  Vertex(const gp::Pnt &coord, const gp::Vec &normal)
       : coord(coord), normal(normal) {}
 };
 

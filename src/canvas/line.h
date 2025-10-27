@@ -4,14 +4,14 @@
 #include "curve.h"
 #include "vertex.h"
 
-#include <glm/glm.hpp>
+#include "../gp/glm.h"
 
 namespace lviz {
 namespace canvas {
 
 class Line : public Curve {
 public:
-  Line(const glm::vec3 &point1, const glm::vec3 &point2);
+  Line(const gp::Pnt &point1, const gp::Pnt &point2);
 
 private:
   canvas::Vertex vertices_[2];

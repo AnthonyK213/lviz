@@ -47,7 +47,7 @@ Application::Application()
     }
   }
 
-  bind::BindGLM(state_->GetLuaState());
+  bind::BindGP(state_->GetLuaState());
   bind::BindCanvas(state_->GetLuaState());
   bind::BindAppl(state_->GetLuaState(), manager_.get());
   bind::BindUI(state_->GetLuaState(), window_->GetView3d());

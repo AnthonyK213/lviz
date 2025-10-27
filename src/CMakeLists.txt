@@ -6,6 +6,7 @@ endif()
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/appl LVIZ_APPL_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/bind LVIZ_BIND_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/canvas LVIZ_CANVAS_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/gp LVIZ_GP_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/render LVIZ_RENDER_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/ui LVIZ_UI_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/window LVIZ_WINDOW_SRC)
@@ -15,6 +16,7 @@ set(
   ${LVIZ_APPL_SRC}
   ${LVIZ_BIND_SRC}
   ${LVIZ_CANVAS_SRC}
+  ${LVIZ_GP_SRC}
   ${LVIZ_RENDER_SRC}
   ${LVIZ_UI_SRC}
   ${LVIZ_WINDOW_SRC}

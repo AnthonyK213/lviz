@@ -7,7 +7,7 @@
 namespace lviz {
 namespace canvas {
 
-Line::Line(const glm::vec3 &point1, const glm::vec3 &point2)
+Line::Line(const gp::Pnt &point1, const gp::Pnt &point2)
     : Curve(), vertices_() {
   vertices_[0] = {point1};
   vertices_[1] = {point2};

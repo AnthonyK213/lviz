@@ -18,25 +18,24 @@ void lviz::bind::BindCanvas(lua_State *L) {
       .endClass()
       .deriveClass<canvas::Circle, canvas::Curve>("Circle")
       .addConstructorFrom<canvas::handle<canvas::Circle>,
-                          void(const glm::vec3 &, const glm::vec3 &,
-                               glm::f32)>()
+                          void(const gp::Ax2 &position, glm::f32 radius)>()
       .endClass()
       .deriveClass<canvas::Line, canvas::Curve>("Line")
       .addConstructorFrom<canvas::handle<canvas::Line>,
-                          void(const glm::vec3 &, const glm::vec3 &)>()
+                          void(const gp::Pnt &, const gp::Pnt &)>()
       .endClass()
       .deriveClass<canvas::Polyline, canvas::Curve>("Polyline")
       .addConstructorFrom<canvas::handle<canvas::Polyline>,
-                          void(const std::vector<glm::vec3> &)>()
+                          void(const std::vector<gp::Pnt> &)>()
       .endClass()
       .deriveClass<canvas::Surface, canvas::Geometry>("Surface")
       .endClass()
       .deriveClass<canvas::Triangle, canvas::Surface>("Triangle")
       .addConstructorFrom<
           canvas::handle<canvas::Triangle>,
-          void(const glm::vec3 &, const glm::vec3 &, const glm::vec3 &),
-          void(const glm::vec3 &, const glm::vec3 &, const glm::vec3 &,
-               const glm::vec3 &, const glm::vec3 &, const glm::vec3 &)>()
+          void(const gp::Pnt &, const gp::Pnt &, const gp::Pnt &),
+          void(const gp::Pnt &, const gp::Pnt &, const gp::Pnt &,
+               const gp::Vec &, const gp::Vec &, const gp::Vec &)>()
       .endClass()
       .endNamespace()
       .endNamespace();

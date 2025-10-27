@@ -4,7 +4,7 @@
 #include "curve.h"
 #include "vertex.h"
 
-#include <glm/glm.hpp>
+#include "../gp/glm.h"
 
 #include <vector>
 
@@ -13,7 +13,7 @@ namespace canvas {
 
 class Polyline : public Curve {
 public:
-  Polyline(const std::vector<glm::vec3> &vertices);
+  Polyline(const std::vector<gp::Pnt> &vertices);
 
 private:
   std::vector<canvas::Vertex> vertices_;

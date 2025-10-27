@@ -4,8 +4,6 @@
 #include "surface.h"
 #include "vertex.h"
 
-#include <glm/glm.hpp>
-
 #include <memory>
 
 namespace lviz {
@@ -13,12 +11,11 @@ namespace canvas {
 
 class Triangle : public Surface {
 public:
-  Triangle(const glm::vec3 &point1, const glm::vec3 &point2,
-           const glm::vec3 &point3);
+  Triangle(const gp::Pnt &point1, const gp::Pnt &point2, const gp::Pnt &point3);
 
-  Triangle(const glm::vec3 &point1, const glm::vec3 &point2,
-           const glm::vec3 &point3, const glm::vec3 &normal1,
-           const glm::vec3 &normal2, const glm::vec3 &normal3);
+  Triangle(const gp::Pnt &point1, const gp::Pnt &point2, const gp::Pnt &point3,
+           const gp::Vec &normal1, const gp::Vec &normal2,
+           const gp::Vec &normal3);
 
 private:
   Vertex vertices_[3];

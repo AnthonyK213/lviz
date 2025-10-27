@@ -10,12 +10,12 @@
 namespace lviz {
 namespace canvas {
 
-Polyline::Polyline(const std::vector<glm::vec3> &vertices)
+Polyline::Polyline(const std::vector<gp::Pnt> &vertices)
     : Curve(), vertices_() {
   vertices_.reserve(vertices.size());
   std::transform(vertices.cbegin(), vertices.cend(),
                  std::back_inserter(vertices_),
-                 [](const glm::vec3 &coord) { return Vertex{coord}; });
+                 [](const gp::Pnt &coord) { return Vertex{coord}; });
   vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(
       static_cast<int>(vertices_.size()), vertices_.data());
 }

@@ -4,18 +4,17 @@
 #include "curve.h"
 #include "vertex.h"
 
-#include <glm/glm.hpp>
+#include "../gp/ax2.h"
 
 namespace lviz {
 namespace canvas {
 
 class Circle : public Curve {
 public:
-  Circle(const glm::vec3 &center, const glm::vec3 &normal, glm::f32 radius);
+  Circle(const gp::Ax2 &position, glm::f32 radius);
 
 private:
-  glm::vec3 center_;
-  glm::vec3 normal_;
+  gp::Ax2 pos_;
   glm::f32 radius_;
 };
 

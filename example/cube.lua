@@ -3,14 +3,14 @@ lviz.view3d.Purge()
 local H = 10
 
 local vertices = {
-  lviz.glm.vec3(-H, -H, -H),
-  lviz.glm.vec3(H, -H, -H),
-  lviz.glm.vec3(H, H, -H),
-  lviz.glm.vec3(-H, H, -H),
-  lviz.glm.vec3(-H, -H, H),
-  lviz.glm.vec3(H, -H, H),
-  lviz.glm.vec3(H, H, H),
-  lviz.glm.vec3(-H, H, H),
+  lviz.gp.Pnt(-H, -H, -H),
+  lviz.gp.Pnt(H, -H, -H),
+  lviz.gp.Pnt(H, H, -H),
+  lviz.gp.Pnt(-H, H, -H),
+  lviz.gp.Pnt(-H, -H, H),
+  lviz.gp.Pnt(H, -H, H),
+  lviz.gp.Pnt(H, H, H),
+  lviz.gp.Pnt(-H, H, H),
 }
 
 local facets = {
