@@ -20,6 +20,10 @@ lviz.canvas.Curve = {}
 ---@overload fun(position: lviz.gp.Ax2, radius: number):lviz.canvas.Circle
 lviz.canvas.Circle = {}
 
+---@class lviz.canvas.Ellipse : lviz.canvas.Curve
+---@overload fun(position: lviz.gp.Ax2, major_radius: number, minor_radius: number):lviz.canvas.Ellipse
+lviz.canvas.Ellipse = {}
+
 ---@class lviz.canvas.Line : lviz.canvas.Curve
 ---@overload fun(point1: lviz.gp.Pnt, point2: lviz.gp.Pnt):lviz.canvas.Line
 lviz.canvas.Line = {}

@@ -8,6 +8,12 @@ namespace gp {
 
 class Ax1 {
 public:
+  /**
+   * @brief World Z.
+   *
+   */
+  Ax1();
+
   Ax1(const Pnt &location, const Vec &direction);
 
   const Pnt &Location() const {

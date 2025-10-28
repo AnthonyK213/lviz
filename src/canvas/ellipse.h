@@ -1,5 +1,5 @@
-#ifndef _LVIZ_CANVAS_CIRCLE_H
-#define _LVIZ_CANVAS_CIRCLE_H
+#ifndef _LVIZ_CANVAS_ELLIPSE_H
+#define _LVIZ_CANVAS_ELLIPSE_H
 
 #include "curve.h"
 
@@ -8,9 +8,10 @@
 namespace lviz {
 namespace canvas {
 
-class Circle : public Curve {
+class Ellipse : public Curve {
 public:
-  Circle(const gp::Ax2 &position, glm::f32 radius);
+  Ellipse(const gp::Ax2 &position, glm::f32 major_radius,
+          glm::f32 minor_radius);
 
   virtual glm::f32 T0() const override;
 
@@ -26,7 +27,8 @@ public:
 
 private:
   gp::Ax2 pos_;
-  glm::f32 radius_;
+  glm::f32 major_;
+  glm::f32 minor_;
 };
 
 } // namespace canvas

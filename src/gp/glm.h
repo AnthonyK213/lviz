@@ -9,6 +9,10 @@ namespace gp {
 using Pnt = glm::vec3;
 using Vec = glm::vec3;
 
+const glm::vec3 &UnsetXYZ();
+
+bool IsUnsetXYZ(const glm::vec3 &xyz);
+
 } // namespace gp
 } // namespace lviz
 

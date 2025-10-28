@@ -1,6 +1,7 @@
 #include "bind.h"
 
 #include "../canvas/circle.h"
+#include "../canvas/ellipse.h"
 #include "../canvas/line.h"
 #include "../canvas/polyline.h"
 #include "../canvas/triangle.h"
@@ -18,7 +19,11 @@ void lviz::bind::BindCanvas(lua_State *L) {
       .endClass()
       .deriveClass<canvas::Circle, canvas::Curve>("Circle")
       .addConstructorFrom<canvas::handle<canvas::Circle>,
-                          void(const gp::Ax2 &position, glm::f32 radius)>()
+                          void(const gp::Ax2 &, glm::f32)>()
+      .endClass()
+      .deriveClass<canvas::Ellipse, canvas::Curve>("Ellipse")
+      .addConstructorFrom<canvas::handle<canvas::Ellipse>,
+                          void(const gp::Ax2 &, glm::f32, glm::f32)>()
       .endClass()
       .deriveClass<canvas::Line, canvas::Curve>("Line")
       .addConstructorFrom<canvas::handle<canvas::Line>,

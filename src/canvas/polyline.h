@@ -15,6 +15,18 @@ class Polyline : public Curve {
 public:
   Polyline(const std::vector<gp::Pnt> &vertices);
 
+  virtual glm::f32 T0() const override;
+
+  virtual glm::f32 T1() const override;
+
+  virtual gp::Pnt Value(glm::f32 t) const override;
+
+  virtual bool IsClosed() const override;
+
+  virtual bool IsPeriodic() const override;
+
+  virtual glm::f32 Period() const override;
+
 private:
   std::vector<canvas::Vertex> vertices_;
 };

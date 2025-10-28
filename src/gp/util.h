@@ -1,14 +1,28 @@
-#ifndef _LVIZ_CANVAS_UTIL_H
-#define _LVIZ_CANVAS_UTIL_H
+#ifndef _LVIZ_GP_UTIL_H
+#define _LVIZ_GP_UTIL_H
 
-#include <cmath>
 #include <glm/glm.hpp>
 
+#include <cmath>
+#include <limits>
+
 namespace lviz {
-namespace canvas {
+namespace gp {
 
 class Math {
 public:
+  static constexpr glm::f32 UnsetFloat() {
+    return std::numeric_limits<glm::f32>::quiet_NaN();
+  }
+
+  static bool IsUnsetFloat(glm::f32 value) {
+    return std::isnan(value);
+  }
+
+  static constexpr glm::f32 Infinite() {
+    return 1.0e20f;
+  }
+
   static constexpr glm::f32 Pi() {
     return 3.14159265358979323846f;
   }
@@ -30,15 +44,15 @@ public:
   }
 
   static constexpr glm::f32 LinearDeflection() {
-    return 1e-2f;
+    return 1.0e-2f;
   }
 
   static constexpr glm::f32 AngularDeflection() {
-    return Pi() / 30.0; // 6 degree
+    return ToRad(6.0f);
   }
 };
 
-} // namespace canvas
+} // namespace gp
 } // namespace lviz
 
 #endif

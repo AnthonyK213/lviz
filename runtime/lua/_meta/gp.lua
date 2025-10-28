@@ -14,6 +14,7 @@ lviz.gp.Pnt = {}
 lviz.gp.Vec = {}
 
 ---@class lviz.gp.Ax1
+---@overload fun():lviz.gp.Ax1
 ---@overload fun(location: lviz.gp.Pnt, direction: lviz.gp.Vec):lviz.gp.Ax1
 lviz.gp.Ax1 = {}
 
@@ -26,7 +27,9 @@ function lviz.gp.Ax1:Location() end
 function lviz.gp.Ax1:Direction() end
 
 ---@class lviz.gp.Ax2
+---@overload fun():lviz.gp.Ax2
 ---@overload fun(location: lviz.gp.Pnt, direction: lviz.gp.Vec):lviz.gp.Ax2
+---@overload fun(location: lviz.gp.Pnt, x_direction: lviz.gp.Vec, y_direction: lviz.gp.Vec):lviz.gp.Ax2
 lviz.gp.Ax2 = {}
 
 ---

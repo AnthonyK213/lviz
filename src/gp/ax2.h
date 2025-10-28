@@ -8,7 +8,15 @@ namespace gp {
 
 class Ax2 {
 public:
+  /**
+   * @brief World XOY.
+   *
+   */
+  Ax2();
+
   Ax2(const Pnt &location, const Vec &direction);
+
+  Ax2(const Pnt &location, const Vec &x_direction, const Vec &y_direction);
 
   const Ax1 &Axis() const {
     return axis_;
