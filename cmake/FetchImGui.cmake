@@ -19,7 +19,22 @@ FetchContent_Declare(
   BUILD_COMMAND ""
   )
 
+FetchContent_Declare(
+  imgui-filebrowser
+  GIT_REPOSITORY https://github.com/AirGuanZ/imgui-filebrowser.git
+  GIT_TAG origin/master
+  GIT_SHALLOW 1
+  SOURCE_DIR ${CMAKE_BINARY_DIR}/deps/imgui-filebrowser
+  CONFIGURE_COMMAND ""
+  BUILD_COMMAND ""
+  )
+
 FetchContent_GetProperties(imgui)
 if(NOT imgui_source_POPULATED)
   FetchContent_Populate(imgui)
+endif()
+
+FetchContent_GetProperties(imgui-filebrowser)
+if(NOT imgui-filebrowser_source_POPULATED)
+  FetchContent_Populate(imgui-filebrowser)
 endif()

@@ -38,7 +38,7 @@ endif()
 target_include_directories(
   lviz
   PRIVATE
-  ${CMAKE_SOURCE_DIR}/deps/plugins/imgui/
+  ${CMAKE_BINARY_DIR}/deps/imgui-filebrowser/
   ${glm_SOURCE_DIR}
   ${luajit_BINARY_DIR}
   ${luabridge3_SOURCE_DIR}/Source

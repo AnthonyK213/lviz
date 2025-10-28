@@ -13,7 +13,7 @@ namespace ui {
 Panel::Panel(window::Window *parent)
     : parent_(parent), file_dialog_(), current_file_() {
   file_dialog_.SetTitle("Open script");
-  file_dialog_.SetFileFilters({".lua"});
+  file_dialog_.SetTypeFilters({".lua"});
 }
 
 Panel::~Panel() {}

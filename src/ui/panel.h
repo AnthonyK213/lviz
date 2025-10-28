@@ -5,7 +5,7 @@
 
 #include <imgui.h>
 
-#include <ImFileBrowser.h>
+#include <imfilebrowser.h>
 
 namespace lviz {
 namespace window {
