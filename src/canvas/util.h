@@ -10,15 +10,15 @@ namespace canvas {
 class Math {
 public:
   static constexpr glm::f32 Pi() {
-    return 3.1415926535897932;
+    return 3.14159265358979323846f;
   }
 
   static constexpr glm::f32 LinearDeflection() {
-    return 0.01;
+    return 1e-2f;
   }
 
   static constexpr glm::f32 AngularDeflection() {
-    return Pi() / 36.0; // 5 degree
+    return Pi() / 30.0; // 6 degree
   }
 };
 

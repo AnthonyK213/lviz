@@ -16,7 +16,7 @@ static std::vector<Vertex> circleVertices(const gp::Ax2 &position,
   glm::f32 theta = Math::AngularDeflection() * 0.5f;
   if (cos_theta > 0.0)
     theta = (std::min)(theta, std::acos(cos_theta));
-  int n_vertices = static_cast<int>(std::ceilf(Math::Pi() / theta));
+  int n_vertices = static_cast<int>(std::ceil(Math::Pi() / theta));
 
   std::vector<Vertex> vertices{};
   vertices.reserve(n_vertices + 1);
