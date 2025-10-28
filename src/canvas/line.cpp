@@ -22,6 +22,8 @@ glm::f32 Line::T1() const {
 }
 
 gp::Pnt Line::Value(glm::f32 t) const {
+  if (!Contains(t))
+    return gp::UnsetXYZ();
   return vertices_[0].coord * (1.0f - t) + vertices_[1].coord * t;
 }
 
@@ -35,6 +37,12 @@ bool Line::IsPeriodic() const {
 
 glm::f32 Line::Period() const {
   return gp::Math::UnsetFloat();
+}
+
+std::vector<Vertex> Line::GetVertices(glm::f32 t0, glm::f32 t1) const {
+  if (t0 >= t1 || !Contains(t0) || !Contains(t1))
+    return {};
+  return {Vertex{Value(t0)}, Vertex{Value(t1)}};
 }
 
 } // namespace canvas

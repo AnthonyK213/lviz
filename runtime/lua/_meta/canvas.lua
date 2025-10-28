@@ -32,6 +32,10 @@ lviz.canvas.Line = {}
 ---@overload fun(vertices: lviz.gp.Pnt[]):lviz.canvas.Polyline
 lviz.canvas.Polyline = {}
 
+---@class lviz.canvas.TrimmedCurve : lviz.canvas.Curve
+---@overload fun(curve: lviz.canvas.Curve, t0: number, t1: number):lviz.canvas.TrimmedCurve
+lviz.canvas.TrimmedCurve = {}
+
 ---@class lviz.canvas.Surface : lviz.canvas.Geometry
 lviz.canvas.Surface = {}
 

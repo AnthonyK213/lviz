@@ -5,6 +5,7 @@
 #include "../canvas/line.h"
 #include "../canvas/polyline.h"
 #include "../canvas/triangle.h"
+#include "../canvas/trimmed_curve.h"
 
 void lviz::bind::BindCanvas(lua_State *L) {
   luabridge::getGlobalNamespace(L)
@@ -32,6 +33,11 @@ void lviz::bind::BindCanvas(lua_State *L) {
       .deriveClass<canvas::Polyline, canvas::Curve>("Polyline")
       .addConstructorFrom<canvas::handle<canvas::Polyline>,
                           void(const std::vector<gp::Pnt> &)>()
+      .endClass()
+      .deriveClass<canvas::TrimmedCurve, canvas::Curve>("TrimmedCurve")
+      .addConstructorFrom<canvas::handle<canvas::TrimmedCurve>,
+                          void(const canvas::handle<canvas::Curve> &, glm::f32,
+                               glm::f32)>()
       .endClass()
       .deriveClass<canvas::Surface, canvas::Geometry>("Surface")
       .endClass()

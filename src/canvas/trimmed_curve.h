@@ -24,6 +24,9 @@ public:
 
   virtual glm::f32 Period() const override;
 
+  virtual std::vector<Vertex> GetVertices(glm::f32 t0,
+                                          glm::f32 t1) const override;
+
 private:
   canvas::handle<canvas::Curve> crv_;
   glm::f32 t0_;

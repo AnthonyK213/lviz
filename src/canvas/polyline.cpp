@@ -28,7 +28,7 @@ glm::f32 Polyline::T1() const {
 }
 
 gp::Pnt Polyline::Value(glm::f32 t) const {
-  if (t < T0() || t > T1())
+  if (!Contains(t))
     return gp::UnsetXYZ();
 
   glm::f32 t_i = std::floor(t);
@@ -51,6 +51,28 @@ bool Polyline::IsPeriodic() const {
 
 glm::f32 Polyline::Period() const {
   return gp::Math::UnsetFloat();
+}
+
+std::vector<Vertex> Polyline::GetVertices(glm::f32 t0, glm::f32 t1) const {
+  if (t0 >= t1 || !Contains(t0) || !Contains(t1))
+    return {};
+
+  std::vector<Vertex> vertices{};
+
+  int i = static_cast<int>(std::ceil(t0));
+  if (std::abs((glm::f32)i - t0) > 1e-6f)
+    vertices.emplace_back(Value(t0));
+
+  int j = static_cast<int>(std::floor(t1));
+
+  for (; i <= j; ++i) {
+    vertices.push_back(vertices_[i]);
+  }
+
+  if (std::abs(t1 - (glm::f32)j) > 1e-6f)
+    vertices.emplace_back(Value(t1));
+
+  return vertices;
 }
 
 } // namespace canvas

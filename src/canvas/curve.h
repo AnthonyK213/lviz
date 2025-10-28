@@ -2,11 +2,13 @@
 #define _LVIZ_CANVAS_CURVE_H
 
 #include "geometry.h"
+#include "vertex.h"
 
 #include "../gp/glm.h"
 #include "../render/gl_vertex_buffer.h"
 
 #include <memory>
+#include <vector>
 
 namespace lviz {
 namespace canvas {
@@ -24,6 +26,10 @@ public:
   virtual glm::f32 Period() const = 0;
 
   virtual gp::Pnt Value(glm::f32 t) const = 0;
+
+  virtual std::vector<Vertex> GetVertices(glm::f32 t0, glm::f32 t1) const = 0;
+
+  virtual bool Contains(glm::f32 t) const;
 
   virtual void UpdateShader(render::Shader *shader) override;
 
