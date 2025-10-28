@@ -31,6 +31,10 @@ public:
 
   ~View3d();
 
+  canvas::Camera *GetCamera() const {
+    return camera_.get();
+  }
+
   void Render();
 
   void Purge();

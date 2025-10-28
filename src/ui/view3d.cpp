@@ -1,7 +1,6 @@
 #include "view3d.h"
 
-#include "../canvas/polyline.h"
-#include "../canvas/triangle.h"
+#include "../canvas/util.h"
 
 #include <imgui.h>
 
@@ -89,8 +88,8 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
   glm::vec3 cam_orig{40.0f, -20.0f, 20.0f};
   glm::mat4 cam_pos = createCameraPos(cam_orig);
   glm::f32 cam_dist = glm::length(cam_orig);
-  camera_ = std::make_unique<canvas::Camera>(cam_pos, cam_dist, 45.0f, 1.3f,
-                                             0.1f, 1000.0f);
+  camera_ = std::make_unique<canvas::Camera>(
+      cam_pos, cam_dist, canvas::Math::ToRad(45.0f), 1.3f, 0.1f, 1000.0f);
 
   light_ = std::make_unique<canvas::Light>(glm::vec3(90.0f, -120.0f, 150.0f));
   light_->AttachToCamera(camera_.get(), glm::vec3(-0.35f, 0.35f, 0.0f));

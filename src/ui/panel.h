@@ -28,6 +28,7 @@ private:
   window::Window *parent_;
   ImGui::FileBrowser file_dialog_;
   std::string current_file_;
+  int current_proj_idx_;
 };
 
 } // namespace ui

@@ -21,7 +21,7 @@ static std::vector<Vertex> circleVertices(const gp::Ax2 &position,
   std::vector<Vertex> vertices{};
   vertices.reserve(n_vertices + 1);
   glm::f32 angle = 0.0f;
-  glm::f32 step = 2.0 * Math::Pi() / n_vertices;
+  glm::f32 step = Math::Tau() / n_vertices;
   for (int i = 0; i <= n_vertices; ++i) {
     gp::Pnt p = position.Evaluate(std::cos(angle) * radius,
                                   std::sin(angle) * radius, 0.0f);

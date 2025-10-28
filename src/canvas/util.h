@@ -13,6 +13,22 @@ public:
     return 3.14159265358979323846f;
   }
 
+  static constexpr glm::f32 Tau() {
+    return 2.0f * Pi();
+  }
+
+  static constexpr glm::f32 HalfPi() {
+    return 0.5f * Pi();
+  }
+
+  static constexpr glm::f32 ToRad(glm::f32 deg) {
+    return deg * Pi() / 180.0f;
+  }
+
+  static constexpr glm::f32 ToDeg(glm::f32 rad) {
+    return rad * 180.0f / Pi();
+  }
+
   static constexpr glm::f32 LinearDeflection() {
     return 1e-2f;
   }

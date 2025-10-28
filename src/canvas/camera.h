@@ -10,7 +10,13 @@ namespace canvas {
 
 class Camera : public Object {
 public:
-  Camera(const glm::mat4 &pos, glm::f32 dist, glm::f32 fov, glm::f32 aspect,
+  enum class ProjectionType {
+    Orthographic,
+    Perspective,
+  };
+
+public:
+  Camera(const glm::mat4 &pos, glm::f32 dist, glm::f32 fovy, glm::f32 aspect,
          glm::f32 near, glm::f32 far);
 
   virtual void UpdateShader(render::Shader *shader) override;
@@ -47,6 +53,14 @@ public:
 
   void SetAspect(glm::f32 x, glm::f32 y);
 
+  ProjectionType GetProjType() const {
+    return proj_type_;
+  }
+
+  void SetProjType(ProjectionType proj_type) {
+    proj_type_ = proj_type;
+  }
+
   void Pan(glm::f32 dx, glm::f32 dy);
 
   void Orbit(glm::f32 rz, glm::f32 pitch);
@@ -61,10 +75,12 @@ private:
   glm::vec3 cen_; /* Cached view center */
   glm::f32 dist_;
 
-  glm::f32 fov_;
+  glm::f32 fovy_; /* In radians */
   glm::f32 aspect_;
   glm::f32 near_;
   glm::f32 far_;
+
+  ProjectionType proj_type_;
 };
 
 } // namespace canvas

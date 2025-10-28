@@ -5,10 +5,10 @@
 namespace lviz {
 namespace canvas {
 
-Camera::Camera(const glm::mat4 &pos, glm::f32 dist, glm::f32 fov,
+Camera::Camera(const glm::mat4 &pos, glm::f32 dist, glm::f32 fovy,
                glm::f32 aspect, glm::f32 near, glm::f32 far)
-    : pos_(pos), dist_(dist), fov_(fov), aspect_(aspect), near_(near),
-      far_(far) {
+    : pos_(pos), dist_(dist), fovy_(fovy), aspect_(aspect), near_(near),
+      far_(far), proj_type_(ProjectionType::Orthographic) {
   UpdateViewMatrix();
   UpdateProjMatrix();
   UpdateViewCenter();
@@ -27,7 +27,18 @@ void Camera::UpdateViewMatrix() {
 }
 
 void Camera::UpdateProjMatrix() {
-  proj_mat_ = glm::perspective(fov_, aspect_, near_, far_);
+  switch (proj_type_) {
+  case ProjectionType::Orthographic: {
+    glm::f32 y = dist_ * std::tan(fovy_ * 0.5f);
+    glm::f32 x = y * aspect_;
+    proj_mat_ = glm::ortho(-x, x, -y, y, near_, far_);
+  } break;
+  case ProjectionType::Perspective: {
+    proj_mat_ = glm::perspective(fovy_, aspect_, near_, far_);
+  } break;
+  default:
+    break;
+  }
 }
 
 void Camera::UpdateViewCenter() {
