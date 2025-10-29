@@ -130,6 +130,8 @@ void View3d::Purge() {
 }
 
 bool View3d::AddGeometry(const canvas::handle<canvas::Geometry> &geom) {
+  if (!geom->CreateBuffers())
+    return false;
   geometries_.push_back(geom);
   return true;
 }

@@ -6,22 +6,9 @@
 namespace lviz {
 namespace canvas {
 
-static std::vector<Vertex>
-trimmedCurveVertices(const canvas::handle<canvas::Curve> &curve, glm::f32 t0,
-                     glm::f32 t1, glm::f32 t_begin, glm::f32 t_end) {
-  if (t_begin >= t_end || t_begin < t0 || t_begin > t1 || t_end < t0 ||
-      t_end > t1)
-    return {};
-  return curve->GetVertices(t_begin, t_end);
-}
-
 TrimmedCurve::TrimmedCurve(const canvas::handle<canvas::Curve> &curve,
                            glm::f32 t0, glm::f32 t1)
-    : crv_(curve), t0_(t0), t1_(t1) {
-  std::vector<Vertex> vertices = trimmedCurveVertices(crv_, t0_, t1_, t0_, t1_);
-  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(
-      static_cast<int>(vertices.size()), vertices.data());
-}
+    : crv_(curve), t0_(t0), t1_(t1) {}
 
 glm::f32 TrimmedCurve::T0() const {
   return t0_;
@@ -50,7 +37,18 @@ glm::f32 TrimmedCurve::Period() const {
 }
 
 std::vector<Vertex> TrimmedCurve::GetVertices(glm::f32 t0, glm::f32 t1) const {
-  return trimmedCurveVertices(crv_, t0_, t1_, t0, t1);
+  if (t0 >= t1 || !Contains(t0) || !Contains(t1))
+    return {};
+  return crv_->GetVertices(t0, t1);
+}
+
+bool TrimmedCurve::CreateBuffers() {
+  std::vector<Vertex> vertices = GetVertices(t0_, t1_);
+  if (vertices.empty())
+    return false;
+  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(
+      static_cast<int>(vertices.size()), vertices.data());
+  return true;
 }
 
 } // namespace canvas

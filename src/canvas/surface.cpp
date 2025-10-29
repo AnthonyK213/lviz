@@ -8,7 +8,8 @@ Surface::Surface() : Geometry(), vertex_buffer_(nullptr) {}
 void Surface::UpdateShader(render::Shader *shader) {}
 
 void Surface::Draw() {
-  vertex_buffer_->Draw(GL_TRIANGLES);
+  if (vertex_buffer_)
+    vertex_buffer_->Draw(GL_TRIANGLES);
 }
 
 } // namespace canvas

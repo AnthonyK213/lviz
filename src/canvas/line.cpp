@@ -10,7 +10,6 @@ Line::Line(const gp::Pnt &point1, const gp::Pnt &point2)
     : Curve(), vertices_() {
   vertices_[0] = {point1};
   vertices_[1] = {point2};
-  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(2, vertices_);
 }
 
 glm::f32 Line::T0() const {
@@ -43,6 +42,11 @@ std::vector<Vertex> Line::GetVertices(glm::f32 t0, glm::f32 t1) const {
   if (t0 >= t1 || !Contains(t0) || !Contains(t1))
     return {};
   return {Vertex{Value(t0)}, Vertex{Value(t1)}};
+}
+
+bool Line::CreateBuffers() {
+  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(2, vertices_);
+  return true;
 }
 
 } // namespace canvas

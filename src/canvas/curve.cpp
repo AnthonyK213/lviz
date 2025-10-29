@@ -12,7 +12,8 @@ bool Curve::Contains(glm::f32 t) const {
 void Curve::UpdateShader(render::Shader *shader) {}
 
 void Curve::Draw() {
-  vertex_buffer_->Draw(GL_LINE_STRIP);
+  if (vertex_buffer_)
+    vertex_buffer_->Draw(GL_LINE_STRIP);
 }
 
 } // namespace canvas

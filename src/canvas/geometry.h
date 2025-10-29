@@ -8,6 +8,8 @@ namespace canvas {
 
 class Geometry : public Object {
 public:
+  virtual bool CreateBuffers() = 0;
+
   virtual void Draw() = 0;
 };
 

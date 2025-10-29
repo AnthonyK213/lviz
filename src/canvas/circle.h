@@ -27,6 +27,8 @@ public:
   virtual std::vector<Vertex> GetVertices(glm::f32 t0,
                                           glm::f32 t1) const override;
 
+  virtual bool CreateBuffers() override;
+
 private:
   gp::Ax2 pos_;
   glm::f32 radius_;

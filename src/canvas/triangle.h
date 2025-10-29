@@ -17,6 +17,8 @@ public:
            const gp::Vec &normal1, const gp::Vec &normal2,
            const gp::Vec &normal3);
 
+  virtual bool CreateBuffers() override;
+
 private:
   Vertex vertices_[3];
 };

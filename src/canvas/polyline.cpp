@@ -15,8 +15,6 @@ Polyline::Polyline(const std::vector<gp::Pnt> &vertices)
   std::transform(vertices.cbegin(), vertices.cend(),
                  std::back_inserter(vertices_),
                  [](const gp::Pnt &coord) { return Vertex{coord}; });
-  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(
-      static_cast<int>(vertices_.size()), vertices_.data());
 }
 
 glm::f32 Polyline::T0() const {
@@ -73,6 +71,14 @@ std::vector<Vertex> Polyline::GetVertices(glm::f32 t0, glm::f32 t1) const {
     vertices.emplace_back(Value(t1));
 
   return vertices;
+}
+
+bool Polyline::CreateBuffers() {
+  if (vertices_.empty())
+    return false;
+  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(
+      static_cast<int>(vertices_.size()), vertices_.data());
+  return true;
 }
 
 } // namespace canvas

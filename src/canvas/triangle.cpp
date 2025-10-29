@@ -14,7 +14,6 @@ Triangle::Triangle(const gp::Pnt &point1, const gp::Pnt &point2,
   vertices_[0] = {point1, normal};
   vertices_[1] = {point2, normal};
   vertices_[2] = {point3, normal};
-  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(3, vertices_);
 }
 
 Triangle::Triangle(const gp::Pnt &point1, const gp::Pnt &point2,
@@ -24,7 +23,11 @@ Triangle::Triangle(const gp::Pnt &point1, const gp::Pnt &point2,
   vertices_[0] = {point1, normal1};
   vertices_[1] = {point2, normal2};
   vertices_[2] = {point3, normal3};
+}
+
+bool Triangle::CreateBuffers() {
   vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(3, vertices_);
+  return true;
 }
 
 } // namespace canvas
