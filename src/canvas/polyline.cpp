@@ -60,7 +60,7 @@ std::vector<Vertex> Polyline::GetVertices(glm::f32 t0, glm::f32 t1) const {
   std::vector<Vertex> vertices{};
 
   int i = static_cast<int>(std::ceil(t0));
-  if (std::abs((glm::f32)i - t0) > 1e-6f)
+  if (std::abs((glm::f32)i - t0) > gp::Math::Zero())
     vertices.emplace_back(Value(t0));
 
   int j = static_cast<int>(std::floor(t1));
@@ -69,7 +69,7 @@ std::vector<Vertex> Polyline::GetVertices(glm::f32 t0, glm::f32 t1) const {
     vertices.push_back(vertices_[i]);
   }
 
-  if (std::abs(t1 - (glm::f32)j) > 1e-6f)
+  if (std::abs(t1 - (glm::f32)j) > gp::Math::Zero())
     vertices.emplace_back(Value(t1));
 
   return vertices;

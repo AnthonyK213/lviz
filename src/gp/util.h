@@ -11,6 +11,10 @@ namespace gp {
 
 class Math {
 public:
+  static constexpr glm::f32 Zero() {
+    return 1.0e-8f;
+  }
+
   static constexpr glm::f32 UnsetFloat() {
     return std::numeric_limits<glm::f32>::quiet_NaN();
   }

@@ -38,7 +38,9 @@ public:
     return y_dir_;
   }
 
-  Pnt Evaluate(const glm::f32 x, const glm::f32 y, const glm::f32 z) const;
+  Pnt ToWorld(const gp::Pnt &local_coord) const;
+
+  Pnt ToLocal(const gp::Pnt &world_coord) const;
 
 private:
   Ax1 axis_;
