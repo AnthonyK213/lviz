@@ -9,7 +9,31 @@
 namespace lviz {
 namespace ui {
 
-static const char *VIEW3D_VS = R"(
+static const char *CURV_VS = R"(
+#version 330 core
+
+layout(location = 0) in vec3 aCoord;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main() {
+  gl_Position = projection * view * model * vec4(aCoord, 1.0f);
+}
+)";
+
+static const char *CURV_FS = R"(
+#version 330 core
+
+out vec4 FragColor;
+
+void main() {
+  FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+}
+)";
+
+static const char *SURF_VS = R"(
 #version 330 core
 
 layout(location = 0) in vec3 aCoord;
@@ -30,7 +54,7 @@ void main() {
 }
 )";
 
-static const char *VIEW3D_FS = R"(
+static const char *SURF_FS = R"(
 #version 330 core
 
 uniform vec3 viewPos;
@@ -78,12 +102,13 @@ inline static glm::mat4 createCameraPos(const glm::vec3 &cam_orig) {
 
 View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
     : parent_(parent), camera_(nullptr), light_(nullptr),
-      frame_buffer_(nullptr), shader_(nullptr), grid_(nullptr), geometries_(),
-      size_(init_size), cursor_(0, 0) {
+      frame_buffer_(nullptr), curv_shader_(nullptr), surf_shader_(nullptr),
+      grid_(nullptr), curves_(), surfaces_(), size_(init_size), cursor_(0, 0) {
   frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
   frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
 
-  shader_ = std::make_unique<render::Shader>(VIEW3D_VS, VIEW3D_FS);
+  curv_shader_ = std::make_unique<render::Shader>(CURV_VS, CURV_FS);
+  surf_shader_ = std::make_unique<render::Shader>(SURF_VS, SURF_FS);
 
   glm::vec3 cam_orig{40.0f, -20.0f, 20.0f};
   glm::mat4 cam_pos = createCameraPos(cam_orig);
@@ -105,17 +130,28 @@ void View3d::Render() {
   ImVec2 region_size = ImGui::GetContentRegionAvail();
   size_ = {region_size.x, region_size.y};
 
-  shader_->Use();
   camera_->SetAspect(size_.x, size_.y);
-  camera_->UpdateShader(shader_.get());
-  light_->UpdateShader(shader_.get());
 
   frame_buffer_->Bind();
-  for (const canvas::handle<canvas::Geometry> &geom : geometries_) {
-    geom->UpdateShader(shader_.get());
-    geom->Draw();
+
+  curv_shader_->Use();
+  camera_->UpdateShader(curv_shader_.get());
+  // light_->UpdateShader(curv_shader_.get());
+  for (const canvas::handle<canvas::Geometry> &curv : curves_) {
+    curv->UpdateShader(curv_shader_.get());
+    curv->Draw();
   }
+
+  surf_shader_->Use();
+  camera_->UpdateShader(surf_shader_.get());
+  light_->UpdateShader(surf_shader_.get());
+  for (const canvas::handle<canvas::Geometry> &surf : surfaces_) {
+    surf->UpdateShader(surf_shader_.get());
+    surf->Draw();
+  }
+
   grid_->Draw(camera_.get());
+
   frame_buffer_->Unbind();
 
   uint64_t tex_id = frame_buffer_->GetTexture();
@@ -126,13 +162,25 @@ void View3d::Render() {
 }
 
 void View3d::Purge() {
-  geometries_.clear();
+  curves_.clear();
+  surfaces_.clear();
 }
 
 bool View3d::AddGeometry(const canvas::handle<canvas::Geometry> &geom) {
-  if (!geom->CreateBuffers())
+  if (!geom || !geom->CreateBuffers())
     return false;
-  geometries_.push_back(geom);
+
+  switch (geom->GetType()) {
+  case canvas::Geometry::GeomType::Curve: {
+    curves_.push_back(geom);
+  } break;
+  case canvas::Geometry::GeomType::Surface: {
+    surfaces_.push_back(geom);
+  } break;
+  default:
+    return false;
+  }
+
   return true;
 }
 

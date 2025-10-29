@@ -8,6 +8,15 @@ namespace canvas {
 
 class Geometry : public Object {
 public:
+  enum class GeomType {
+    None,
+    Curve,
+    Surface,
+  };
+
+public:
+  virtual GeomType GetType() const = 0;
+
   virtual bool CreateBuffers() = 0;
 
   virtual void Draw() = 0;

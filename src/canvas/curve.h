@@ -33,6 +33,8 @@ public:
 
   virtual void UpdateShader(render::Shader *shader) override;
 
+  virtual GeomType GetType() const override;
+
   virtual void Draw() override;
 
 protected:

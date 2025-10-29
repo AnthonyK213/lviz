@@ -11,6 +11,10 @@ bool Curve::Contains(glm::f32 t) const {
 
 void Curve::UpdateShader(render::Shader *shader) {}
 
+Geometry::GeomType Curve::GetType() const {
+  return GeomType::Curve;
+}
+
 void Curve::Draw() {
   if (vertex_buffer_)
     vertex_buffer_->Draw(GL_LINE_STRIP);
