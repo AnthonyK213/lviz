@@ -10,6 +10,7 @@ class Geometry : public Object {
 public:
   enum class GeomType {
     None,
+    Point,
     Curve,
     Surface,
   };

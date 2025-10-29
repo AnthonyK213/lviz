@@ -12,10 +12,11 @@ local height = H * 0.5
 for i = 0, N - 1 do
   local a1 = sector * i
   local a2 = sector * (i + offset)
-  local column = lviz.canvas.Polyline {
-    lviz.gp.Pnt(R1 * math.cos(a1), R1 * math.sin(a1), -height),
-    lviz.gp.Pnt(R2 * math.cos(a2), R2 * math.sin(a2), height)
-  }
+  local pnt1 = lviz.gp.Pnt(R1 * math.cos(a1), R1 * math.sin(a1), -height)
+  local pnt2 = lviz.gp.Pnt(R2 * math.cos(a2), R2 * math.sin(a2), height)
+  local node = lviz.canvas.Point(pnt2)
+  local column = lviz.canvas.Line(pnt1, pnt2)
+  lviz.view3d.AddGeometry(node)
   lviz.view3d.AddGeometry(column)
 end
 

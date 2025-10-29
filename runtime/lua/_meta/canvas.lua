@@ -13,6 +13,10 @@ function lviz.canvas.Object:GetRefCount() end
 ---@class lviz.canvas.Geometry : lviz.canvas.Object
 lviz.canvas.Geometry = {}
 
+---@class lviz.canvas.Point : lviz.canvas.Geometry
+---@overload fun(coord: lviz.gp.Pnt):lviz.canvas.Point
+lviz.canvas.Point = {}
+
 ---@class lviz.canvas.Curve : lviz.canvas.Geometry
 lviz.canvas.Curve = {}
 

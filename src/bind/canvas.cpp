@@ -3,6 +3,7 @@
 #include "../canvas/circle.h"
 #include "../canvas/ellipse.h"
 #include "../canvas/line.h"
+#include "../canvas/point.h"
 #include "../canvas/polyline.h"
 #include "../canvas/triangle.h"
 #include "../canvas/trimmed_curve.h"
@@ -15,6 +16,10 @@ void lviz::bind::BindCanvas(lua_State *L) {
       .addFunction("GetRefCount", &canvas::Object::GetRefCount)
       .endClass()
       .deriveClass<canvas::Geometry, canvas::Object>("Geometry")
+      .endClass()
+      .deriveClass<canvas::Point, canvas::Geometry>("Point")
+      .addConstructorFrom<canvas::handle<canvas::Point>,
+                          void(const gp::Pnt &)>()
       .endClass()
       .deriveClass<canvas::Curve, canvas::Geometry>("Curve")
       .endClass()

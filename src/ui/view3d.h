@@ -52,9 +52,11 @@ private:
   std::unique_ptr<canvas::Camera> camera_;
   std::unique_ptr<canvas::Light> light_;
   std::unique_ptr<render::GLFrameBuffer> frame_buffer_;
-  std::unique_ptr<render::Shader> curv_shader_;
-  std::unique_ptr<render::Shader> surf_shader_;
+  std::unique_ptr<render::Shader> pnt_shader_;
+  std::unique_ptr<render::Shader> crv_shader_;
+  std::unique_ptr<render::Shader> srf_shader_;
   std::unique_ptr<canvas::Grid> grid_;
+  std::vector<canvas::handle<canvas::Geometry>> points_;
   std::vector<canvas::handle<canvas::Geometry>> curves_;
   std::vector<canvas::handle<canvas::Geometry>> surfaces_;
   glm::vec2 size_;

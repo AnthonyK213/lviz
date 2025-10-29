@@ -9,7 +9,32 @@
 namespace lviz {
 namespace ui {
 
-static const char *CURV_VS = R"(
+static const char *PNT_VS = R"(
+#version 330 core
+
+layout(location = 0) in vec3 aCoord;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main() {
+  gl_Position = projection * view * model * vec4(aCoord, 1.0f);
+  gl_PointSize = 3.0f;
+}
+)";
+
+static const char *PNT_FS = R"(
+#version 330 core
+
+out vec4 FragColor;
+
+void main() {
+  FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+}
+)";
+
+static const char *CRV_VS = R"(
 #version 330 core
 
 layout(location = 0) in vec3 aCoord;
@@ -23,7 +48,7 @@ void main() {
 }
 )";
 
-static const char *CURV_FS = R"(
+static const char *CRV_FS = R"(
 #version 330 core
 
 out vec4 FragColor;
@@ -33,7 +58,7 @@ void main() {
 }
 )";
 
-static const char *SURF_VS = R"(
+static const char *SRF_VS = R"(
 #version 330 core
 
 layout(location = 0) in vec3 aCoord;
@@ -54,7 +79,7 @@ void main() {
 }
 )";
 
-static const char *SURF_FS = R"(
+static const char *SRF_FS = R"(
 #version 330 core
 
 uniform vec3 viewPos;
@@ -102,13 +127,15 @@ inline static glm::mat4 createCameraPos(const glm::vec3 &cam_orig) {
 
 View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
     : parent_(parent), camera_(nullptr), light_(nullptr),
-      frame_buffer_(nullptr), curv_shader_(nullptr), surf_shader_(nullptr),
-      grid_(nullptr), curves_(), surfaces_(), size_(init_size), cursor_(0, 0) {
+      frame_buffer_(nullptr), pnt_shader_(nullptr), crv_shader_(nullptr),
+      srf_shader_(nullptr), grid_(nullptr), points_(), curves_(), surfaces_(),
+      size_(init_size), cursor_(0, 0) {
   frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
   frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
 
-  curv_shader_ = std::make_unique<render::Shader>(CURV_VS, CURV_FS);
-  surf_shader_ = std::make_unique<render::Shader>(SURF_VS, SURF_FS);
+  pnt_shader_ = std::make_unique<render::Shader>(PNT_VS, PNT_FS);
+  crv_shader_ = std::make_unique<render::Shader>(CRV_VS, CRV_FS);
+  srf_shader_ = std::make_unique<render::Shader>(SRF_VS, SRF_FS);
 
   glm::vec3 cam_orig{40.0f, -20.0f, 20.0f};
   glm::mat4 cam_pos = createCameraPos(cam_orig);
@@ -134,20 +161,34 @@ void View3d::Render() {
 
   frame_buffer_->Bind();
 
-  curv_shader_->Use();
-  camera_->UpdateShader(curv_shader_.get());
-  // light_->UpdateShader(curv_shader_.get());
-  for (const canvas::handle<canvas::Geometry> &curv : curves_) {
-    curv->UpdateShader(curv_shader_.get());
-    curv->Draw();
+  if (!points_.empty()) {
+    pnt_shader_->Use();
+    camera_->UpdateShader(pnt_shader_.get());
+    // light_->UpdateShader(pnt_shader_.get());
+    for (const canvas::handle<canvas::Geometry> &pnt : points_) {
+      pnt->UpdateShader(pnt_shader_.get());
+      pnt->Draw();
+    }
   }
 
-  surf_shader_->Use();
-  camera_->UpdateShader(surf_shader_.get());
-  light_->UpdateShader(surf_shader_.get());
-  for (const canvas::handle<canvas::Geometry> &surf : surfaces_) {
-    surf->UpdateShader(surf_shader_.get());
-    surf->Draw();
+  if (!curves_.empty()) {
+    crv_shader_->Use();
+    camera_->UpdateShader(crv_shader_.get());
+    // light_->UpdateShader(crv_shader_.get());
+    for (const canvas::handle<canvas::Geometry> &crv : curves_) {
+      crv->UpdateShader(crv_shader_.get());
+      crv->Draw();
+    }
+  }
+
+  if (!surfaces_.empty()) {
+    srf_shader_->Use();
+    camera_->UpdateShader(srf_shader_.get());
+    light_->UpdateShader(srf_shader_.get());
+    for (const canvas::handle<canvas::Geometry> &srf : surfaces_) {
+      srf->UpdateShader(srf_shader_.get());
+      srf->Draw();
+    }
   }
 
   grid_->Draw(camera_.get());
@@ -162,6 +203,7 @@ void View3d::Render() {
 }
 
 void View3d::Purge() {
+  points_.clear();
   curves_.clear();
   surfaces_.clear();
 }
@@ -171,6 +213,9 @@ bool View3d::AddGeometry(const canvas::handle<canvas::Geometry> &geom) {
     return false;
 
   switch (geom->GetType()) {
+  case canvas::Geometry::GeomType::Point: {
+    points_.push_back(geom);
+  } break;
   case canvas::Geometry::GeomType::Curve: {
     curves_.push_back(geom);
   } break;
