@@ -10,9 +10,17 @@
 namespace lviz {
 namespace render {
 
+struct ShaderSource {
+  const char *vertex_shader;
+  const char *fragment_shader;
+  const char *geometry_shader;
+
+  ShaderSource();
+};
+
 class Shader {
 public:
-  Shader(const char *vertex_shader, const char *fragment_shader);
+  Shader(const ShaderSource &source);
 
   ~Shader();
 
@@ -21,6 +29,8 @@ public:
   void SetBool(const std::string &name, bool value);
 
   void SetNums(const std::string &name, glm::u32 n_nums, const glm::f32 *nums);
+
+  void SetVec2(const std::string &name, const glm::vec2 &vec2);
 
   void SetVec3(const std::string &name, const glm::vec3 &vec3);
 

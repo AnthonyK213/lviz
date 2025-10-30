@@ -34,6 +34,35 @@ void main() {
 }
 )";
 
+static const char *PNT_GS = R"(
+#version 330 core
+
+uniform vec2 ndcUnit;
+uniform float pntSize;
+
+layout (points) in;
+layout (line_strip, max_vertices = 5) out;
+
+void build_cross(vec4 position) {
+  vec2 crsSize = pntSize * 0.5f * position.w * ndcUnit;
+  gl_Position = position + vec4(-crsSize.x, 0.0f, 0.0f, 0.0f);
+  EmitVertex();
+  gl_Position = position + vec4(crsSize.x, 0.0f, 0.0f, 0.0f);
+  EmitVertex();
+  gl_Position = position;
+  EmitVertex();
+  gl_Position = position + vec4(0.0f, crsSize.y, 0.0f, 0.0f);
+  EmitVertex();
+  gl_Position = position + vec4(0.0f, -crsSize.y, 0.0f, 0.0f);
+  EmitVertex();
+  EndPrimitive();
+}
+
+void main() {
+  build_cross(gl_in[0].gl_Position);
+}
+)";
+
 static const char *CRV_VS = R"(
 #version 330 core
 
@@ -129,13 +158,25 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
     : parent_(parent), camera_(nullptr), light_(nullptr),
       frame_buffer_(nullptr), pnt_shader_(nullptr), crv_shader_(nullptr),
       srf_shader_(nullptr), grid_(nullptr), points_(), curves_(), surfaces_(),
-      size_(init_size), cursor_(0, 0) {
+      size_(init_size), cursor_(0, 0), pnt_size_(10.0f), crv_width_(5.0f) {
   frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
   frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
 
-  pnt_shader_ = std::make_unique<render::Shader>(PNT_VS, PNT_FS);
-  crv_shader_ = std::make_unique<render::Shader>(CRV_VS, CRV_FS);
-  srf_shader_ = std::make_unique<render::Shader>(SRF_VS, SRF_FS);
+  render::ShaderSource pnt_shader_source{};
+  pnt_shader_source.vertex_shader = PNT_VS;
+  pnt_shader_source.fragment_shader = PNT_FS;
+  pnt_shader_source.geometry_shader = PNT_GS;
+  pnt_shader_ = std::make_unique<render::Shader>(pnt_shader_source);
+
+  render::ShaderSource crv_shader_source{};
+  crv_shader_source.vertex_shader = CRV_VS;
+  crv_shader_source.fragment_shader = CRV_FS;
+  crv_shader_ = std::make_unique<render::Shader>(crv_shader_source);
+
+  render::ShaderSource srf_shader_source{};
+  srf_shader_source.vertex_shader = SRF_VS;
+  srf_shader_source.fragment_shader = SRF_FS;
+  srf_shader_ = std::make_unique<render::Shader>(srf_shader_source);
 
   glm::vec3 cam_orig{40.0f, -20.0f, 20.0f};
   glm::mat4 cam_pos = createCameraPos(cam_orig);
@@ -164,6 +205,8 @@ void View3d::Render() {
   if (!points_.empty()) {
     pnt_shader_->Use();
     camera_->UpdateShader(pnt_shader_.get());
+    pnt_shader_->SetVec2("ndcUnit", glm::vec2{2.0f} / size_);
+    pnt_shader_->SetNums("pntSize", 1, &pnt_size_);
     // light_->UpdateShader(pnt_shader_.get());
     for (const canvas::handle<canvas::Geometry> &pnt : points_) {
       pnt->UpdateShader(pnt_shader_.get());
@@ -246,7 +289,7 @@ void View3d::OnMouseMove(double x, double y, ui::MouseButton button) {
     break;
 
   case ui::MouseButton::Middle:
-    camera_->Pan(-dx * 0.1f, dy * 0.1f);
+    camera_->Pan(-dx * 0.001f, dy * 0.001f);
     break;
 
   default:

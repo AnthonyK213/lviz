@@ -15,6 +15,7 @@ lviz.canvas.Geometry = {}
 
 ---@class lviz.canvas.Point : lviz.canvas.Geometry
 ---@overload fun(coord: lviz.gp.Pnt):lviz.canvas.Point
+---@overload fun(x: number, y: number, z: number):lviz.canvas.Point
 lviz.canvas.Point = {}
 
 ---@class lviz.canvas.Curve : lviz.canvas.Geometry

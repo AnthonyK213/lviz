@@ -53,8 +53,8 @@ void Camera::SetAspect(glm::f32 x, glm::f32 y) {
 }
 
 void Camera::Pan(glm::f32 dx, glm::f32 dy) {
-  pos_[3] += pos_[0] * dx;
-  pos_[3] += pos_[1] * dy;
+  pos_[3] += pos_[0] * dx * dist_;
+  pos_[3] += pos_[1] * dy * dist_;
   UpdateViewMatrix();
   UpdateViewCenter();
 }

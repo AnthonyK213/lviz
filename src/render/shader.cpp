@@ -14,6 +14,9 @@ static GLint getUniLoc(GLuint prog_id, const std::string &name) {
 }
 
 static GLuint getCompiledShader(int shader_type, const char *shader_source) {
+  if (!shader_source)
+    return 0;
+
   GLuint shader_id = glCreateShader(shader_type);
 
   glShaderSource(shader_id, 1, &shader_source, nullptr);
@@ -36,21 +39,27 @@ static GLuint getCompiledShader(int shader_type, const char *shader_source) {
   return shader_id;
 }
 
-Shader::Shader(const char *vertex_shader, const char *fragment_shader)
-    : prog_id_(0) {
+ShaderSource::ShaderSource()
+    : vertex_shader(nullptr), fragment_shader(nullptr),
+      geometry_shader(nullptr) {}
+
+Shader::Shader(const ShaderSource &source) : prog_id_(0) {
   prog_id_ = glCreateProgram();
 
-  GLuint vs = getCompiledShader(GL_VERTEX_SHADER, vertex_shader);
-  GLuint fs = getCompiledShader(GL_FRAGMENT_SHADER, fragment_shader);
+  GLuint vs = getCompiledShader(GL_VERTEX_SHADER, source.vertex_shader);
+  GLuint fs = getCompiledShader(GL_FRAGMENT_SHADER, source.fragment_shader);
+  GLuint gs = getCompiledShader(GL_GEOMETRY_SHADER, source.geometry_shader);
 
   glAttachShader(prog_id_, vs);
   glAttachShader(prog_id_, fs);
+  glAttachShader(prog_id_, gs);
 
   glLinkProgram(prog_id_);
   glValidateProgram(prog_id_);
 
   glDeleteShader(vs);
   glDeleteShader(fs);
+  glDeleteShader(gs);
 }
 
 Shader::~Shader() {
@@ -71,6 +80,10 @@ void Shader::SetBool(const std::string &name, bool value) {
 void Shader::SetNums(const std::string &name, glm::u32 n_nums,
                      const glm::f32 *nums) {
   glUniform1fv(getUniLoc(prog_id_, name), n_nums, nums);
+}
+
+void Shader::SetVec2(const std::string &name, const glm::vec2 &vec2) {
+  glUniform2fv(getUniLoc(prog_id_, name), 1, glm::value_ptr(vec2));
 }
 
 void Shader::SetVec3(const std::string &name, const glm::vec3 &vec3) {

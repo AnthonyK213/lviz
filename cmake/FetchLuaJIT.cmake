@@ -13,8 +13,9 @@ FetchContent_Declare(
 FetchContent_Declare(
   LuaJIT
   GIT_REPOSITORY https://github.com/zhaozg/luajit-cmake
-  GIT_TAG origin/master
-  GIT_SHALLOW 1
+  GIT_TAG 9ea79407064f67e2589deb0443a5305c53428159
+  # GIT_TAG origin/master
+  # GIT_SHALLOW 1
   SOURCE_DIR ${CMAKE_BINARY_DIR}/deps/luajit-cmake
   )
 

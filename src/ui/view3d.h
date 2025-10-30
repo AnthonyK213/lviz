@@ -61,6 +61,8 @@ private:
   std::vector<canvas::handle<canvas::Geometry>> surfaces_;
   glm::vec2 size_;
   glm::vec2 cursor_;
+  glm::f32 pnt_size_;
+  glm::f32 crv_width_;
 };
 
 } // namespace ui

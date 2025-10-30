@@ -18,8 +18,8 @@ void lviz::bind::BindCanvas(lua_State *L) {
       .deriveClass<canvas::Geometry, canvas::Object>("Geometry")
       .endClass()
       .deriveClass<canvas::Point, canvas::Geometry>("Point")
-      .addConstructorFrom<canvas::handle<canvas::Point>,
-                          void(const gp::Pnt &)>()
+      .addConstructorFrom<canvas::handle<canvas::Point>, void(const gp::Pnt &),
+                          void(glm::f32, glm::f32, glm::f32)>()
       .endClass()
       .deriveClass<canvas::Curve, canvas::Geometry>("Curve")
       .endClass()

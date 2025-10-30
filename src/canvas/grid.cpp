@@ -95,7 +95,10 @@ void main() {
 )";
 
 Grid::Grid() : shader_(nullptr), vbo_(0), vao_(0), ibo_(0) {
-  shader_ = std::make_unique<render::Shader>(GRID_VS, GRID_FS);
+  render::ShaderSource shader_source{};
+  shader_source.vertex_shader = GRID_VS;
+  shader_source.fragment_shader = GRID_FS;
+  shader_ = std::make_unique<render::Shader>(shader_source);
 
   glGenVertexArrays(1, &vao_);
 
