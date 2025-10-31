@@ -42,6 +42,8 @@ public:
 
   void Resize(int width, int height);
 
+  void SetShowGrid(bool show_grid);
+
   void OnMouseMove(double x, double y, ui::MouseButton button);
 
   void OnMouseWheel(double delta);
@@ -61,6 +63,7 @@ private:
   glm::vec2 cursor_;
   glm::f32 pnt_size_;
   glm::f32 crv_width_;
+  bool show_grid_;
 };
 
 } // namespace ui

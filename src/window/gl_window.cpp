@@ -33,6 +33,8 @@ bool GLWindow::Init(int width, int height, const std::string &titile) {
   panel_ = std::make_unique<ui::Panel>(this);
   view3d_ = std::make_unique<ui::View3d>(this, glm::vec2{width_, height_});
 
+  panel_->Setup();
+
   running_ = true;
 
   return running_;
@@ -40,15 +42,23 @@ bool GLWindow::Init(int width, int height, const std::string &titile) {
 
 void GLWindow::Render() {
   gl_ctx_->PreRender();
+  ui_ctx_->PreRender();
 
+  panel_->Render();
+  log_->Render();
   view3d_->Render();
 
-  ui_ctx_->PreRender();
-  log_->Render();
-  panel_->Render();
   ui_ctx_->PostRender();
-
   gl_ctx_->PostRender();
+}
+
+void *GLWindow::GetNativeWindow() const {
+  return window_;
+}
+
+void GLWindow::SetNativeWindow(void *win) {
+  window_ = (GLFWwindow *)win;
+  glfwGetFramebufferSize(window_, &width_, &height_);
 }
 
 void GLWindow::WaitEvents() const {

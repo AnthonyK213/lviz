@@ -41,13 +41,9 @@ public:
     return view3d_.get();
   }
 
-  virtual void *GetNativeWindow() const override {
-    return window_;
-  }
+  virtual void *GetNativeWindow() const override;
 
-  virtual void SetNativeWindow(void *win) override {
-    window_ = (GLFWwindow *)win;
-  }
+  virtual void SetNativeWindow(void *win) override;
 
   void WaitEvents() const;
 

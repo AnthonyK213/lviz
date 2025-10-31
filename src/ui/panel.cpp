@@ -10,30 +10,53 @@
 namespace lviz {
 namespace ui {
 
+static const char *PROJ_LIST[] = {"Orthographic", "Perspective"};
+
+static canvas::Camera::ProjectionType idxToProjType(int idx) {
+  return static_cast<canvas::Camera::ProjectionType>(idx);
+}
+
+static appl::Application *getApplication(window::Window *win) {
+  window::GLWindow *gl_win = dynamic_cast<window::GLWindow *>(win);
+  return gl_win ? gl_win->GetApp() : nullptr;
+}
+
+static ui::View3d *getView3d(window::Window *win) {
+  window::GLWindow *gl_win = dynamic_cast<window::GLWindow *>(win);
+  return gl_win ? gl_win->GetView3d() : nullptr;
+}
+
 Panel::Panel(window::Window *parent)
-    : parent_(parent), file_dialog_(), current_file_(), current_proj_idx_(0) {
+    : parent_(parent), file_dialog_(), current_file_(), current_proj_idx_(1),
+      show_grid_(true) {
   file_dialog_.SetTitle("Open script");
   file_dialog_.SetTypeFilters({".lua"});
 }
 
 Panel::~Panel() {}
 
+void Panel::Setup() {
+  setupProjection();
+  setupShowGrid();
+}
+
 void Panel::Render() {
   ImGui::Begin("Control panel");
 
   if (ImGui::CollapsingHeader("View3d")) {
-    const char *proj_list[] = {"Orthographic", "Perspective"};
-    if (ImGui::Combo("Projection", &current_proj_idx_, proj_list,
-                     IM_ARRAYSIZE(proj_list))) {
-      auto gl_win = dynamic_cast<window::GLWindow *>(parent_);
-      if (gl_win) {
-        canvas::Camera *camera = gl_win->GetView3d()->GetCamera();
-        if (camera) {
-          /* Ewww! */
-          camera->SetProjType(
-              static_cast<canvas::Camera::ProjectionType>(current_proj_idx_));
-        }
-      }
+    if (ImGui::Combo("Projection", &current_proj_idx_, PROJ_LIST,
+                     IM_ARRAYSIZE(PROJ_LIST))) {
+      setupProjection();
+    }
+
+    if (ImGui::Checkbox("Show grid", &show_grid_)) {
+      setupShowGrid();
+    }
+
+    if (ImGui::Button("Clear scene")) {
+      ui::View3d *view3d = getView3d(parent_);
+      if (view3d)
+        view3d->Clear();
     }
   }
 
@@ -43,12 +66,14 @@ void Panel::Render() {
     }
 
     if (ImGui::Button("Run script")) {
-      auto gl_win = dynamic_cast<window::GLWindow *>(parent_);
-      if (gl_win) {
-        appl::State *state = gl_win->GetApp()->GetState();
-        std::string error{};
-        if (!state->DoFile(current_file_, error))
-          std::cout << error << std::endl;
+      appl::Application *app = getApplication(parent_);
+      if (app) {
+        appl::State *state = app->GetState();
+        if (state) {
+          std::string error{};
+          if (!state->DoFile(current_file_, error))
+            std::cout << error << std::endl;
+        }
       }
     }
   }
@@ -60,6 +85,21 @@ void Panel::Render() {
     current_file_ = file_dialog_.GetSelected().string();
     file_dialog_.ClearSelected();
   }
+}
+
+void Panel::setupProjection() {
+  ui::View3d *view3d = getView3d(parent_);
+  if (view3d) {
+    canvas::Camera *camera = view3d->GetCamera();
+    if (camera)
+      camera->SetProjType(idxToProjType(current_proj_idx_));
+  }
+}
+
+void Panel::setupShowGrid() {
+  ui::View3d *view3d = getView3d(parent_);
+  if (view3d)
+    view3d->SetShowGrid(show_grid_);
 }
 
 } // namespace ui

@@ -17,9 +17,15 @@ Log::~Log() {}
 void Log::Render() {
   ImGui::Begin("Log");
 
-  for (const std::string &line : buffer_) {
-    ImGui::Text(line.c_str());
+  if (ImGui::Button("Clear")) {
+    Clear();
   }
+
+  ImGui::BeginChild("Log buffer", ImVec2(0, 0), ImGuiChildFlags_Borders);
+  for (const std::string &line : buffer_) {
+    ImGui::TextWrapped("%s", line.c_str());
+  }
+  ImGui::EndChild();
 
   ImGui::End();
 }

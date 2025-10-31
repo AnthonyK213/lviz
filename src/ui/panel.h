@@ -22,13 +22,21 @@ public:
 
   ~Panel();
 
+  void Setup();
+
   void Render();
+
+private:
+  void setupProjection();
+
+  void setupShowGrid();
 
 private:
   window::Window *parent_;
   ImGui::FileBrowser file_dialog_;
   std::string current_file_;
   int current_proj_idx_;
+  bool show_grid_;
 };
 
 } // namespace ui

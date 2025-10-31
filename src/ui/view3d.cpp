@@ -160,7 +160,7 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
     : parent_(parent), camera_(nullptr), light_(nullptr), pnt_shader_(nullptr),
       crv_shader_(nullptr), srf_shader_(nullptr), grid_(nullptr), points_(),
       curves_(), surfaces_(), size_(init_size), cursor_(0, 0), pnt_size_(10.0f),
-      crv_width_(5.0f) {
+      crv_width_(5.0f), show_grid_(false) {
   render::ShaderSource pnt_shader_source{};
   pnt_shader_source.vertex_shader = PNT_VS;
   pnt_shader_source.fragment_shader = PNT_FS;
@@ -228,7 +228,9 @@ void View3d::Render() {
     }
   }
 
-  grid_->Draw(camera_.get());
+  if (show_grid_) {
+    grid_->Draw(camera_.get());
+  }
 }
 
 void View3d::Clear() {
@@ -261,6 +263,10 @@ bool View3d::Display(const canvas::handle<canvas::Geometry> &geom) {
 void View3d::Resize(int width, int height) {
   size_.x = width;
   size_.y = height;
+}
+
+void View3d::SetShowGrid(bool show_grid) {
+  show_grid_ = show_grid;
 }
 
 void View3d::OnMouseMove(double x, double y, ui::MouseButton button) {
