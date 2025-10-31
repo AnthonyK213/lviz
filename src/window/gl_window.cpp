@@ -5,12 +5,13 @@ namespace window {
 
 GLWindow::GLWindow(appl::Application *app)
     : Window(app), window_(nullptr), gl_ctx_(nullptr), ui_ctx_(nullptr),
-      panel_(nullptr), view3d_(nullptr), running_(false) {
+      log_(nullptr), panel_(nullptr), view3d_(nullptr), running_(false) {
   gl_ctx_ = std::make_unique<render::GLContext>();
   ui_ctx_ = std::make_unique<render::UIContext>();
 }
 
 GLWindow::~GLWindow() {
+  log_ = nullptr;
   panel_ = nullptr;
   view3d_ = nullptr; // Destruct before gl_ctx_.
   ui_ctx_->Close();
@@ -28,6 +29,7 @@ bool GLWindow::Init(int width, int height, const std::string &titile) {
   if (!ui_ctx_->Init(this))
     return false;
 
+  log_ = std::make_unique<ui::Log>(this);
   panel_ = std::make_unique<ui::Panel>(this);
   view3d_ = std::make_unique<ui::View3d>(this, glm::vec2{width_, height_});
 
@@ -38,12 +40,14 @@ bool GLWindow::Init(int width, int height, const std::string &titile) {
 
 void GLWindow::Render() {
   gl_ctx_->PreRender();
-  ui_ctx_->PreRender();
 
-  panel_->Render();
   view3d_->Render();
 
+  ui_ctx_->PreRender();
+  log_->Render();
+  panel_->Render();
   ui_ctx_->PostRender();
+
   gl_ctx_->PostRender();
 }
 

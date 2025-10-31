@@ -1,4 +1,4 @@
-lviz.view3d.Purge()
+lviz.view3d.Clear()
 
 local R1 = 4
 local R2 = 2.4
@@ -16,19 +16,19 @@ for i = 0, N - 1 do
   local pnt2 = lviz.gp.Pnt(R2 * math.cos(a2), R2 * math.sin(a2), height)
   local node = lviz.canvas.Point(pnt2)
   local column = lviz.canvas.Line(pnt1, pnt2)
-  lviz.view3d.AddGeometry(node)
-  lviz.view3d.AddGeometry(column)
+  lviz.view3d.Display(node)
+  lviz.view3d.Display(column)
 end
 
 local tip = lviz.canvas.Polyline {
   lviz.gp.Pnt(0, 0, height),
   lviz.gp.Pnt(0, 0, height * 1.5)
 }
-lviz.view3d.AddGeometry(tip)
+lviz.view3d.Display(tip)
 
 local sqrt3 = math.sqrt(3)
 local base = lviz.canvas.Triangle(
   lviz.gp.Pnt(-sqrt3 * R1, -R1, -height),
   lviz.gp.Pnt(sqrt3 * R1, -R1, -height),
   lviz.gp.Pnt(0, 2 * R1, -height))
-lviz.view3d.AddGeometry(base)
+lviz.view3d.Display(base)

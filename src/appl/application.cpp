@@ -18,7 +18,8 @@ namespace lviz {
 namespace appl {
 
 Application::Application()
-    : window_(nullptr), manager_(nullptr), state_(nullptr) {
+    : window_(nullptr), manager_(nullptr), log_stream_(nullptr),
+      state_(nullptr) {
   std::optional<std::filesystem::path> app_local = GetAppLocalDataLocation();
   if (app_local) {
     if (!std::filesystem::is_directory(app_local.value())) {
@@ -50,7 +51,10 @@ Application::Application()
   bind::BindGP(state_->GetLuaState());
   bind::BindCanvas(state_->GetLuaState());
   bind::BindAppl(state_->GetLuaState(), manager_.get());
-  bind::BindUI(state_->GetLuaState(), window_->GetView3d());
+  bind::BindUI(state_->GetLuaState(), window_.get());
+  bind::BindIO(state_->GetLuaState());
+
+  log_stream_ = std::make_unique<LogStream>(std::cout, window_->GetLog());
 }
 
 Application::~Application() {

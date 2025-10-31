@@ -1,6 +1,9 @@
-lviz.view3d.Purge()
+lviz.log.Clear()
+lviz.view3d.Clear()
 
 local H = 10
+
+print("Draw a cube")
 
 local vertices = {
   lviz.gp.Pnt(-H, -H, -H),
@@ -30,5 +33,5 @@ local facets = {
 
 for _, facet in ipairs(facets) do
   local triangle = lviz.canvas.Triangle(vertices[facet[1]], vertices[facet[2]], vertices[facet[3]])
-  lviz.view3d.AddGeometry(triangle)
+  lviz.view3d.Display(triangle)
 end

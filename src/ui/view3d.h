@@ -8,7 +8,6 @@
 #include "../canvas/grid.h"
 #include "../canvas/handle.h"
 #include "../canvas/light.h"
-#include "../render/gl_frame_buffer.h"
 #include "../render/shader.h"
 #include "input.h"
 
@@ -37,9 +36,9 @@ public:
 
   void Render();
 
-  void Purge();
+  void Clear();
 
-  bool AddGeometry(const canvas::handle<canvas::Geometry> &geom);
+  bool Display(const canvas::handle<canvas::Geometry> &geom);
 
   void Resize(int width, int height);
 
@@ -51,7 +50,6 @@ private:
   window::Window *parent_;
   std::unique_ptr<canvas::Camera> camera_;
   std::unique_ptr<canvas::Light> light_;
-  std::unique_ptr<render::GLFrameBuffer> frame_buffer_;
   std::unique_ptr<render::Shader> pnt_shader_;
   std::unique_ptr<render::Shader> crv_shader_;
   std::unique_ptr<render::Shader> srf_shader_;

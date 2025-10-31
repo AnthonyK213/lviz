@@ -6,6 +6,7 @@
 
 #include "../window/gl_window.h"
 #include "extension_manager.h"
+#include "log_stream.h"
 #include "state.h"
 
 #include <filesystem>
@@ -31,6 +32,7 @@ public:
 private:
   std::unique_ptr<window::GLWindow> window_;
   std::unique_ptr<ExtensionManager> manager_;
+  std::unique_ptr<LogStream> log_stream_;
   std::unique_ptr<State> state_;
 };
 

@@ -1,17 +1,23 @@
 #include "bind.h"
 
-#include "../ui/view3d.h"
+#include "../window/gl_window.h"
 
-void lviz::bind::BindUI(lua_State *L, ui::View3d *view3d) {
+void lviz::bind::BindUI(lua_State *L, window::GLWindow *gl_win) {
+  ui::Log *log_buf = gl_win->GetLog();
+  ui::View3d *view3d = gl_win->GetView3d();
+
   luabridge::getGlobalNamespace(L)
       .beginNamespace("lviz")
       .beginNamespace("view3d")
       .addFunction(
-          "AddGeometry",
+          "Display",
           [view3d](const canvas::handle<canvas::Geometry> &geom) -> bool {
-            return view3d->AddGeometry(geom);
+            return view3d->Display(geom);
           })
-      .addFunction("Purge", [view3d]() { view3d->Purge(); })
+      .addFunction("Clear", [view3d]() { view3d->Clear(); })
+      .endNamespace()
+      .beginNamespace("log")
+      .addFunction("Clear", [log_buf]() { log_buf->Clear(); })
       .endNamespace()
       .endNamespace();
 }

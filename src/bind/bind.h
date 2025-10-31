@@ -33,11 +33,11 @@ class ExtensionManager;
 
 } // namespace appl
 
-namespace ui {
+namespace window {
 
-class View3d;
+class GLWindow;
 
-} // namespace ui
+} // namespace window
 
 namespace bind {
 
@@ -47,7 +47,9 @@ void BindCanvas(lua_State *L);
 
 void BindAppl(lua_State *L, appl::ExtensionManager *manager);
 
-void BindUI(lua_State *L, ui::View3d *view3d);
+void BindUI(lua_State *L, window::GLWindow *gl_win);
+
+void BindIO(lua_State *L);
 
 } // namespace bind
 } // namespace lviz

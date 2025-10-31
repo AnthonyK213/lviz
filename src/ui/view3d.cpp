@@ -2,6 +2,8 @@
 
 #include "../gp/util.h"
 
+#include "../window/window.h"
+
 #include <imgui.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -155,13 +157,10 @@ inline static glm::mat4 createCameraPos(const glm::vec3 &cam_orig) {
 }
 
 View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
-    : parent_(parent), camera_(nullptr), light_(nullptr),
-      frame_buffer_(nullptr), pnt_shader_(nullptr), crv_shader_(nullptr),
-      srf_shader_(nullptr), grid_(nullptr), points_(), curves_(), surfaces_(),
-      size_(init_size), cursor_(0, 0), pnt_size_(10.0f), crv_width_(5.0f) {
-  frame_buffer_ = std::make_unique<render::GLFrameBuffer>();
-  frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
-
+    : parent_(parent), camera_(nullptr), light_(nullptr), pnt_shader_(nullptr),
+      crv_shader_(nullptr), srf_shader_(nullptr), grid_(nullptr), points_(),
+      curves_(), surfaces_(), size_(init_size), cursor_(0, 0), pnt_size_(10.0f),
+      crv_width_(5.0f) {
   render::ShaderSource pnt_shader_source{};
   pnt_shader_source.vertex_shader = PNT_VS;
   pnt_shader_source.fragment_shader = PNT_FS;
@@ -193,14 +192,9 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
 View3d::~View3d() {}
 
 void View3d::Render() {
-  ImGui::Begin("View3d");
-
-  ImVec2 region_size = ImGui::GetContentRegionAvail();
-  size_ = {region_size.x, region_size.y};
+  size_ = {parent_->GetWidth(), parent_->GetHeight()};
 
   camera_->SetAspect(size_.x, size_.y);
-
-  frame_buffer_->Bind();
 
   if (!points_.empty()) {
     pnt_shader_->Use();
@@ -235,23 +229,15 @@ void View3d::Render() {
   }
 
   grid_->Draw(camera_.get());
-
-  frame_buffer_->Unbind();
-
-  uint64_t tex_id = frame_buffer_->GetTexture();
-  ImGui::Image(reinterpret_cast<void *>(tex_id), ImVec2{size_.x, size_.y},
-               ImVec2{0, 1}, ImVec2{1, 0});
-
-  ImGui::End();
 }
 
-void View3d::Purge() {
+void View3d::Clear() {
   points_.clear();
   curves_.clear();
   surfaces_.clear();
 }
 
-bool View3d::AddGeometry(const canvas::handle<canvas::Geometry> &geom) {
+bool View3d::Display(const canvas::handle<canvas::Geometry> &geom) {
   if (!geom || !geom->CreateBuffers())
     return false;
 
@@ -275,11 +261,13 @@ bool View3d::AddGeometry(const canvas::handle<canvas::Geometry> &geom) {
 void View3d::Resize(int width, int height) {
   size_.x = width;
   size_.y = height;
-
-  frame_buffer_->CreateBuffers((int)size_.x, (int)size_.y);
 }
 
 void View3d::OnMouseMove(double x, double y, ui::MouseButton button) {
+  ImGuiIO &io = ImGui::GetIO();
+  if (io.WantCaptureMouse)
+    return;
+
   double dx = x - cursor_.x;
   double dy = y - cursor_.y;
 
@@ -301,6 +289,9 @@ void View3d::OnMouseMove(double x, double y, ui::MouseButton button) {
 }
 
 void View3d::OnMouseWheel(double delta) {
+  ImGuiIO &io = ImGui::GetIO();
+  if (io.WantCaptureMouse)
+    return;
   camera_->Zoom(-delta);
 }
 
