@@ -3,6 +3,8 @@
 
 #include "object.h"
 
+#include "../gp/box.h"
+
 namespace lviz {
 namespace canvas {
 
@@ -21,6 +23,8 @@ public:
   virtual bool CreateBuffers() = 0;
 
   virtual void Draw() = 0;
+
+  virtual gp::Box GetBox() const = 0;
 };
 
 } // namespace canvas

@@ -49,5 +49,12 @@ bool Line::CreateBuffers() {
   return true;
 }
 
+gp::Box Line::GetBox() const {
+  gp::Box box{};
+  box.Unite(vertices_[0].coord);
+  box.Unite(vertices_[1].coord);
+  return box;
+}
+
 } // namespace canvas
 } // namespace lviz

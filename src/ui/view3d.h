@@ -40,6 +40,8 @@ public:
 
   bool Display(const canvas::handle<canvas::Geometry> &geom);
 
+  void ZoomAll();
+
   void Resize(int width, int height);
 
   void SetShowGrid(bool show_grid);

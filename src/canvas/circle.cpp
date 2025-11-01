@@ -66,5 +66,15 @@ bool Circle::CreateBuffers() {
   return true;
 }
 
+gp::Box Circle::GetBox() const {
+  const gp::Pnt &loc = pos_.Location();
+  const gp::Vec &x_dir = pos_.XDirection();
+  const gp::Vec &y_dir = pos_.YDirection();
+  gp::Vec diag{std::hypot(x_dir.x, y_dir.x), std::hypot(x_dir.y, y_dir.y),
+               std::hypot(x_dir.z, y_dir.z)};
+  diag *= radius_;
+  return gp::Box(loc - diag, loc + diag);
+}
+
 } // namespace canvas
 } // namespace lviz

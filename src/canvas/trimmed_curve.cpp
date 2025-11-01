@@ -51,5 +51,9 @@ bool TrimmedCurve::CreateBuffers() {
   return true;
 }
 
+gp::Box TrimmedCurve::GetBox() const {
+  return crv_->GetBox();
+}
+
 } // namespace canvas
 } // namespace lviz

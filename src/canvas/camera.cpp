@@ -1,5 +1,7 @@
 #include "camera.h"
 
+#include "../gp/box.h"
+
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace lviz {
@@ -73,6 +75,28 @@ void Camera::Zoom(glm::f32 delta) {
     return;
   dist_ = new_dist;
   pos_[3] += pos_[2] * delta;
+  UpdateViewMatrix();
+}
+
+void Camera::ZoomToBox(const gp::Box &box, glm::f32 offse_ratio) {
+  std::vector<gp::Pnt> corners = box.Corners();
+  if (corners.empty()) {
+    return;
+  }
+
+  gp::Box view_box{};
+  for (const gp::Pnt &corner : corners) {
+    gp::Pnt view_corner = view_mat_ * glm::vec4(corner, 1.0);
+    view_box.Unite(view_corner);
+  }
+
+  cen_ = box.Center();
+  glm::f32 max_y = (std::max)((view_box.Max().x - view_box.Min().x) / aspect_,
+                              view_box.Max().y - view_box.Min().y);
+  max_y *= (1.0f + offse_ratio);
+  dist_ = max_y * 0.5f / std::tan(fovy_ * 0.5f);
+  pos_[3] = glm::vec4(cen_, 1.0f) + pos_[2] * dist_;
+
   UpdateViewMatrix();
 }
 

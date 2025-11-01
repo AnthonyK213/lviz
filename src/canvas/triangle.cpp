@@ -30,5 +30,13 @@ bool Triangle::CreateBuffers() {
   return true;
 }
 
+gp::Box Triangle::GetBox() const {
+  gp::Box box{};
+  box.Unite(vertices_[0].coord);
+  box.Unite(vertices_[1].coord);
+  box.Unite(vertices_[2].coord);
+  return box;
+}
+
 } // namespace canvas
 } // namespace lviz

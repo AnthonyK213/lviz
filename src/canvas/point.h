@@ -26,6 +26,12 @@ public:
 
   virtual void Draw() override;
 
+  virtual gp::Box GetBox() const override;
+
+  const gp::Pnt &GetPoint() const {
+    return vertex_.coord;
+  }
+
 private:
   std::unique_ptr<render::GLVertexBuffer> vertex_buffer_;
   Vertex vertex_;

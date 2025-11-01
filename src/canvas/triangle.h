@@ -19,6 +19,8 @@ public:
 
   virtual bool CreateBuffers() override;
 
+  virtual gp::Box GetBox() const override;
+
 private:
   Vertex vertices_[3];
 };

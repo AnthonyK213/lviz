@@ -81,5 +81,13 @@ bool Polyline::CreateBuffers() {
   return true;
 }
 
+gp::Box Polyline::GetBox() const {
+  gp::Box box{};
+  for (const Vertex &vertex : vertices_) {
+    box.Unite(vertex.coord);
+  }
+  return box;
+}
+
 } // namespace canvas
 } // namespace lviz

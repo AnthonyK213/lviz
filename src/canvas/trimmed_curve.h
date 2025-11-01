@@ -29,6 +29,8 @@ public:
 
   virtual bool CreateBuffers() override;
 
+  virtual gp::Box GetBox() const override;
+
 private:
   canvas::handle<canvas::Curve> crv_;
   glm::f32 t0_;

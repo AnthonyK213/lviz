@@ -65,5 +65,15 @@ bool Ellipse::CreateBuffers() {
   return true;
 }
 
+gp::Box Ellipse::GetBox() const {
+  const gp::Pnt &loc = pos_.Location();
+  const gp::Vec &x_dir = pos_.XDirection();
+  const gp::Vec &y_dir = pos_.YDirection();
+  gp::Vec diag{std::hypot(x_dir.x * major_, y_dir.x * minor_),
+               std::hypot(x_dir.y * major_, y_dir.y * minor_),
+               std::hypot(x_dir.z * major_, y_dir.z * minor_)};
+  return gp::Box(loc - diag, loc + diag);
+}
+
 } // namespace canvas
 } // namespace lviz

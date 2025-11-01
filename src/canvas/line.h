@@ -30,6 +30,8 @@ public:
 
   virtual bool CreateBuffers() override;
 
+  virtual gp::Box GetBox() const override;
+
 private:
   canvas::Vertex vertices_[2];
 };

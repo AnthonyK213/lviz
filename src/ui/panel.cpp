@@ -27,7 +27,7 @@ static ui::View3d *getView3d(window::Window *win) {
 }
 
 Panel::Panel(window::Window *parent)
-    : parent_(parent), file_dialog_(), current_file_(), current_proj_idx_(1),
+    : parent_(parent), file_dialog_(), current_file_(), current_proj_idx_(0),
       show_grid_(true) {
   file_dialog_.SetTitle("Open script");
   file_dialog_.SetTypeFilters({".lua"});
@@ -51,6 +51,12 @@ void Panel::Render() {
 
     if (ImGui::Checkbox("Show grid", &show_grid_)) {
       setupShowGrid();
+    }
+
+    if (ImGui::Button("Zoom all")) {
+      ui::View3d *view3d = getView3d(parent_);
+      if (view3d)
+        view3d->ZoomAll();
     }
 
     if (ImGui::Button("Clear scene")) {

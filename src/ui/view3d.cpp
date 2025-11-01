@@ -22,7 +22,6 @@ uniform mat4 projection;
 
 void main() {
   gl_Position = projection * view * model * vec4(aCoord, 1.0f);
-  gl_PointSize = 3.0f;
 }
 )";
 
@@ -258,6 +257,24 @@ bool View3d::Display(const canvas::handle<canvas::Geometry> &geom) {
   }
 
   return true;
+}
+
+void View3d::ZoomAll() {
+  gp::Box box{};
+
+  for (const canvas::handle<canvas::Geometry> &geom : points_) {
+    box.Unite(geom->GetBox());
+  }
+
+  for (const canvas::handle<canvas::Geometry> &geom : curves_) {
+    box.Unite(geom->GetBox());
+  }
+
+  for (const canvas::handle<canvas::Geometry> &geom : surfaces_) {
+    box.Unite(geom->GetBox());
+  }
+
+  camera_->ZoomToBox(box, 0.2f);
 }
 
 void View3d::Resize(int width, int height) {

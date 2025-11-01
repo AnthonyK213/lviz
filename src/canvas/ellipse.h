@@ -30,6 +30,8 @@ public:
 
   virtual bool CreateBuffers() override;
 
+  virtual gp::Box GetBox() const override;
+
 private:
   gp::Ax2 pos_;
   glm::f32 major_;

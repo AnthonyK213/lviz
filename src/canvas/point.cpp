@@ -26,5 +26,9 @@ void Point::Draw() {
     vertex_buffer_->Draw(GL_POINTS);
 }
 
+gp::Box Point::GetBox() const {
+  return gp::Box(vertex_.coord, vertex_.coord);
+}
+
 } // namespace canvas
 } // namespace lviz

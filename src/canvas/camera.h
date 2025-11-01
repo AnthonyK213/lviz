@@ -6,6 +6,12 @@
 #include "object.h"
 
 namespace lviz {
+namespace gp {
+
+class Box;
+
+} // namespace gp
+
 namespace canvas {
 
 class Camera : public Object {
@@ -66,6 +72,8 @@ public:
   void Orbit(glm::f32 rz, glm::f32 pitch);
 
   void Zoom(glm::f32 delta);
+
+  void ZoomToBox(const gp::Box &box, glm::f32 offset_ratio = 0.0);
 
 private:
   glm::mat4 view_mat_; /* Cached view matrix */
