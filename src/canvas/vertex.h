@@ -2,20 +2,19 @@
 #define _LVIZ_CANVAS_VERTEX_H
 
 #include "../gp/glm.h"
+#include "../render/gl_vertex_buffer_layout.h"
 
 namespace lviz {
 namespace canvas {
 
 struct Vertex {
   gp::Pnt coord;
-  gp::Vec normal;
 
-  Vertex() : coord(), normal() {}
+  Vertex();
 
-  Vertex(const gp::Pnt &coord) : coord(coord), normal() {}
+  Vertex(const gp::Pnt &coord);
 
-  Vertex(const gp::Pnt &coord, const gp::Vec &normal)
-      : coord(coord), normal(normal) {}
+  static const render::GLVertexBufferLayout &GetLayout();
 };
 
 } // namespace canvas

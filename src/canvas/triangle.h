@@ -2,7 +2,7 @@
 #define _LVIZ_CANVAS_TRIANGLE_H
 
 #include "surface.h"
-#include "vertex.h"
+#include "vertex_with_normal.h"
 
 #include <memory>
 
@@ -22,7 +22,7 @@ public:
   virtual gp::Box GetBox() const override;
 
 private:
-  Vertex vertices_[3];
+  VertexWithNormal vertices_[3];
 };
 
 } // namespace canvas

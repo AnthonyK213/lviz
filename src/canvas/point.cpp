@@ -13,7 +13,8 @@ Point::Point(glm::f32 x, glm::f32 y, glm::f32 z)
 void Point::UpdateShader(render::Shader *shader) {}
 
 bool Point::CreateBuffers() {
-  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer>(1, &vertex_);
+  vertex_buffer_ =
+      std::make_unique<render::GLVertexArrayBuffer<Vertex>>(1, &vertex_);
   return true;
 }
 
