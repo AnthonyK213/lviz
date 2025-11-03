@@ -41,8 +41,8 @@ std::vector<Vertex> Ellipse::GetVertices(glm::f32 t0, glm::f32 t1) const {
 
   /* TODO: Implement with *REAL* deflections. */
 
-  glm::f32 theta = gp::Math::AngularDeflection();
-  int n_vertices = static_cast<int>(std::ceil((t1 - t0) / theta));
+  int n_vertices =
+      static_cast<int>(std::ceil((t1 - t0) / gp::Math::AngularDeflection()));
 
   std::vector<Vertex> vertices{};
   vertices.reserve(n_vertices + 1);

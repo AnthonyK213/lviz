@@ -18,7 +18,11 @@ public:
 
   void AttachToCamera(const Camera *camera, const glm::vec3 offset);
 
-  virtual void UpdateShader(render::Shader *shader) override;
+  glm::vec3 GetPosition() const;
+
+  const glm::vec3 &GetColor() const {
+    return color_;
+  }
 
 private:
   const Camera *camera_;

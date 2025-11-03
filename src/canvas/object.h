@@ -1,8 +1,6 @@
 #ifndef _LVIZ_CANVAS_OBJECT_H
 #define _LVIZ_CANVAS_OBJECT_H
 
-#include "../render/shader.h"
-
 #include <atomic>
 
 namespace lviz {
@@ -35,8 +33,6 @@ public:
   virtual void Delete() const {
     delete this;
   }
-
-  virtual void UpdateShader(render::Shader *shader) = 0;
 
 private:
   std::atomic<int> rc_;

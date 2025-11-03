@@ -5,10 +5,8 @@ namespace canvas {
 
 Surface::Surface() : Geometry(), vertex_buffer_(nullptr) {}
 
-void Surface::UpdateShader(render::Shader *shader) {}
-
-Geometry::GeomType Surface::GetType() const {
-  return GeomType::Surface;
+Presentable::Type Surface::GetType() const {
+  return Type::Surface;
 }
 
 void Surface::Draw() {

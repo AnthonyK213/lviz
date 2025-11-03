@@ -16,14 +16,6 @@ Camera::Camera(const glm::mat4 &pos, glm::f32 dist, glm::f32 fovy,
   UpdateViewCenter();
 }
 
-void Camera::UpdateShader(render::Shader *shader) {
-  glm::mat4 model{1.0f};
-  shader->SetMat4("model", model);
-  shader->SetMat4("view", view_mat_);
-  shader->SetMat4("projection", proj_mat_);
-  shader->SetVec3("viewPos", glm::vec3(pos_[3]));
-}
-
 void Camera::UpdateViewMatrix() {
   view_mat_ = glm::inverse(pos_);
 }

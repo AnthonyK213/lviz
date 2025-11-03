@@ -31,9 +31,7 @@ public:
 
   virtual bool Contains(glm::f32 t) const;
 
-  virtual void UpdateShader(render::Shader *shader) override;
-
-  virtual GeomType GetType() const override;
+  virtual Type GetType() const override;
 
   virtual void Draw() override;
 

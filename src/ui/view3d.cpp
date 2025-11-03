@@ -146,6 +146,18 @@ void main() {
 }
 )";
 
+static void cameraUpdateShader(canvas::Camera *camera, render::Shader *shader) {
+  shader->SetMat4("model", glm::mat4{1.0f});
+  shader->SetMat4("view", camera->GetViewMatrix());
+  shader->SetMat4("projection", camera->GetProjMatrix());
+  shader->SetVec3("viewPos", glm::vec3(camera->GetPosition()[3]));
+}
+
+static void lightUpdateShader(canvas::Light *light, render::Shader *shader) {
+  shader->SetVec3("lightPos", light->GetPosition());
+  shader->SetVec3("lightColor", light->GetColor());
+}
+
 inline static glm::mat4 createCameraPos(const glm::vec3 &cam_orig) {
   glm::vec3 cam_x = glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), cam_orig);
   glm::vec3 cam_y = glm::cross(cam_orig, cam_x);
@@ -185,7 +197,8 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
   light_ = std::make_unique<canvas::Light>(glm::vec3(90.0f, -120.0f, 150.0f));
   light_->AttachToCamera(camera_.get(), glm::vec3(-0.35f, 0.35f, 0.0f));
 
-  grid_ = std::make_unique<canvas::Grid>();
+  grid_ = std::make_unique<canvas::Grid>(camera_.get());
+  grid_->CreateBuffers();
 }
 
 View3d::~View3d() {}
@@ -197,38 +210,33 @@ void View3d::Render() {
 
   if (!points_.empty()) {
     pnt_shader_->Use();
-    camera_->UpdateShader(pnt_shader_.get());
+    cameraUpdateShader(camera_.get(), pnt_shader_.get());
     pnt_shader_->SetVec2("ndcUnit", glm::vec2{2.0f} / size_);
     pnt_shader_->SetNums("pntSize", 1, &pnt_size_);
-    // light_->UpdateShader(pnt_shader_.get());
     for (const canvas::handle<canvas::Geometry> &pnt : points_) {
-      pnt->UpdateShader(pnt_shader_.get());
       pnt->Draw();
     }
   }
 
   if (!curves_.empty()) {
     crv_shader_->Use();
-    camera_->UpdateShader(crv_shader_.get());
-    // light_->UpdateShader(crv_shader_.get());
+    cameraUpdateShader(camera_.get(), crv_shader_.get());
     for (const canvas::handle<canvas::Geometry> &crv : curves_) {
-      crv->UpdateShader(crv_shader_.get());
       crv->Draw();
     }
   }
 
   if (!surfaces_.empty()) {
     srf_shader_->Use();
-    camera_->UpdateShader(srf_shader_.get());
-    light_->UpdateShader(srf_shader_.get());
+    cameraUpdateShader(camera_.get(), srf_shader_.get());
+    lightUpdateShader(light_.get(), srf_shader_.get());
     for (const canvas::handle<canvas::Geometry> &srf : surfaces_) {
-      srf->UpdateShader(srf_shader_.get());
       srf->Draw();
     }
   }
 
   if (show_grid_) {
-    grid_->Draw(camera_.get());
+    grid_->Draw();
   }
 }
 
@@ -243,13 +251,13 @@ bool View3d::Display(const canvas::handle<canvas::Geometry> &geom) {
     return false;
 
   switch (geom->GetType()) {
-  case canvas::Geometry::GeomType::Point: {
+  case canvas::Presentable::Type::Point: {
     points_.push_back(geom);
   } break;
-  case canvas::Geometry::GeomType::Curve: {
+  case canvas::Presentable::Type::Curve: {
     curves_.push_back(geom);
   } break;
-  case canvas::Geometry::GeomType::Surface: {
+  case canvas::Presentable::Type::Surface: {
     surfaces_.push_back(geom);
   } break;
   default:

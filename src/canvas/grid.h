@@ -1,8 +1,9 @@
 #ifndef _LVIZ_CANVAS_GRID_H
 #define _LVIZ_CANVAS_GRID_H
 
-#include "../render/gl_vertex_index_buffer.h"
+#include "../render/gl_vertex_buffer.h"
 #include "../render/shader.h"
+#include "presentable.h"
 
 #include <memory>
 
@@ -11,19 +12,22 @@ namespace canvas {
 
 class Camera;
 
-class Grid {
+class Grid : public Presentable {
 public:
-  Grid();
+  Grid(Camera *camera);
 
   ~Grid();
 
-  void Draw(Camera *camera);
+  virtual Type GetType() const override;
+
+  virtual bool CreateBuffers() override;
+
+  virtual void Draw() override;
 
 private:
+  std::unique_ptr<render::GLVertexBuffer> buffer_;
   std::unique_ptr<render::Shader> shader_;
-  GLuint vbo_;
-  GLuint vao_;
-  GLuint ibo_;
+  Camera *camera_;
 };
 
 } // namespace canvas

@@ -18,11 +18,9 @@ public:
 
   Point(glm::f32 x, glm::f32 y, glm::f32 z);
 
-  virtual void UpdateShader(render::Shader *shader) override;
-
   virtual bool CreateBuffers() override;
 
-  virtual GeomType GetType() const override;
+  virtual Type GetType() const override;
 
   virtual void Draw() override;
 

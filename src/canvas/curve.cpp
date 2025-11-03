@@ -9,10 +9,8 @@ bool Curve::Contains(glm::f32 t) const {
   return t >= T0() && t <= T1();
 }
 
-void Curve::UpdateShader(render::Shader *shader) {}
-
-Geometry::GeomType Curve::GetType() const {
-  return GeomType::Curve;
+Presentable::Type Curve::GetType() const {
+  return Type::Curve;
 }
 
 void Curve::Draw() {

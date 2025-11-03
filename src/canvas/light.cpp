@@ -14,14 +14,12 @@ void Light::AttachToCamera(const Camera *camera, const glm::vec3 offset) {
   offset_ = offset;
 }
 
-void Light::UpdateShader(render::Shader *shader) {
+glm::vec3 Light::GetPosition() const {
   if (camera_) {
     glm::vec3 loc_pos = offset_ * camera_->GetDistance();
-    pos_ = camera_->GetPosition() * glm::vec4(loc_pos, 1.0f);
+    return camera_->GetPosition() * glm::vec4(loc_pos, 1.0f);
   }
-
-  shader->SetVec3("lightPos", pos_);
-  shader->SetVec3("lightColor", color_);
+  return pos_;
 }
 
 } // namespace canvas

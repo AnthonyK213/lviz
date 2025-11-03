@@ -1,21 +1,13 @@
 #include "grid.h"
 #include "camera.h"
 
+#include "../render/gl_vertex_buffer_layout.h"
+#include "../render/gl_vertex_index_buffer.h"
+
 #include <glm/glm.hpp>
 
 namespace lviz {
 namespace canvas {
-
-static const glm::vec2 GRID_VERTICES[4] = {
-    glm::vec2{-1.0f, -1.0f},
-    glm::vec2{-1.0f, 1.0f},
-    glm::vec2{1.0f, 1.0f},
-    glm::vec2{1.0f, -1.0f},
-};
-
-static const glm::u32 GRID_INDICES[6] = {
-    0, 1, 2, 0, 2, 3,
-};
 
 static const char *GRID_VS = R"(
 #version 330 core
@@ -94,53 +86,52 @@ void main() {
 }
 )";
 
-Grid::Grid() : shader_(nullptr), vbo_(0), vao_(0), ibo_(0) {
+struct GridVertexBufferLayout {
+  static const render::GLVertexBufferLayout &GetLayout() {
+    static render::GLVertexBufferLayout layout{
+        {GL_FLOAT, 2, 0},
+    };
+    return layout;
+  }
+};
+
+Grid::Grid(Camera *camera)
+    : buffer_(nullptr), shader_(nullptr), camera_(camera) {
   render::ShaderSource shader_source{};
   shader_source.vertex_shader = GRID_VS;
   shader_source.fragment_shader = GRID_FS;
   shader_ = std::make_unique<render::Shader>(shader_source);
-
-  glGenVertexArrays(1, &vao_);
-
-  glGenBuffers(1, &ibo_);
-  glGenBuffers(1, &vbo_);
-
-  glBindVertexArray(vao_);
-
-  glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GRID_VERTICES), GRID_VERTICES,
-               GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GRID_INDICES), GRID_INDICES,
-               GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void *)0);
-  glEnableVertexAttribArray(0);
-
-  glBindVertexArray(0);
 }
 
-Grid::~Grid() {
-  glDisableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  glDeleteBuffers(1, &ibo_);
-  glDeleteBuffers(1, &vbo_);
-  glDeleteVertexArrays(1, &vao_);
+Grid::~Grid() {}
+
+Presentable::Type Grid::GetType() const {
+  return Type::Grid;
 }
 
-void Grid::Draw(Camera *camera) {
+bool Grid::CreateBuffers() {
+  static const glm::vec2 vertices[4] = {
+      glm::vec2{-1.0f, -1.0f},
+      glm::vec2{-1.0f, 1.0f},
+      glm::vec2{1.0f, 1.0f},
+      glm::vec2{1.0f, -1.0f},
+  };
+  static const glm::u32 indices[6] = {0, 1, 2, 0, 2, 3};
+  buffer_ = std::make_unique<
+      render::GLVertexIndexBuffer<glm::vec2, GridVertexBufferLayout>>(
+      4, vertices, 6, indices);
+  return true;
+}
+
+void Grid::Draw() {
   shader_->Use();
 
-  glm::f32 near_far[2] = {camera->GetNear(), camera->GetFar()};
-  shader_->SetMat4("view", camera->GetViewMatrix());
-  shader_->SetMat4("projection", camera->GetProjMatrix());
+  glm::f32 near_far[2] = {camera_->GetNear(), camera_->GetFar()};
+  shader_->SetMat4("view", camera_->GetViewMatrix());
+  shader_->SetMat4("projection", camera_->GetProjMatrix());
 
-  glBindVertexArray(vao_);
-  glDrawElements(GL_TRIANGLES, sizeof(GRID_INDICES) / sizeof(glm::u32),
-                 GL_UNSIGNED_INT, 0);
-  glBindVertexArray(0);
+  if (buffer_)
+    buffer_->Draw(GL_TRIANGLES);
 }
 
 } // namespace canvas

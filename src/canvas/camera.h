@@ -25,8 +25,6 @@ public:
   Camera(const glm::mat4 &pos, glm::f32 dist, glm::f32 fovy, glm::f32 aspect,
          glm::f32 near, glm::f32 far);
 
-  virtual void UpdateShader(render::Shader *shader) override;
-
   const glm::mat4 &GetPosition() const {
     return pos_;
   }
