@@ -213,7 +213,7 @@ void View3d::Render() {
     cameraUpdateShader(camera_.get(), pnt_shader_.get());
     pnt_shader_->SetVec2("ndcUnit", glm::vec2{2.0f} / size_);
     pnt_shader_->SetNums("pntSize", 1, &pnt_size_);
-    for (const canvas::handle<canvas::Geometry> &pnt : points_) {
+    for (const canvas::handle<canvas::Presentable> &pnt : points_) {
       pnt->Draw();
     }
   }
@@ -221,7 +221,7 @@ void View3d::Render() {
   if (!curves_.empty()) {
     crv_shader_->Use();
     cameraUpdateShader(camera_.get(), crv_shader_.get());
-    for (const canvas::handle<canvas::Geometry> &crv : curves_) {
+    for (const canvas::handle<canvas::Presentable> &crv : curves_) {
       crv->Draw();
     }
   }
@@ -230,7 +230,7 @@ void View3d::Render() {
     srf_shader_->Use();
     cameraUpdateShader(camera_.get(), srf_shader_.get());
     lightUpdateShader(light_.get(), srf_shader_.get());
-    for (const canvas::handle<canvas::Geometry> &srf : surfaces_) {
+    for (const canvas::handle<canvas::Presentable> &srf : surfaces_) {
       srf->Draw();
     }
   }
@@ -246,19 +246,19 @@ void View3d::Clear() {
   surfaces_.clear();
 }
 
-bool View3d::Display(const canvas::handle<canvas::Geometry> &geom) {
-  if (!geom || !geom->CreateBuffers())
+bool View3d::Display(const canvas::handle<canvas::Presentable> &obj) {
+  if (!obj || !obj->CreateBuffers())
     return false;
 
-  switch (geom->GetType()) {
+  switch (obj->GetType()) {
   case canvas::Presentable::Type::Point: {
-    points_.push_back(geom);
+    points_.push_back(obj);
   } break;
   case canvas::Presentable::Type::Curve: {
-    curves_.push_back(geom);
+    curves_.push_back(obj);
   } break;
   case canvas::Presentable::Type::Surface: {
-    surfaces_.push_back(geom);
+    surfaces_.push_back(obj);
   } break;
   default:
     return false;
@@ -270,16 +270,16 @@ bool View3d::Display(const canvas::handle<canvas::Geometry> &geom) {
 void View3d::ZoomAll() {
   gp::Box box{};
 
-  for (const canvas::handle<canvas::Geometry> &geom : points_) {
-    box.Unite(geom->GetBox());
+  for (const canvas::handle<canvas::Presentable> &obj : points_) {
+    box.Unite(obj->GetBox());
   }
 
-  for (const canvas::handle<canvas::Geometry> &geom : curves_) {
-    box.Unite(geom->GetBox());
+  for (const canvas::handle<canvas::Presentable> &obj : curves_) {
+    box.Unite(obj->GetBox());
   }
 
-  for (const canvas::handle<canvas::Geometry> &geom : surfaces_) {
-    box.Unite(geom->GetBox());
+  for (const canvas::handle<canvas::Presentable> &obj : surfaces_) {
+    box.Unite(obj->GetBox());
   }
 
   camera_->ZoomToBox(box, 0.2f);

@@ -3,6 +3,8 @@
 
 #include "object.h"
 
+#include "../gp/box.h"
+
 namespace lviz {
 namespace canvas {
 
@@ -19,6 +21,8 @@ public:
 
 public:
   virtual Type GetType() const = 0;
+
+  virtual gp::Box GetBox() const = 0;
 
   virtual bool CreateBuffers() = 0;
 

@@ -9,9 +9,9 @@ function lviz.log.Clear() end
 lviz.view3d = {}
 
 ---
----@param geom lviz.canvas.Geometry
+---@param obj lviz.canvas.Presentable
 ---@return boolean
-function lviz.view3d.Display(geom) end
+function lviz.view3d.Display(obj) end
 
 ---
 function lviz.view3d.Clear() end

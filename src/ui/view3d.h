@@ -4,10 +4,10 @@
 #include <glm/glm.hpp>
 
 #include "../canvas/camera.h"
-#include "../canvas/geometry.h"
 #include "../canvas/grid.h"
 #include "../canvas/handle.h"
 #include "../canvas/light.h"
+#include "../canvas/presentable.h"
 #include "../render/shader.h"
 #include "input.h"
 
@@ -38,7 +38,7 @@ public:
 
   void Clear();
 
-  bool Display(const canvas::handle<canvas::Geometry> &geom);
+  bool Display(const canvas::handle<canvas::Presentable> &obj);
 
   void ZoomAll();
 
@@ -58,9 +58,9 @@ private:
   std::unique_ptr<render::Shader> crv_shader_;
   std::unique_ptr<render::Shader> srf_shader_;
   std::unique_ptr<canvas::Grid> grid_;
-  std::vector<canvas::handle<canvas::Geometry>> points_;
-  std::vector<canvas::handle<canvas::Geometry>> curves_;
-  std::vector<canvas::handle<canvas::Geometry>> surfaces_;
+  std::vector<canvas::handle<canvas::Presentable>> points_;
+  std::vector<canvas::handle<canvas::Presentable>> curves_;
+  std::vector<canvas::handle<canvas::Presentable>> surfaces_;
   glm::vec2 size_;
   glm::vec2 cursor_;
   glm::f32 pnt_size_;

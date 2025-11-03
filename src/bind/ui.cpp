@@ -11,8 +11,8 @@ void lviz::bind::BindUI(lua_State *L, window::GLWindow *gl_win) {
       .beginNamespace("view3d")
       .addFunction(
           "Display",
-          [view3d](const canvas::handle<canvas::Geometry> &geom) -> bool {
-            return view3d->Display(geom);
+          [view3d](const canvas::handle<canvas::Presentable> &obj) -> bool {
+            return view3d->Display(obj);
           })
       .addFunction("Clear", [view3d]() { view3d->Clear(); })
       .endNamespace()

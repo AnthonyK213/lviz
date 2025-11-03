@@ -15,7 +15,9 @@ void lviz::bind::BindCanvas(lua_State *L) {
       .beginClass<canvas::Object>("Object")
       .addFunction("GetRefCount", &canvas::Object::GetRefCount)
       .endClass()
-      .deriveClass<canvas::Geometry, canvas::Object>("Geometry")
+      .deriveClass<canvas::Presentable, canvas::Object>("Presentable")
+      .endClass()
+      .deriveClass<canvas::Geometry, canvas::Presentable>("Geometry")
       .endClass()
       .deriveClass<canvas::Point, canvas::Geometry>("Point")
       .addConstructorFrom<canvas::handle<canvas::Point>, void(const gp::Pnt &),

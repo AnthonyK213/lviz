@@ -3,14 +3,11 @@
 
 #include "presentable.h"
 
-#include "../gp/box.h"
-
 namespace lviz {
 namespace canvas {
 
 class Geometry : public Presentable {
 public:
-  virtual gp::Box GetBox() const = 0;
 };
 
 } // namespace canvas

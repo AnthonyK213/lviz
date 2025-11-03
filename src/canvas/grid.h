@@ -20,6 +20,8 @@ public:
 
   virtual Type GetType() const override;
 
+  virtual gp::Box GetBox() const override;
+
   virtual bool CreateBuffers() override;
 
   virtual void Draw() override;

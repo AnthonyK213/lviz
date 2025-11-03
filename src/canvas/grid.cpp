@@ -109,6 +109,10 @@ Presentable::Type Grid::GetType() const {
   return Type::Grid;
 }
 
+gp::Box Grid::GetBox() const {
+  return gp::Box();
+}
+
 bool Grid::CreateBuffers() {
   static const glm::vec2 vertices[4] = {
       glm::vec2{-1.0f, -1.0f},

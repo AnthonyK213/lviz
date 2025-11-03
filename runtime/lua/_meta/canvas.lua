@@ -10,7 +10,10 @@ lviz.canvas.Object = {}
 ---@return integer
 function lviz.canvas.Object:GetRefCount() end
 
----@class lviz.canvas.Geometry : lviz.canvas.Object
+---@class lviz.canvas.Presentable : lviz.canvas.Object
+lviz.canvas.Presentable = {}
+
+---@class lviz.canvas.Geometry : lviz.canvas.Presentable
 lviz.canvas.Geometry = {}
 
 ---@class lviz.canvas.Point : lviz.canvas.Geometry
