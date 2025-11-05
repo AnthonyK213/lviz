@@ -58,7 +58,8 @@ void lviz::bind::BindCanvas(lua_State *L) {
       .endClass()
       .deriveClass<canvas::Label, canvas::Presentable>("Label")
       .addConstructorFrom<canvas::handle<canvas::Label>,
-                          void(const std::string &, const gp::Pnt &, int)>()
+                          void(const std::string &, const gp::Pnt &,
+                               glm::f32)>()
       .endClass()
       .endNamespace()
       .endNamespace();

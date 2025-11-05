@@ -53,5 +53,5 @@ lviz.canvas.Surface = {}
 lviz.canvas.Triangle = {}
 
 ---@class lviz.canvas.Label : lviz.canvas.Presentable
----@overload fun(text: string, location: lviz.gp.Pnt, size: integer):lviz.canvas.Label
+---@overload fun(text: string, location: lviz.gp.Pnt, size: number):lviz.canvas.Label
 lviz.canvas.Label = {}

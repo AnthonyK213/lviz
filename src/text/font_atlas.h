@@ -19,6 +19,16 @@ public:
 
   bool Init(const std::string &font);
 
+  const Character *GetCharacter(char c) const;
+
+  GLuint GetWidth() const {
+    return tex_width_;
+  }
+
+  GLuint GetHeight() const {
+    return tex_height_;
+  }
+
   void Bind() const;
 
   void Unbind() const;

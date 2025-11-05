@@ -86,6 +86,14 @@ bool FontAtlas::Init(const std::string &font) {
   return true;
 }
 
+const Character *FontAtlas::GetCharacter(char c) const {
+  auto it = char_map_.find(c);
+  if (it == char_map_.cend())
+    return nullptr;
+  else
+    return &it->second;
+}
+
 void FontAtlas::Bind() const {
   glBindTexture(GL_TEXTURE_2D, tex_id_);
 }

@@ -1,7 +1,6 @@
 #include "view3d.h"
 
 #include "../util/math.h"
-
 #include "../window/window.h"
 
 #include <imgui.h>
@@ -146,6 +145,51 @@ void main() {
 }
 )";
 
+const static char *LBL_VS = R"(
+#version 330 core
+
+layout(location = 0) in vec2 aCoord;
+layout(location = 1) in vec2 aUV;
+
+uniform vec2 ndcUnit;
+uniform float texHeight;
+uniform float labelSize;
+uniform vec3 labelPos;
+uniform mat4 view;
+uniform mat4 projection;
+
+out vec2 TexCoords;
+
+void main() {
+  vec4 labelViewPos = view * vec4(labelPos, 1.0f);
+  vec4 labelProjPos = projection * labelViewPos;
+  float height = labelSize * ndcUnit.y * labelProjPos.w;
+  labelProjPos += vec4(0.0f, height, 0.0f, 0.0f);
+  vec4 labelOffset = inverse(projection) * labelProjPos;
+  float scale = abs(labelOffset.y / labelOffset.w  - labelViewPos.y) / texHeight;
+
+  vec3 viewCoord = vec3(aCoord * scale, 0.0f) + vec3(labelViewPos);
+  gl_Position = projection * vec4(viewCoord, 1.0f);
+  TexCoords = aUV;
+}
+)";
+
+const static char *LBL_FS = R"(
+#version 330 core
+
+uniform sampler2D text;
+uniform vec3 textColor;
+
+in vec2 TexCoords;
+
+out vec4 color;
+
+void main() {    
+  vec4 sampled = vec4(1.0f, 1.0f, 1.0f, texture(text, TexCoords).r);
+  color = vec4(textColor, 1.0f) * sampled;
+}
+)";
+
 static void cameraUpdateShader(canvas::Camera *camera, render::Shader *shader) {
   shader->SetMat4("model", glm::mat4{1.0f});
   shader->SetMat4("view", camera->GetViewMatrix());
@@ -186,6 +230,11 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
   srf_shader_source.fragment_shader = SRF_FS;
   srf_shader_ = std::make_unique<render::Shader>(srf_shader_source);
 
+  render::ShaderSource lbl_shader_source{};
+  lbl_shader_source.vertex_shader = LBL_VS;
+  lbl_shader_source.fragment_shader = LBL_FS;
+  lbl_shader_ = std::make_unique<render::Shader>(lbl_shader_source);
+
   glm::vec3 cam_orig{40.0f, -20.0f, 20.0f};
   glm::mat4 cam_pos = createCameraPos(cam_orig);
   glm::f32 cam_dist = glm::length(cam_orig);
@@ -199,7 +248,12 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
   grid_->CreateBuffers();
 
   font_atlas_ = std::make_unique<text::FontAtlas>();
+  /* TODO: Find fonts on system. */
+#if defined(_WIN32)
   font_atlas_->Init("C:/Windows/Fonts/arial.ttf");
+#elif defined(__APPLE__)
+  font_atlas_->Init("/System/Library/Fonts/Supplemental/Arial.ttf");
+#endif
 }
 
 View3d::~View3d() {}
@@ -237,9 +291,20 @@ void View3d::Render() {
   }
 
   if (!labels_.empty()) {
-    for (const canvas::handle<canvas::Presentable> &lbl : labels_) {
+    lbl_shader_->Use();
+    lbl_shader_->SetVec2("ndcUnit", glm::vec2{2.0f} / size_);
+    lbl_shader_->SetVec3("textColor", glm::vec3(1.0f));
+    glm::f32 atlasHeight = font_atlas_->GetHeight();
+    lbl_shader_->SetNums("texHeight", 1, &atlasHeight);
+    cameraUpdateShader(camera_.get(), lbl_shader_.get());
+    font_atlas_->Bind();
+    for (const canvas::handle<canvas::Label> &lbl : labels_) {
+      glm::f32 labelSize = lbl->GetSize();
+      lbl_shader_->SetNums("labelSize", 1, &labelSize);
+      lbl_shader_->SetVec3("labelPos", lbl->GetLocation());
       lbl->Draw();
     }
+    font_atlas_->Unbind();
   }
 
   if (show_grid_) {
@@ -251,24 +316,37 @@ void View3d::Clear() {
   points_.clear();
   curves_.clear();
   surfaces_.clear();
+  labels_.clear();
 }
 
 bool View3d::Display(const canvas::handle<canvas::Presentable> &obj) {
-  if (!obj || !obj->CreateBuffers())
+  if (!obj)
     return false;
 
   switch (obj->GetType()) {
   case canvas::Presentable::Type::Point: {
+    if (!obj->CreateBuffers())
+      return false;
     points_.push_back(obj);
   } break;
   case canvas::Presentable::Type::Curve: {
+    if (!obj->CreateBuffers())
+      return false;
     curves_.push_back(obj);
   } break;
   case canvas::Presentable::Type::Surface: {
+    if (!obj->CreateBuffers())
+      return false;
     surfaces_.push_back(obj);
   } break;
   case canvas::Presentable::Type::Label: {
-    labels_.push_back(obj);
+    auto label = canvas::handle<canvas::Label>::DownCast(obj);
+    if (!label)
+      return false;
+    label->BuildGlyphs(font_atlas_.get());
+    if (!label->CreateBuffers())
+      return false;
+    labels_.push_back(label);
   } break;
   default:
     return false;
