@@ -1,7 +1,7 @@
 #ifndef _LVIZ_CANVAS_VERTEX_H
 #define _LVIZ_CANVAS_VERTEX_H
 
-#include "../gp/glm.h"
+#include "../gp/xyz.h"
 #include "../render/gl_vertex_buffer_layout.h"
 
 namespace lviz {

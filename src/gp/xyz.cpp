@@ -1,11 +1,11 @@
-#include "glm.h"
-#include "util.h"
+#include "xyz.h"
+#include "../util/math.h"
 
 namespace lviz {
 namespace gp {
 
 const glm::vec3 &UnsetXYZ() {
-  static glm::vec3 unset{Math::UnsetFloat()};
+  static glm::vec3 unset{util::Math::UnsetFloat()};
   return unset;
 }
 
@@ -37,8 +37,8 @@ Vec VecCrossed(const Vec &a, const Vec &b) {
 glm::f32 VecAngle(const Vec &a, const Vec &b) {
   glm::f32 a_len = glm::length(a);
   glm::f32 b_len = glm::length(b);
-  if (a_len < Math::Zero() || b_len < Math::Zero())
-    return Math::UnsetFloat();
+  if (a_len < util::Math::Zero() || b_len < util::Math::Zero())
+    return util::Math::UnsetFloat();
   glm::f32 cos_theta = glm::dot(a, b) / (a_len * b_len);
   return std::acos(cos_theta);
 }

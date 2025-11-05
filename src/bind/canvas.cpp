@@ -2,6 +2,7 @@
 
 #include "../canvas/circle.h"
 #include "../canvas/ellipse.h"
+#include "../canvas/label.h"
 #include "../canvas/line.h"
 #include "../canvas/point.h"
 #include "../canvas/polyline.h"
@@ -54,6 +55,10 @@ void lviz::bind::BindCanvas(lua_State *L) {
           void(const gp::Pnt &, const gp::Pnt &, const gp::Pnt &),
           void(const gp::Pnt &, const gp::Pnt &, const gp::Pnt &,
                const gp::Vec &, const gp::Vec &, const gp::Vec &)>()
+      .endClass()
+      .deriveClass<canvas::Label, canvas::Presentable>("Label")
+      .addConstructorFrom<canvas::handle<canvas::Label>,
+                          void(const std::string &, const gp::Pnt &, int)>()
       .endClass()
       .endNamespace()
       .endNamespace();

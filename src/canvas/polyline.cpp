@@ -1,7 +1,7 @@
 #include "polyline.h"
 
-#include "../gp/util.h"
 #include "../render/gl_vertex_array_buffer.h"
+#include "../util/math.h"
 
 #include <algorithm>
 #include <iterator>
@@ -48,7 +48,7 @@ bool Polyline::IsPeriodic() const {
 }
 
 glm::f32 Polyline::Period() const {
-  return gp::Math::UnsetFloat();
+  return util::Math::UnsetFloat();
 }
 
 std::vector<Vertex> Polyline::GetVertices(glm::f32 t0, glm::f32 t1) const {
@@ -58,7 +58,7 @@ std::vector<Vertex> Polyline::GetVertices(glm::f32 t0, glm::f32 t1) const {
   std::vector<Vertex> vertices{};
 
   int i = static_cast<int>(std::ceil(t0));
-  if (std::abs((glm::f32)i - t0) > gp::Math::Zero())
+  if (std::abs((glm::f32)i - t0) > util::Math::Zero())
     vertices.emplace_back(Value(t0));
 
   int j = static_cast<int>(std::floor(t1));
@@ -67,7 +67,7 @@ std::vector<Vertex> Polyline::GetVertices(glm::f32 t0, glm::f32 t1) const {
     vertices.push_back(vertices_[i]);
   }
 
-  if (std::abs(t1 - (glm::f32)j) > gp::Math::Zero())
+  if (std::abs(t1 - (glm::f32)j) > util::Math::Zero())
     vertices.emplace_back(Value(t1));
 
   return vertices;

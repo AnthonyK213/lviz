@@ -51,3 +51,7 @@ lviz.canvas.Surface = {}
 ---@overload fun(point1: lviz.gp.Pnt, point2: lviz.gp.Pnt, point3: lviz.gp.Pnt):lviz.canvas.Triangle
 ---@overload fun(point1: lviz.gp.Pnt, point2: lviz.gp.Pnt, point3: lviz.gp.Pnt, normal1: lviz.gp.Vec, normal2: lviz.gp.Vec, normal3: lviz.gp.Vec):lviz.canvas.Triangle
 lviz.canvas.Triangle = {}
+
+---@class lviz.canvas.Label : lviz.canvas.Presentable
+---@overload fun(text: string, location: lviz.gp.Pnt, size: integer):lviz.canvas.Label
+lviz.canvas.Label = {}

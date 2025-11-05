@@ -1,5 +1,5 @@
-#ifndef _LVIZ_GP_UTIL_H
-#define _LVIZ_GP_UTIL_H
+#ifndef _LVIZ_UTIL_MATH_H
+#define _LVIZ_UTIL_MATH_H
 
 #include <glm/glm.hpp>
 
@@ -7,7 +7,7 @@
 #include <limits>
 
 namespace lviz {
-namespace gp {
+namespace util {
 
 class Math {
 public:
@@ -56,7 +56,7 @@ public:
   }
 };
 
-} // namespace gp
+} // namespace util
 } // namespace lviz
 
 #endif

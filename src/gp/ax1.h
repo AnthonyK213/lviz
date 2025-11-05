@@ -1,7 +1,7 @@
 #ifndef _LVIZ_GP_AX1_H
 #define _LVIZ_GP_AX1_H
 
-#include "glm.h"
+#include "xyz.h"
 
 namespace lviz {
 namespace gp {

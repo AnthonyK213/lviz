@@ -1,7 +1,7 @@
 #include "circle.h"
 
-#include "../gp/util.h"
 #include "../render/gl_vertex_array_buffer.h"
+#include "../util/math.h"
 
 namespace lviz {
 namespace canvas {
@@ -10,11 +10,11 @@ Circle::Circle(const gp::Ax2 &position, glm::f32 radius)
     : Curve(), pos_(position), radius_(radius) {}
 
 glm::f32 Circle::T0() const {
-  return -gp::Math::Infinite();
+  return -util::Math::Infinite();
 }
 
 glm::f32 Circle::T1() const {
-  return gp::Math::Infinite();
+  return util::Math::Infinite();
 }
 
 gp::Pnt Circle::Value(glm::f32 t) const {
@@ -32,15 +32,15 @@ bool Circle::IsPeriodic() const {
 }
 
 glm::f32 Circle::Period() const {
-  return gp::Math::Tau();
+  return util::Math::Tau();
 }
 
 std::vector<Vertex> Circle::GetVertices(glm::f32 t0, glm::f32 t1) const {
   if (t0 >= t1)
     return {};
 
-  glm::f32 cos_theta = 1.0f - (gp::Math::LinearDeflection() / radius_);
-  glm::f32 theta = gp::Math::AngularDeflection();
+  glm::f32 cos_theta = 1.0f - (util::Math::LinearDeflection() / radius_);
+  glm::f32 theta = util::Math::AngularDeflection();
   if (cos_theta > 0.0)
     theta = (std::min)(theta, std::acos(cos_theta) * 2.0f);
   int n_vertices = static_cast<int>(std::ceil((t1 - t0) / theta));

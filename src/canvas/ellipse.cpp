@@ -1,7 +1,7 @@
 #include "ellipse.h"
 
-#include "../gp/util.h"
 #include "../render/gl_vertex_array_buffer.h"
+#include "../util/math.h"
 
 namespace lviz {
 namespace canvas {
@@ -11,11 +11,11 @@ Ellipse::Ellipse(const gp::Ax2 &position, glm::f32 major_radius,
     : Curve(), pos_(position), major_(major_radius), minor_(minor_radius) {}
 
 glm::f32 Ellipse::T0() const {
-  return -gp::Math::Infinite();
+  return -util::Math::Infinite();
 }
 
 glm::f32 Ellipse::T1() const {
-  return gp::Math::Infinite();
+  return util::Math::Infinite();
 }
 
 gp::Pnt Ellipse::Value(glm::f32 t) const {
@@ -32,7 +32,7 @@ bool Ellipse::IsPeriodic() const {
 }
 
 glm::f32 Ellipse::Period() const {
-  return gp::Math::Tau();
+  return util::Math::Tau();
 }
 
 std::vector<Vertex> Ellipse::GetVertices(glm::f32 t0, glm::f32 t1) const {
@@ -42,7 +42,7 @@ std::vector<Vertex> Ellipse::GetVertices(glm::f32 t0, glm::f32 t1) const {
   /* TODO: Implement with *REAL* deflections. */
 
   int n_vertices =
-      static_cast<int>(std::ceil((t1 - t0) / gp::Math::AngularDeflection()));
+      static_cast<int>(std::ceil((t1 - t0) / util::Math::AngularDeflection()));
 
   std::vector<Vertex> vertices{};
   vertices.reserve(n_vertices + 1);

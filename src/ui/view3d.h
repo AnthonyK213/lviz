@@ -9,6 +9,7 @@
 #include "../canvas/light.h"
 #include "../canvas/presentable.h"
 #include "../render/shader.h"
+#include "../text/font_atlas.h"
 #include "input.h"
 
 #include <memory>
@@ -58,9 +59,11 @@ private:
   std::unique_ptr<render::Shader> crv_shader_;
   std::unique_ptr<render::Shader> srf_shader_;
   std::unique_ptr<canvas::Grid> grid_;
+  std::unique_ptr<text::FontAtlas> font_atlas_;
   std::vector<canvas::handle<canvas::Presentable>> points_;
   std::vector<canvas::handle<canvas::Presentable>> curves_;
   std::vector<canvas::handle<canvas::Presentable>> surfaces_;
+  std::vector<canvas::handle<canvas::Presentable>> labels_;
   glm::vec2 size_;
   glm::vec2 cursor_;
   glm::f32 pnt_size_;

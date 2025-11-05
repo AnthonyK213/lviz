@@ -1,5 +1,5 @@
-#ifndef _LVIZ_GP_GLM_H
-#define _LVIZ_GP_GLM_H
+#ifndef _LVIZ_GP_XYZ_H
+#define _LVIZ_GP_XYZ_H
 
 #include <glm/glm.hpp>
 

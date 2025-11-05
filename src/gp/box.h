@@ -1,7 +1,7 @@
 #ifndef _LVIZ_GP_BOX_H
 #define _LVIZ_GP_BOX_H
 
-#include "glm.h"
+#include "xyz.h"
 
 #include <vector>
 

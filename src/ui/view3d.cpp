@@ -1,6 +1,6 @@
 #include "view3d.h"
 
-#include "../gp/util.h"
+#include "../util/math.h"
 
 #include "../window/window.h"
 
@@ -168,9 +168,7 @@ inline static glm::mat4 createCameraPos(const glm::vec3 &cam_orig) {
 }
 
 View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
-    : parent_(parent), camera_(nullptr), light_(nullptr), pnt_shader_(nullptr),
-      crv_shader_(nullptr), srf_shader_(nullptr), grid_(nullptr), points_(),
-      curves_(), surfaces_(), size_(init_size), cursor_(0, 0), pnt_size_(10.0f),
+    : parent_(parent), size_(init_size), cursor_(0, 0), pnt_size_(10.0f),
       crv_width_(5.0f), show_grid_(false) {
   render::ShaderSource pnt_shader_source{};
   pnt_shader_source.vertex_shader = PNT_VS;
@@ -192,13 +190,16 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
   glm::mat4 cam_pos = createCameraPos(cam_orig);
   glm::f32 cam_dist = glm::length(cam_orig);
   camera_ = std::make_unique<canvas::Camera>(
-      cam_pos, cam_dist, gp::Math::ToRad(45.0f), 1.3f, 0.1f, 1000.0f);
+      cam_pos, cam_dist, util::Math::ToRad(45.0f), 1.3f, 0.1f, 1000.0f);
 
   light_ = std::make_unique<canvas::Light>(glm::vec3(90.0f, -120.0f, 150.0f));
   light_->AttachToCamera(camera_.get(), glm::vec3(-0.35f, 0.35f, 0.0f));
 
   grid_ = std::make_unique<canvas::Grid>(camera_.get());
   grid_->CreateBuffers();
+
+  font_atlas_ = std::make_unique<text::FontAtlas>();
+  font_atlas_->Init("C:/Windows/Fonts/arial.ttf");
 }
 
 View3d::~View3d() {}
@@ -235,6 +236,12 @@ void View3d::Render() {
     }
   }
 
+  if (!labels_.empty()) {
+    for (const canvas::handle<canvas::Presentable> &lbl : labels_) {
+      lbl->Draw();
+    }
+  }
+
   if (show_grid_) {
     grid_->Draw();
   }
@@ -259,6 +266,9 @@ bool View3d::Display(const canvas::handle<canvas::Presentable> &obj) {
   } break;
   case canvas::Presentable::Type::Surface: {
     surfaces_.push_back(obj);
+  } break;
+  case canvas::Presentable::Type::Label: {
+    labels_.push_back(obj);
   } break;
   default:
     return false;

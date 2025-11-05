@@ -1,5 +1,5 @@
 #include "ax2.h"
-#include "util.h"
+#include "../util/math.h"
 
 namespace lviz {
 namespace gp {
@@ -9,7 +9,7 @@ Ax2::Ax2() : axis_(), x_dir_(1.0, 0.0, 0.0), y_dir_(0.0, 1.0, 0.0) {}
 Ax2::Ax2(const Pnt &location, const Vec &direction)
     : axis_(location, direction), x_dir_(1.0, 0.0, 0.0) {
   y_dir_ = glm::cross(axis_.Direction(), x_dir_);
-  if (glm::length(y_dir_) < Math::Zero()) {
+  if (glm::length(y_dir_) < util::Math::Zero()) {
     x_dir_ = Vec(0.0, 1.0, 0.0);
     y_dir_ = glm::cross(axis_.Direction(), x_dir_);
   }

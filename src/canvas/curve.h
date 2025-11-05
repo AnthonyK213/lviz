@@ -4,7 +4,7 @@
 #include "geometry.h"
 #include "vertex.h"
 
-#include "../gp/glm.h"
+#include "../gp/xyz.h"
 #include "../render/gl_vertex_buffer.h"
 
 #include <memory>

@@ -2,7 +2,7 @@
 
 #include "../gp/ax1.h"
 #include "../gp/ax2.h"
-#include "../gp/glm.h"
+#include "../gp/xyz.h"
 
 static glm::vec3 xyzAdded(const glm::vec3 &xyz1, const glm::vec3 &xyz2) {
   return xyz1 + xyz2;

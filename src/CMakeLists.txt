@@ -8,7 +8,9 @@ aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/bind LVIZ_BIND_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/canvas LVIZ_CANVAS_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/gp LVIZ_GP_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/render LVIZ_RENDER_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/text LVIZ_TEXT_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/ui LVIZ_UI_SRC)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/util LVIZ_UTIL_SRC)
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/window LVIZ_WINDOW_SRC)
 
 set(
@@ -18,7 +20,9 @@ set(
   ${LVIZ_CANVAS_SRC}
   ${LVIZ_GP_SRC}
   ${LVIZ_RENDER_SRC}
+  ${LVIZ_TEXT_SRC}
   ${LVIZ_UI_SRC}
+  ${LVIZ_UTIL_SRC}
   ${LVIZ_WINDOW_SRC}
   main.cpp
   )
@@ -42,9 +46,10 @@ target_include_directories(
   ${glm_SOURCE_DIR}
   ${luajit_BINARY_DIR}
   ${luabridge3_SOURCE_DIR}/Source
+  ${freetype_SOURCE_DIR}/include/
   )
 
-target_link_libraries(lviz PRIVATE glad glfw imgui)
+target_link_libraries(lviz PRIVATE glad glfw imgui freetype)
 
 # Link X11 on Linux.
 if(UNIX AND NOT APPLE)
@@ -86,7 +91,7 @@ add_custom_command(
       "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/runtime"
   )
 
-if(MSVC)
+if(WIN32)
   add_custom_command(
     TARGET lviz POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -95,5 +100,8 @@ if(MSVC)
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "$<TARGET_PROPERTY:libluajit,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
         "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "$<TARGET_PROPERTY:freetype,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
+        "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>"
     )
-endif(MSVC)
+endif()

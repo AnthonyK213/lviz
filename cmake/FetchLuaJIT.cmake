@@ -39,7 +39,7 @@ if(NOT luajit_POPULATED)
     ${luajit_BINARY_DIR}
     )
 
-  if(MSVC)
+  if(WIN32)
     set_target_properties(libluajit PROPERTIES OUTPUT_NAME "lua51")
-  endif(MSVC)
+  endif()
 endif()

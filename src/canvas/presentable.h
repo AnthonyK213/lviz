@@ -16,7 +16,7 @@ public:
     Curve,
     Surface,
     Grid,
-    Text,
+    Label,
   };
 
 public:

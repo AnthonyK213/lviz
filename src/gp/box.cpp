@@ -1,5 +1,5 @@
 #include "box.h"
-#include "util.h"
+#include "../util/math.h"
 
 namespace lviz {
 namespace gp {

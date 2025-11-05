@@ -4,7 +4,7 @@
 #include "curve.h"
 #include "vertex.h"
 
-#include "../gp/glm.h"
+#include "../gp/xyz.h"
 
 namespace lviz {
 namespace canvas {

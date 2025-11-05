@@ -1,7 +1,7 @@
 #include "trimmed_curve.h"
 
-#include "../gp/util.h"
 #include "../render/gl_vertex_array_buffer.h"
+#include "../util/math.h"
 
 namespace lviz {
 namespace canvas {
@@ -33,7 +33,7 @@ bool TrimmedCurve::IsPeriodic() const {
 }
 
 glm::f32 TrimmedCurve::Period() const {
-  return gp::Math::UnsetFloat();
+  return util::Math::UnsetFloat();
 }
 
 std::vector<Vertex> TrimmedCurve::GetVertices(glm::f32 t0, glm::f32 t1) const {

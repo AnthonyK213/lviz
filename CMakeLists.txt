@@ -22,11 +22,11 @@ if(EXISTS "${LOC_PATH}")
   build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles.")
 endif()
 
-if(MSVC)
+if(WIN32)
   option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
-else(MSVC)
+else()
   option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
-endif(MSVC)
+endif()
 
 set(OpenGL_GL_PREFERENCE "GLVND")
 
@@ -40,6 +40,7 @@ include(cmake/FetchGLM.cmake)
 include(cmake/FetchImGui.cmake)
 include(cmake/FetchLuaJIT.cmake)
 include(cmake/FetchLuaBridge3.cmake)
+include(cmake/FetchFreeType.cmake)
 
 # GLAD
 set(GLAD_DIR ${CMAKE_SOURCE_DIR}/deps/glad)
