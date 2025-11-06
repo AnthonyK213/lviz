@@ -21,10 +21,14 @@ namespace util {
 
 std::filesystem::path AppPath::ApplicationDirPath() {
 #if defined(_WIN32)
-  char path[MAX_PATH];
-  GetModuleFileNameA(nullptr, path, MAX_PATH);
-  std::filesystem::path sPath{path};
-  return sPath.parent_path();
+  char pathBuf[MAX_PATH];
+  DWORD pathLen = GetModuleFileNameA(nullptr, pathBuf, MAX_PATH);
+  if (pathLen > 0 && pathLen < MAX_PATH) {
+    std::filesystem::path appPath{pathBuf};
+    return appPath.parent_path();
+  } else {
+    return {};
+  }
 #elif defined(__linux__)
   return {};
 #elif defined(__APPLE__)
