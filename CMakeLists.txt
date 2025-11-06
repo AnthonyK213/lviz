@@ -41,6 +41,7 @@ include(cmake/FetchImGui.cmake)
 include(cmake/FetchLuaJIT.cmake)
 include(cmake/FetchLuaBridge3.cmake)
 include(cmake/FetchFreeType.cmake)
+include(cmake/FetchFonts.cmake)
 
 # GLAD
 set(GLAD_DIR ${CMAKE_SOURCE_DIR}/deps/glad)

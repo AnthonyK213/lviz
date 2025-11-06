@@ -1,5 +1,6 @@
 #include "view3d.h"
 
+#include "../util/app_path.h"
 #include "../util/math.h"
 #include "../window/window.h"
 
@@ -248,12 +249,14 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
   grid_->CreateBuffers();
 
   font_atlas_ = std::make_unique<text::FontAtlas>();
-  /* TODO: Find fonts on system. */
-#if defined(_WIN32)
-  font_atlas_->Init("C:/Windows/Fonts/arial.ttf");
-#elif defined(__APPLE__)
-  font_atlas_->Init("/System/Library/Fonts/Supplemental/Arial.ttf");
-#endif
+  std::filesystem::path app_dir = util::AppPath::ApplicationDirPath();
+  if (!app_dir.empty()) {
+    std::filesystem::path lm_path =
+        app_dir / "fonts" / "latin-modern" / "lmroman8-bold.otf";
+    font_atlas_->Init(lm_path.string());
+  }
+
+  /* TODO: Find fonts on system? */
 }
 
 View3d::~View3d() {}

@@ -89,6 +89,9 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy_directory
       "$<TARGET_PROPERTY:lviz,SOURCE_DIR>/../runtime"
       "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/runtime"
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+      "${CMAKE_BINARY_DIR}/deps/latin-modern"
+      "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/fonts/latin-modern"
   )
 
 if(WIN32)
