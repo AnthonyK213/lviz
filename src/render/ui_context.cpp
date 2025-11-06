@@ -1,6 +1,6 @@
 #include "ui_context.h"
 
-#include "../appl/application.h"
+#include "../util/app_path.h"
 #include "../window/window.h"
 
 #include <glad/glad.h>
@@ -32,9 +32,9 @@ bool UIContext::Init(window::Window *win) {
   io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 #endif
 
-  auto app_local = appl::Application::GetAppLocalDataLocation();
-  if (app_local && std::filesystem::is_directory(app_local.value())) {
-    std::string ini_path = (app_local.value() / "imgui.ini").string();
+  std::filesystem::path app_local = util::AppPath::AppLocalDataLocation();
+  if (!app_local.empty() && std::filesystem::is_directory(app_local)) {
+    std::string ini_path = (app_local / "imgui.ini").string();
     char *c_ini_path = new char[ini_path.length() + 1];
     std::strcpy(c_ini_path, ini_path.c_str());
     io.IniFilename = c_ini_path; /* Let it leak... */

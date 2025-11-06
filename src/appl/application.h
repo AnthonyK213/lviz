@@ -1,16 +1,14 @@
 #ifndef _LVIZ_APPL_APPLICATION_H
 #define _LVIZ_APPL_APPLICATION_H
 
-#include <memory>
-#include <string>
-
+#include "../util/app_path.h"
 #include "../window/gl_window.h"
 #include "extension_manager.h"
 #include "log_stream.h"
 #include "state.h"
 
-#include <filesystem>
-#include <optional>
+#include <memory>
+#include <string>
 
 namespace lviz {
 namespace appl {
@@ -26,8 +24,6 @@ public:
   }
 
   void Run();
-
-  static std::optional<std::filesystem::path> GetAppLocalDataLocation();
 
 private:
   std::unique_ptr<window::GLWindow> window_;
