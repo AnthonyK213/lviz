@@ -84,15 +84,27 @@ else()
     )
 endif()
 
-add_custom_command(
-  TARGET lviz POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-      "$<TARGET_PROPERTY:lviz,SOURCE_DIR>/../runtime"
-      "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/runtime"
-  COMMAND ${CMAKE_COMMAND} -E copy_directory
-      "${CMAKE_BINARY_DIR}/deps/latin-modern"
-      "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/fonts/latin-modern"
-  )
+if(APPLE)
+  add_custom_command(
+    TARGET lviz POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "$<TARGET_PROPERTY:lviz,SOURCE_DIR>/../runtime"
+        "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/lviz.app/Contents/Resources/runtime"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_BINARY_DIR}/deps/latin-modern"
+        "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/lviz.app/Contents/Resources/fonts/latin-modern"
+    )
+else()
+  add_custom_command(
+    TARGET lviz POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "$<TARGET_PROPERTY:lviz,SOURCE_DIR>/../runtime"
+        "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/runtime"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_BINARY_DIR}/deps/latin-modern"
+        "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/fonts/latin-modern"
+    )
+endif()
 
 if(WIN32)
   add_custom_command(

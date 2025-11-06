@@ -249,10 +249,10 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
   grid_->CreateBuffers();
 
   font_atlas_ = std::make_unique<text::FontAtlas>();
-  std::filesystem::path app_dir = util::AppPath::ApplicationDirPath();
-  if (!app_dir.empty()) {
+  std::filesystem::path res_dir = util::AppPath::AppResourcesDir();
+  if (!res_dir.empty()) {
     std::filesystem::path lm_path =
-        app_dir / "fonts" / "latin-modern" / "lmroman8-bold.otf";
+        res_dir / "fonts" / "latin-modern" / "lmroman8-bold.otf";
     font_atlas_->Init(lm_path.string());
   }
 

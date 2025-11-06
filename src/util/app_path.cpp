@@ -1,13 +1,20 @@
 #if defined(_WIN32)
 #include <ShlObj.h>
 #include <Windows.h>
-#elif defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux__)
+#include <pwd.h>
+#include <sys/types.h>
+#include <unistd.h>
+#elif defined(__APPLE__)
+#include <mach-o/dyld.h>
 #include <pwd.h>
 #include <sys/types.h>
 #include <unistd.h>
 #endif
 
 #include "app_path.h"
+
+#include <vector>
 
 namespace lviz {
 namespace util {
@@ -21,7 +28,15 @@ std::filesystem::path AppPath::ApplicationDirPath() {
 #elif defined(__linux__)
   return {};
 #elif defined(__APPLE__)
-  return {};
+  uint32_t bufsize = 0;
+  _NSGetExecutablePath(nullptr, &bufsize);
+  std::vector<char> pathBuf(bufsize);
+  if (_NSGetExecutablePath(pathBuf.data(), &bufsize) == 0) {
+    std::filesystem::path appPath{pathBuf.data()};
+    return appPath.parent_path();
+  } else {
+    return {};
+  }
 #else
   return {};
 #endif
@@ -56,6 +71,17 @@ std::filesystem::path AppPath::AppLocalDataLocation() {
   }
 #else
   return {};
+#endif
+}
+
+std::filesystem::path AppPath::AppResourcesDir() {
+  std::filesystem::path appDir = ApplicationDirPath();
+#if defined(__APPLE__)
+  if (appDir.empty() || !appDir.has_parent_path())
+    return {};
+  return appDir.parent_path() / "Resources";
+#else
+  return appDir;
 #endif
 }
 

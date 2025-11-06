@@ -11,6 +11,8 @@ public:
   static std::filesystem::path ApplicationDirPath();
 
   static std::filesystem::path AppLocalDataLocation();
+
+  static std::filesystem::path AppResourcesDir();
 };
 
 } // namespace util
