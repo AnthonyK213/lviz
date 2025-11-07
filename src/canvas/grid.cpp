@@ -51,10 +51,10 @@ vec4 FragGrid(vec3 point) {
   float minX = min(deriv.x, 1.0f);
   float minY = min(deriv.y, 1.0f);
 
-  if (-minY < point.y && point.y < minY) {
-    return vec4(0.985f, 0.382f, 0.486f, 1.0f); // x-axis
-  } else if (-minX < point.x && point.x < minX) {
-    return vec4(0.382f, 0.985f, 0.486f, 1.0f); // y-axis
+  if (-minY < point.y && point.y < minY) { // x-axis
+    return vec4(0.985f, 0.382f, 0.486f, 1.0f) * ((point.x >= 0.0f) ? 1.0f : 0.6f);
+  } else if (-minX < point.x && point.x < minX) { // y-axis
+    return vec4(0.382f, 0.985f, 0.486f, 1.0f) * ((point.y >= 0.0f) ? 1.0f : 0.6f);
   } else {
     vec2 uv = fract(coord - 0.5f) - 0.5f;
     vec2 grid = abs(uv) / deriv;
@@ -80,7 +80,7 @@ void main() {
 
   FragColor = FragGrid(fragPos);
   FragColor *= smoothstep(0.3f, 0.0f, ComputeLinearDepth(fragPos) / 1000.0f);
-  FragColor *= float(t > 0);
+  // FragColor *= float(t > 0);
 
   gl_FragDepth = ComputeDepth(fragPos);
 }

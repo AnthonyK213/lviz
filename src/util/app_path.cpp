@@ -2,6 +2,7 @@
 #include <ShlObj.h>
 #include <Windows.h>
 #elif defined(__linux__)
+#include <linux/limits.h>
 #include <pwd.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -30,11 +31,18 @@ std::filesystem::path AppPath::ApplicationDirPath() {
     return {};
   }
 #elif defined(__linux__)
-  return {};
+  std::vector<char> pathBuf(PATH_MAX, 0);
+  ssize_t pathLen = readlink("/proc/self/exe", pathBuf.data(), PATH_MAX);
+  if (pathLen > 0 && pathLen < PATH_MAX) {
+    std::filesystem::path appPath{pathBuf.data()};
+    return appPath.parent_path();
+  } else {
+    return {};
+  }
 #elif defined(__APPLE__)
   uint32_t bufsize = 0;
   _NSGetExecutablePath(nullptr, &bufsize);
-  std::vector<char> pathBuf(bufsize);
+  std::vector<char> pathBuf(bufsize, 0);
   if (_NSGetExecutablePath(pathBuf.data(), &bufsize) == 0) {
     std::filesystem::path appPath{pathBuf.data()};
     return appPath.parent_path();
