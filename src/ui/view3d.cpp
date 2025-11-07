@@ -141,7 +141,7 @@ void main() {
   float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32);
   vec3 specular = materialSpecular * spec * lightColor;
 
-  vec3 result = (ambient + diffuse + spec) * materialDiffuse;
+  vec3 result = (ambient + diffuse + specular) * materialDiffuse;
   FragColor = vec4(result, 1.0f);
 }
 )";
@@ -243,7 +243,7 @@ View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
       cam_pos, cam_dist, util::Math::ToRad(45.0f), 1.3f, 0.1f, 1000.0f);
 
   light_ = std::make_unique<canvas::Light>(glm::vec3(90.0f, -120.0f, 150.0f));
-  light_->AttachToCamera(camera_.get(), glm::vec3(-1.5f, 1.5f, 1.0f));
+  light_->AttachToCamera(camera_.get(), glm::vec3(-1.0f, 1.0f, 1.0f));
 
   grid_ = std::make_unique<canvas::Grid>(camera_.get());
   grid_->CreateBuffers();
