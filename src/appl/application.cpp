@@ -48,7 +48,8 @@ Application::Application()
 }
 
 Application::~Application() {
-  state_ = nullptr; // Destruct before window_.
+  state_ = nullptr;      // Destruct before window_.
+  log_stream_ = nullptr; // Destruct before window_.
   manager_ = nullptr;
   window_ = nullptr;
 }

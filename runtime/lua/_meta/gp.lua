@@ -32,8 +32,8 @@ function lviz.gp.Pnt:Distance2(other) end
 function lviz.gp.Pnt:Added(other) end
 
 ---
----@overload fun(self: lviz.gp.Pnt, other: lviz.gp.Pnt):lviz.gp.Vec
----@overload fun(self: lviz.gp.Pnt, other: lviz.gp.Vec):lviz.gp.Pnt
+---@overload fun(self, other: lviz.gp.Pnt):lviz.gp.Vec
+---@overload fun(self, other: lviz.gp.Vec):lviz.gp.Pnt
 function lviz.gp.Pnt:Subtracted(...) end
 
 ---

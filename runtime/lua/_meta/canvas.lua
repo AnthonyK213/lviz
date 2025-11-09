@@ -52,6 +52,19 @@ lviz.canvas.Surface = {}
 ---@overload fun(point1: lviz.gp.Pnt, point2: lviz.gp.Pnt, point3: lviz.gp.Pnt, normal1: lviz.gp.Vec, normal2: lviz.gp.Vec, normal3: lviz.gp.Vec):lviz.canvas.Triangle
 lviz.canvas.Triangle = {}
 
+---@class lviz.canvas.Triangulation : lviz.canvas.Surface
+---@overload fun():lviz.canvas.Triangulation
+lviz.canvas.Triangulation = {}
+
+---
+---@overload fun(self, point1: lviz.gp.Pnt, point2: lviz.gp.Pnt, point3: lviz.gp.Pnt)
+---@overload fun(self, point1: lviz.gp.Pnt, point2: lviz.gp.Pnt, point3: lviz.gp.Pnt, normal1: lviz.gp.Vec, normal2: lviz.gp.Vec, normal3: lviz.gp.Vec)
+---@overload fun(self, triangle: lviz.canvas.Triangle)
+function lviz.canvas.Triangulation:PushTriangle(...) end
+
+---
+function lviz.canvas.Triangulation:Clear() end
+
 ---@class lviz.canvas.Label : lviz.canvas.Presentable
 ---@overload fun(text: string, location: lviz.gp.Pnt, size: number):lviz.canvas.Label
 lviz.canvas.Label = {}

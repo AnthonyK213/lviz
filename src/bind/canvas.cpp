@@ -7,6 +7,7 @@
 #include "../canvas/point.h"
 #include "../canvas/polyline.h"
 #include "../canvas/triangle.h"
+#include "../canvas/triangulation.h"
 #include "../canvas/trimmed_curve.h"
 
 void lviz::bind::BindCanvas(lua_State *L) {
@@ -55,6 +56,21 @@ void lviz::bind::BindCanvas(lua_State *L) {
           void(const gp::Pnt &, const gp::Pnt &, const gp::Pnt &),
           void(const gp::Pnt &, const gp::Pnt &, const gp::Pnt &,
                const gp::Vec &, const gp::Vec &, const gp::Vec &)>()
+      .endClass()
+      .deriveClass<canvas::Triangulation, canvas::Surface>("Triangulation")
+      .addConstructorFrom<canvas::handle<canvas::Triangulation>, void()>()
+      .addFunction(
+          "PushTriangle",
+          luabridge::overload<const gp::Pnt &, const gp::Pnt &,
+                              const gp::Pnt &>(
+              &canvas::Triangulation::PushTriangle),
+          luabridge::overload<const gp::Pnt &, const gp::Pnt &, const gp::Pnt &,
+                              const gp::Vec &, const gp::Vec &,
+                              const gp::Vec &>(
+              &canvas::Triangulation::PushTriangle),
+          luabridge::overload<const canvas::handle<canvas::Triangle> &>(
+              &canvas::Triangulation::PushTriangle))
+      .addFunction("Clear", &canvas::Triangulation::Clear)
       .endClass()
       .deriveClass<canvas::Label, canvas::Presentable>("Label")
       .addConstructorFrom<canvas::handle<canvas::Label>,

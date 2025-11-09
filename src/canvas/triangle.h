@@ -17,6 +17,10 @@ public:
            const gp::Vec &normal1, const gp::Vec &normal2,
            const gp::Vec &normal3);
 
+  const VertexWithNormal *GetVertices() const {
+    return vertices_;
+  }
+
   virtual bool CreateBuffers() override;
 
   virtual gp::Box GetBox() const override;
