@@ -46,7 +46,7 @@ std::vector<Vertex> Line::GetVertices(glm::f32 t0, glm::f32 t1) const {
 
 bool Line::CreateBuffers() {
   vertex_buffer_ =
-      std::make_unique<render::GLVertexArrayBuffer<Vertex>>(2, vertices_);
+      std::make_unique<render::GLVertexArrayBuffer<Vertex>>(vertices_);
   return true;
 }
 

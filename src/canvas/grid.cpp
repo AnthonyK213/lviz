@@ -114,16 +114,16 @@ gp::Box Grid::GetBox() const {
 }
 
 bool Grid::CreateBuffers() {
-  static const glm::vec2 vertices[4] = {
+  static glm::vec2 vertices[4] = {
       glm::vec2{-1.0f, -1.0f},
       glm::vec2{-1.0f, 1.0f},
       glm::vec2{1.0f, 1.0f},
       glm::vec2{1.0f, -1.0f},
   };
-  static const glm::u32 indices[6] = {0, 1, 2, 0, 2, 3};
+  static glm::u32 indices[6] = {0, 1, 2, 0, 2, 3};
   buffer_ = std::make_unique<
-      render::GLVertexIndexBuffer<glm::vec2, GridVertexBufferLayout>>(
-      4, vertices, 6, indices);
+      render::GLVertexIndexBuffer<glm::vec2, GridVertexBufferLayout>>(vertices,
+                                                                      indices);
   return true;
 }
 

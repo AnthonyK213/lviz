@@ -28,7 +28,7 @@ Triangle::Triangle(const gp::Pnt &point1, const gp::Pnt &point2,
 bool Triangle::CreateBuffers() {
   vertex_buffer_ =
       std::make_unique<render::GLVertexArrayBuffer<VertexWithNormal>>(
-          3, vertices_);
+          vertices_);
   return true;
 }
 

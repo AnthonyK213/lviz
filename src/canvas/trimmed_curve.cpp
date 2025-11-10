@@ -46,8 +46,8 @@ bool TrimmedCurve::CreateBuffers() {
   std::vector<Vertex> vertices = GetVertices(t0_, t1_);
   if (vertices.empty())
     return false;
-  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer<Vertex>>(
-      static_cast<int>(vertices.size()), vertices.data());
+  vertex_buffer_ =
+      std::make_unique<render::GLVertexArrayBuffer<Vertex>>(vertices);
   return true;
 }
 

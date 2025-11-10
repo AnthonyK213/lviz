@@ -4,13 +4,15 @@
 #include "gl_vertex_buffer.h"
 #include "gl_vertex_buffer_layout.h"
 
+#include "../util/span.h"
+
 namespace lviz {
 namespace render {
 
 template <typename Vertex_, typename Layout_ = Vertex_>
 class GLVertexArrayBuffer : public GLVertexBuffer {
 public:
-  GLVertexArrayBuffer(int n_vertices, const Vertex_ vertices[])
+  GLVertexArrayBuffer(util::span<Vertex_> vertices)
       : GLVertexBuffer(), vbo_(0), vao_(0), count_(0) {
     glGenVertexArrays(1, &vao_);
 
@@ -19,7 +21,7 @@ public:
     glBindVertexArray(vao_);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferData(GL_ARRAY_BUFFER, n_vertices * sizeof(Vertex_), vertices,
+    glBufferData(GL_ARRAY_BUFFER, vertices.size_bytes(), vertices.data(),
                  GL_STATIC_DRAW);
 
     const GLVertexBufferLayout &layout = Layout_::GetLayout();
@@ -32,7 +34,7 @@ public:
 
     glBindVertexArray(0);
 
-    count_ = n_vertices;
+    count_ = static_cast<int>(vertices.size());
   }
 
   ~GLVertexArrayBuffer() {

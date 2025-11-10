@@ -62,8 +62,8 @@ bool Label::CreateBuffers() {
   if (vertices_.empty())
     return false;
 
-  buffer_ = std::make_unique<render::GLVertexArrayBuffer<LabelVertex>>(
-      static_cast<int>(vertices_.size()), vertices_.data());
+  buffer_ =
+      std::make_unique<render::GLVertexArrayBuffer<LabelVertex>>(vertices_);
 
   return true;
 }

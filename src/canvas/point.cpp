@@ -11,8 +11,8 @@ Point::Point(glm::f32 x, glm::f32 y, glm::f32 z)
     : Geometry(), vertex_(gp::Pnt(x, y, z)) {}
 
 bool Point::CreateBuffers() {
-  vertex_buffer_ =
-      std::make_unique<render::GLVertexArrayBuffer<Vertex>>(1, &vertex_);
+  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer<Vertex>>(
+      util::span{&vertex_, 1});
   return true;
 }
 
