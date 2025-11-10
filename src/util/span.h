@@ -94,14 +94,15 @@ public:
                   "Cannot construct empty span with non-zero static extent");
   }
 
-  constexpr span(pointer first, size_type count) : base_(first, count) {
+  constexpr explicit span(pointer first, size_type count)
+      : base_(first, count) {
     if constexpr (extent != dynamic_extent) {
       LVIZ_UTIL_SPAN_EXPECT(count == extent,
                             "Cannot construct span with static extent");
     }
   }
 
-  constexpr span(pointer first, pointer last)
+  constexpr explicit span(pointer first, pointer last)
       : base_(first, static_cast<size_type>(last - first)) {
     if constexpr (extent != dynamic_extent) {
       LVIZ_UTIL_SPAN_EXPECT(last - first == extent,
@@ -136,7 +137,8 @@ public:
               !detail::is_span_v<typename detail::remove_cvref<R>::type> &&
               !detail::is_std_array_v<typename detail::remove_cvref<R>::type>,
           int> = 0>
-  constexpr span(R &&r) : base_(r.data(), static_cast<size_type>(r.size())) {
+  constexpr explicit span(R &&r)
+      : base_(r.data(), static_cast<size_type>(r.size())) {
     if constexpr (extent != dynamic_extent) {
       LVIZ_UTIL_SPAN_EXPECT(r.size() == extent,
                             "Cannot construct span with static extent");
@@ -149,7 +151,7 @@ public:
           (Extent == dynamic_extent || N == dynamic_extent || Extent == N) &&
               std::is_convertible_v<U (*)[], element_type (*)[]>,
           int> = 0>
-  constexpr span(const span<U, N> &source) noexcept
+  constexpr explicit span(const span<U, N> &source) noexcept
       : base_(source.data(), source.size()) {
     if constexpr (extent != dynamic_extent) {
       LVIZ_UTIL_SPAN_EXPECT(source.size() == extent,

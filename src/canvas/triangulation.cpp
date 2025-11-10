@@ -45,7 +45,7 @@ void Triangulation::Clear() {
 bool Triangulation::CreateBuffers() {
   vertex_buffer_ =
       std::make_unique<render::GLVertexArrayBuffer<VertexWithNormal>>(
-          vertices_);
+          util::span(vertices_));
   return true;
 }
 

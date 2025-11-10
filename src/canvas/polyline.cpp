@@ -76,8 +76,8 @@ std::vector<Vertex> Polyline::GetVertices(glm::f32 t0, glm::f32 t1) const {
 bool Polyline::CreateBuffers() {
   if (vertices_.empty())
     return false;
-  vertex_buffer_ =
-      std::make_unique<render::GLVertexArrayBuffer<Vertex>>(vertices_);
+  vertex_buffer_ = std::make_unique<render::GLVertexArrayBuffer<Vertex>>(
+      util::span(vertices_));
   return true;
 }
 
