@@ -3,7 +3,8 @@
 
 #include "object.h"
 
-#include <utility>
+#include <cstdint>
+#include <functional>
 
 namespace lviz {
 namespace canvas {
