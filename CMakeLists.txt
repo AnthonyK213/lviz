@@ -43,6 +43,10 @@ include(cmake/FetchLuaBridge3.cmake)
 include(cmake/FetchFreeType.cmake)
 include(cmake/FetchFonts.cmake)
 
+if(${LVIZ_ENABLE_FENNEL_SUPPORT})
+  include(cmake/FetchFennel.cmake)
+endif()
+
 # GLAD
 set(GLAD_DIR ${CMAKE_SOURCE_DIR}/deps/glad)
 add_library(glad STATIC ${GLAD_DIR}/src/glad.c)

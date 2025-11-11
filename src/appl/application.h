@@ -1,7 +1,6 @@
 #ifndef _LVIZ_APPL_APPLICATION_H
 #define _LVIZ_APPL_APPLICATION_H
 
-#include "../util/app_path.h"
 #include "../window/gl_window.h"
 #include "extension_manager.h"
 #include "log_stream.h"

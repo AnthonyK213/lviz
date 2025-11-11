@@ -30,7 +30,11 @@ Panel::Panel(window::Window *parent)
     : parent_(parent), file_dialog_(), current_file_(), current_proj_idx_(0),
       show_grid_(true) {
   file_dialog_.SetTitle("Open script");
+#ifndef LVIZ_ENABLE_FENNEL_SUPPORT
   file_dialog_.SetTypeFilters({".lua"});
+#else
+  file_dialog_.SetTypeFilters({".lua", ".fnl"});
+#endif
 }
 
 Panel::~Panel() {}

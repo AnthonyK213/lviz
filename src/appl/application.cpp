@@ -1,6 +1,7 @@
 #include "application.h"
 
 #include "../bind/bind.h"
+#include "../util/app_path.h"
 
 #include <iostream>
 
@@ -24,6 +25,13 @@ Application::Application()
 
   state_ = std::make_unique<State>();
   state_->Init();
+
+  std::filesystem::path rt_dir = util::AppPath::AppResourcesDir();
+  if (!rt_dir.empty()) {
+    if (std::filesystem::is_directory(rt_dir)) {
+      state_->PathAppend((rt_dir / "runtime" / "lua").string() + "/?.lua");
+    }
+  }
 
   manager_ = std::make_unique<ExtensionManager>(this);
 

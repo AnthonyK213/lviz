@@ -3,6 +3,13 @@
 namespace lviz {
 namespace appl {
 
+static bool stringEndsWith(const std::string &str, const std::string &suffix) {
+  if (str.size() < suffix.size())
+    return false;
+
+  return str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+}
+
 State::State() : lua_(nullptr) {}
 
 State::~State() {
@@ -26,12 +33,30 @@ bool State::Init() {
 }
 
 bool State::DoFile(const std::string &file_path, std::string &error) {
-  if (luaL_dofile(lua_, file_path.c_str()) != 0) {
-    error = lua_tostring(lua_, -1);
-    lua_pop(lua_, -1);
+  if (stringEndsWith(file_path, ".lua")) {
+    if (luaL_dofile(lua_, file_path.c_str()) != 0) {
+      error = lua_tostring(lua_, -1);
+      lua_pop(lua_, -1);
+      return false;
+    }
+    return true;
+  }
+#ifdef LVIZ_ENABLE_FENNEL_SUPPORT
+  else if (stringEndsWith(file_path, ".fnl")) {
+    std::string lua_str{"require('fennel').install().dofile [["};
+    lua_str += file_path;
+    lua_str += "]]";
+    if (luaL_dostring(lua_, lua_str.c_str()) != 0) {
+      error = lua_tostring(lua_, -1);
+      lua_pop(lua_, -1);
+      return false;
+    }
+    return true;
+  }
+#endif
+  else {
     return false;
   }
-  return true;
 }
 
 bool State::PathAppend(const std::string &path) {

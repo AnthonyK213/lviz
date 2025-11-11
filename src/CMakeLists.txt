@@ -1,6 +1,10 @@
 # Macro definitions.
-if (${LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT})
+if(${LVIZ_ENABLE_IMGUI_MULTI_VIEWPORT})
   add_definitions(-DLVIZ_ENABLE_IMGUI_MULTI_VIEWPORT)
+endif()
+
+if(${LVIZ_ENABLE_FENNEL_SUPPORT})
+  add_definitions(-DLVIZ_ENABLE_FENNEL_SUPPORT)
 endif()
 
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/appl LVIZ_APPL_SRC)
@@ -27,7 +31,7 @@ set(
   main.cpp
   )
 
-if (APPLE)
+if(APPLE)
   add_executable(lviz MACOSX_BUNDLE ${LVIZ_SRC})
   set_target_properties(
     lviz
@@ -104,6 +108,24 @@ else()
         "${CMAKE_BINARY_DIR}/deps/latin-modern"
         "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/fonts/latin-modern"
     )
+endif()
+
+if(${LVIZ_ENABLE_FENNEL_SUPPORT})
+  if(APPLE)
+    add_custom_command(
+      TARGET lviz POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy
+          "${CMAKE_BINARY_DIR}/deps/fennel/fennel-1.6.0.lua"
+          "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/lviz.app/Contents/Resources/runtime/lua/fennel.lua"
+      )
+  else()
+    add_custom_command(
+      TARGET lviz POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy
+          "${CMAKE_BINARY_DIR}/deps/fennel/fennel-1.6.0.lua"
+          "$<TARGET_PROPERTY:lviz,BINARY_DIR>/$<$<BOOL:${CMAKE_CONFIGURATION_TYPES}>:$<CONFIG>>/runtime/lua/fennel.lua"
+      )
+  endif()
 endif()
 
 if(WIN32)
