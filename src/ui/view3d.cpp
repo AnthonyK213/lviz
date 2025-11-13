@@ -156,13 +156,14 @@ uniform vec2 ndcUnit;
 uniform float texHeight;
 uniform float labelSize;
 uniform vec3 labelPos;
+uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
 out vec2 TexCoords;
 
 void main() {
-  vec4 labelViewPos = view * vec4(labelPos, 1.0f);
+  vec4 labelViewPos = view * model * vec4(labelPos, 1.0f);
   vec4 labelProjPos = projection * labelViewPos;
   float height = labelSize * ndcUnit.y * labelProjPos.w;
   labelProjPos += vec4(0.0f, height, 0.0f, 0.0f);
@@ -191,8 +192,13 @@ void main() {
 }
 )";
 
+static void setModelTransf(render::Shader *shader, glm::mat4 model,
+                           glm::f32 scale) {
+  glm::mat4 scaled_model = glm::scale(model, glm::vec3(scale));
+  shader->SetMat4("model", scaled_model);
+}
+
 static void cameraUpdateShader(canvas::Camera *camera, render::Shader *shader) {
-  shader->SetMat4("model", glm::mat4{1.0f});
   shader->SetMat4("view", camera->GetViewMatrix());
   shader->SetMat4("projection", camera->GetProjMatrix());
   shader->SetVec3("viewPos", glm::vec3(camera->GetPosition()[3]));
@@ -214,7 +220,7 @@ inline static glm::mat4 createCameraPos(const glm::vec3 &cam_orig) {
 
 View3d::View3d(window::Window *parent, const glm::vec2 &init_size)
     : parent_(parent), size_(init_size), cursor_(0, 0), pnt_size_(10.0f),
-      crv_width_(5.0f), show_grid_(false) {
+      crv_width_(5.0f), scale_(1.0f), show_grid_(false) {
   render::ShaderSource pnt_shader_source{};
   pnt_shader_source.vertex_shader = PNT_VS;
   pnt_shader_source.fragment_shader = PNT_FS;
@@ -268,6 +274,7 @@ void View3d::Render() {
 
   if (!points_.empty()) {
     pnt_shader_->Use();
+    setModelTransf(pnt_shader_.get(), glm::mat4(1.0f), scale_);
     cameraUpdateShader(camera_.get(), pnt_shader_.get());
     pnt_shader_->SetVec2("ndcUnit", glm::vec2{2.0f} / size_);
     pnt_shader_->SetNums("pntSize", 1, &pnt_size_);
@@ -278,6 +285,7 @@ void View3d::Render() {
 
   if (!curves_.empty()) {
     crv_shader_->Use();
+    setModelTransf(crv_shader_.get(), glm::mat4(1.0f), scale_);
     cameraUpdateShader(camera_.get(), crv_shader_.get());
     for (const canvas::handle<canvas::Presentable> &crv : curves_) {
       crv->Draw();
@@ -286,6 +294,7 @@ void View3d::Render() {
 
   if (!surfaces_.empty()) {
     srf_shader_->Use();
+    setModelTransf(srf_shader_.get(), glm::mat4(1.0f), scale_);
     cameraUpdateShader(camera_.get(), srf_shader_.get());
     lightUpdateShader(light_.get(), srf_shader_.get());
     for (const canvas::handle<canvas::Presentable> &srf : surfaces_) {
@@ -299,6 +308,7 @@ void View3d::Render() {
     lbl_shader_->SetVec3("textColor", glm::vec3(1.0f));
     glm::f32 atlasHeight = font_atlas_->GetHeight();
     lbl_shader_->SetNums("texHeight", 1, &atlasHeight);
+    setModelTransf(lbl_shader_.get(), glm::mat4(1.0f), scale_);
     cameraUpdateShader(camera_.get(), lbl_shader_.get());
     font_atlas_->Bind();
     for (const canvas::handle<canvas::Label> &lbl : labels_) {
@@ -373,12 +383,17 @@ void View3d::ZoomAll() {
     box.Unite(obj->GetBox());
   }
 
+  box.Scale(scale_);
   camera_->ZoomToBox(box, 0.2f);
 }
 
 void View3d::Resize(int width, int height) {
   size_.x = width;
   size_.y = height;
+}
+
+void View3d::SetScale(glm::f32 scale) {
+  scale_ = scale;
 }
 
 void View3d::SetShowGrid(bool show_grid) {

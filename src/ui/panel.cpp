@@ -12,6 +12,8 @@ namespace ui {
 
 static const char *PROJ_LIST[] = {"Orthographic", "Perspective"};
 
+static const char *SCALE_LIST[] = {"x1", "x10", "x100", "x1000"};
+
 static canvas::Camera::ProjectionType idxToProjType(int idx) {
   return static_cast<canvas::Camera::ProjectionType>(idx);
 }
@@ -28,7 +30,7 @@ static ui::View3d *getView3d(window::Window *win) {
 
 Panel::Panel(window::Window *parent)
     : parent_(parent), file_dialog_(), current_file_(), current_proj_idx_(0),
-      show_grid_(true) {
+      current_scale_idx_(0), show_grid_(true) {
   file_dialog_.SetTitle("Open script");
 #ifndef LVIZ_ENABLE_FENNEL_SUPPORT
   file_dialog_.SetTypeFilters({".lua"});
@@ -41,6 +43,7 @@ Panel::~Panel() {}
 
 void Panel::Setup() {
   setupProjection();
+  setupScale();
   setupShowGrid();
 }
 
@@ -51,6 +54,11 @@ void Panel::Render() {
     if (ImGui::Combo("Projection", &current_proj_idx_, PROJ_LIST,
                      IM_ARRAYSIZE(PROJ_LIST))) {
       setupProjection();
+    }
+
+    if (ImGui::Combo("Scale", &current_scale_idx_, SCALE_LIST,
+                     IM_ARRAYSIZE(SCALE_LIST))) {
+      setupScale();
     }
 
     if (ImGui::Checkbox("Show grid", &show_grid_)) {
@@ -103,6 +111,28 @@ void Panel::setupProjection() {
     canvas::Camera *camera = view3d->GetCamera();
     if (camera)
       camera->SetProjType(idxToProjType(current_proj_idx_));
+  }
+}
+
+void Panel::setupScale() {
+  ui::View3d *view3d = getView3d(parent_);
+  if (view3d) {
+    glm::f32 scale = 1.0f;
+    switch (current_scale_idx_) {
+    case 1:
+      scale = 10.0f;
+      break;
+    case 2:
+      scale = 100.0f;
+      break;
+    case 3:
+      scale = 1000.0f;
+      break;
+    default:
+      scale = 1.0f;
+      break;
+    }
+    view3d->SetScale(scale);
   }
 }
 

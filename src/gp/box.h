@@ -32,6 +32,8 @@ public:
 
   std::vector<Pnt> Corners() const;
 
+  void Scale(glm::f32 scale);
+
   void Enlarge(glm::f32 value);
 
   void Unite(const Box &other);

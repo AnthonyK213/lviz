@@ -29,6 +29,8 @@ public:
 private:
   void setupProjection();
 
+  void setupScale();
+
   void setupShowGrid();
 
 private:
@@ -36,6 +38,7 @@ private:
   ImGui::FileBrowser file_dialog_;
   std::string current_file_;
   int current_proj_idx_;
+  int current_scale_idx_;
   bool show_grid_;
 };
 

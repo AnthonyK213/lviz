@@ -29,6 +29,11 @@ std::vector<Pnt> Box::Corners() const {
   };
 }
 
+void Box::Scale(glm::f32 scale) {
+  min_ *= scale;
+  max_ *= scale;
+}
+
 void Box::Enlarge(glm::f32 value) {
   min_ -= value;
   max_ += value;
