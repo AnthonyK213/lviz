@@ -68,3 +68,7 @@ function lviz.canvas.Triangulation:Clear() end
 ---@class lviz.canvas.Label : lviz.canvas.Presentable
 ---@overload fun(text: string, location: lviz.gp.Pnt, size: number):lviz.canvas.Label
 lviz.canvas.Label = {}
+
+---@class lviz.canvas.Arrow : lviz.canvas.Presentable
+---@overload fun(location: lviz.gp.Pnt, vector: lviz.gp.Vec, tip_angle: number, tip_length: number, n_fins: integer):lviz.canvas.Arrow
+lviz.canvas.Arrow = {}

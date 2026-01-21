@@ -1,5 +1,6 @@
 #include "bind.h"
 
+#include "../canvas/arrow.h"
 #include "../canvas/circle.h"
 #include "../canvas/ellipse.h"
 #include "../canvas/label.h"
@@ -76,6 +77,11 @@ void lviz::bind::BindCanvas(lua_State *L) {
       .addConstructorFrom<canvas::handle<canvas::Label>,
                           void(const std::string &, const gp::Pnt &,
                                glm::f32)>()
+      .endClass()
+      .deriveClass<canvas::Arrow, canvas::Presentable>("Arrow")
+      .addConstructorFrom<canvas::handle<canvas::Arrow>,
+                          void(const gp::Pnt &, const gp::Vec &, glm::f32,
+                               glm::f32, int)>()
       .endClass()
       .endNamespace()
       .endNamespace();

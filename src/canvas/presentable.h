@@ -17,6 +17,7 @@ public:
     Surface,
     Grid,
     Label,
+    Arrow,
   };
 
 public:

@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 
+#include "../canvas/arrow.h"
 #include "../canvas/camera.h"
 #include "../canvas/grid.h"
 #include "../canvas/handle.h"
@@ -68,6 +69,7 @@ private:
   std::vector<canvas::handle<canvas::Presentable>> curves_;
   std::vector<canvas::handle<canvas::Presentable>> surfaces_;
   std::vector<canvas::handle<canvas::Label>> labels_;
+  std::vector<canvas::handle<canvas::Arrow>> arrows_;
   glm::vec2 size_;
   glm::vec2 cursor_;
   glm::f32 pnt_size_;

@@ -320,6 +320,15 @@ void View3d::Render() {
     font_atlas_->Unbind();
   }
 
+  if (!arrows_.empty()) {
+    crv_shader_->Use();
+    setModelTransf(crv_shader_.get(), glm::mat4(1.0f), scale_);
+    cameraUpdateShader(camera_.get(), crv_shader_.get());
+    for (const canvas::handle<canvas::Arrow> &arrow : arrows_) {
+      arrow->Draw();
+    }
+  }
+
   if (show_grid_) {
     grid_->Draw();
   }
@@ -330,6 +339,7 @@ void View3d::Clear() {
   curves_.clear();
   surfaces_.clear();
   labels_.clear();
+  arrows_.clear();
 }
 
 bool View3d::Display(const canvas::handle<canvas::Presentable> &obj) {
@@ -360,6 +370,14 @@ bool View3d::Display(const canvas::handle<canvas::Presentable> &obj) {
     if (!label->CreateBuffers())
       return false;
     labels_.push_back(label);
+  } break;
+  case canvas::Presentable::Type::Arrow: {
+    auto arrow = canvas::handle<canvas::Arrow>::DownCast(obj);
+    if (!arrow)
+      return false;
+    if (!obj->CreateBuffers())
+      return false;
+    arrows_.push_back(arrow);
   } break;
   default:
     return false;
