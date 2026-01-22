@@ -7,6 +7,7 @@
 #include "presentable.h"
 #include "vertex.h"
 
+#include <memory>
 #include <vector>
 
 namespace lviz {
