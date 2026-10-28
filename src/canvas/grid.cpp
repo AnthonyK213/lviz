@@ -75,14 +75,14 @@ float ComputeLinearDepth(vec3 point) {
 }
 
 void main() {
-  float t = -(Near.z + 0.01f) / (Far.z - Near.z);
+  float t = -Near.z / (Far.z - Near.z);
   vec3 fragPos =  Near + t * (Far - Near);
 
   FragColor = FragGrid(fragPos);
   FragColor *= smoothstep(0.3f, 0.0f, ComputeLinearDepth(fragPos) / 1000.0f);
   // FragColor *= float(t > 0);
 
-  gl_FragDepth = ComputeDepth(fragPos);
+  gl_FragDepth = ComputeDepth(fragPos) - 0.00001;
 }
 )";
 
