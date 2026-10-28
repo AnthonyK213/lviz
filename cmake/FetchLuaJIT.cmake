@@ -3,6 +3,7 @@ include(FetchContent)
 FetchContent_Declare(
   LuaJIT_Source
   GIT_REPOSITORY https://github.com/LuaJIT/LuaJIT
+  # GIT_TAG a4c064539ea931274d407e1249b4bb575424a0f4
   GIT_TAG origin/v2.1
   GIT_SHALLOW 1
   SOURCE_DIR ${CMAKE_BINARY_DIR}/deps/LuaJIT_Source
@@ -13,9 +14,9 @@ FetchContent_Declare(
 FetchContent_Declare(
   LuaJIT
   GIT_REPOSITORY https://github.com/zhaozg/luajit-cmake
-  GIT_TAG 9ea79407064f67e2589deb0443a5305c53428159
-  # GIT_TAG origin/master
-  # GIT_SHALLOW 1
+  # GIT_TAG 94444a6c9bde77a768822f5cd00139161c9de412
+  GIT_TAG origin/master
+  GIT_SHALLOW 1
   SOURCE_DIR ${CMAKE_BINARY_DIR}/deps/luajit-cmake
   )
 
