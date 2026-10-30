@@ -45,21 +45,40 @@ in vec3 Far;
 
 out vec4 FragColor;
 
-vec4 FragGrid(vec3 point) {
+float GridDist(vec2 coord, vec2 deriv, float gridSize) {
+  vec2 uv = fract(coord / gridSize - 0.5f) - 0.5f;
+  vec2 grid = abs(uv) / deriv * gridSize;
+  return min(grid.x, grid.y);
+}
+
+float FragFade(float depth, float far) {
+  return clamp(1.0f - depth / far, 0.0f, 1.0f);
+  // return smoothstep(1.0f, 0.0f, depth / far);
+}
+
+vec4 FragGrid(vec3 point, float depth) {
   vec2 coord = point.xy;
   vec2 deriv = fwidth(coord);
   float minX = min(deriv.x, 1.0f);
   float minY = min(deriv.y, 1.0f);
 
   if (-minY < point.y && point.y < minY) { // x-axis
-    return vec4(0.985f, 0.382f, 0.486f, 1.0f) * ((point.x >= 0.0f) ? 1.0f : 0.6f);
+    return vec4(0.985f, 0.382f, 0.486f, FragFade(depth, 1000.0f)) * ((point.x >= 0.0f) ? 1.0f : 0.6f);
   } else if (-minX < point.x && point.x < minX) { // y-axis
-    return vec4(0.382f, 0.985f, 0.486f, 1.0f) * ((point.y >= 0.0f) ? 1.0f : 0.6f);
+    return vec4(0.382f, 0.985f, 0.486f, FragFade(depth, 1000.0f)) * ((point.y >= 0.0f) ? 1.0f : 0.6f);
   } else {
-    vec2 uv = fract(coord - 0.5f) - 0.5f;
-    vec2 grid = abs(uv) / deriv;
-    float line = min(grid.x, grid.y);
-    return vec4(vec3(0.2f), 1.0f - min(line, 1.0f));
+    float gridDist = GridDist(coord, deriv, 100.0f);
+    if (gridDist <= 1.0f) {
+      return vec4(vec3(0.15f), (1.0f - gridDist) * FragFade(depth, 1000.0f));
+    }
+
+    gridDist = GridDist(coord, deriv, 10.0f);
+    if (gridDist <= 1.0f) {
+      return vec4(vec3(0.15f), (1.0f - gridDist) * FragFade(depth, 500.0f));
+    }
+
+    gridDist = GridDist(coord, deriv, 1.0f);
+    return vec4(vec3(0.15f), (1.0f - min(gridDist, 1.0f)) * FragFade(depth, 100.0f));
   }
 }
 
@@ -78,11 +97,10 @@ void main() {
   float t = -Near.z / (Far.z - Near.z);
   vec3 fragPos =  Near + t * (Far - Near);
 
-  FragColor = FragGrid(fragPos);
-  FragColor *= smoothstep(0.3f, 0.0f, ComputeLinearDepth(fragPos) / 1000.0f);
-  // FragColor *= float(t > 0);
+  FragColor = FragGrid(fragPos, ComputeLinearDepth(fragPos));
+  FragColor *= float(t > 0);
 
-  gl_FragDepth = ComputeDepth(fragPos) - 0.00001;
+  gl_FragDepth = ComputeDepth(fragPos) + 0.00001;
 }
 )";
 
@@ -130,7 +148,6 @@ bool Grid::CreateBuffers() {
 void Grid::Draw() {
   shader_->Use();
 
-  glm::f32 near_far[2] = {camera_->GetNear(), camera_->GetFar()};
   shader_->SetMat4("view", camera_->GetViewMatrix());
   shader_->SetMat4("projection", camera_->GetProjMatrix());
 
