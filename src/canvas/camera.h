@@ -37,6 +37,10 @@ public:
     return proj_mat_;
   }
 
+  const glm::vec3 &GetCenter() const {
+    return cen_;
+  }
+
   glm::f32 GetDistance() const {
     return dist_;
   }
@@ -54,6 +58,10 @@ public:
   void UpdateProjMatrix();
 
   void UpdateViewCenter();
+
+  void SetPosition(const glm::mat4 pos);
+
+  void SetDistance(const glm::f32 dist);
 
   void SetAspect(glm::f32 x, glm::f32 y);
 

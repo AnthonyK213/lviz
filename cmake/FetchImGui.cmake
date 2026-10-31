@@ -12,8 +12,9 @@ include(FetchContent)
 FetchContent_Declare(
   imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
-  GIT_TAG origin/docking
-  GIT_SHALLOW 1
+  GIT_TAG d682dc41f58b98c9343ffbaa7d94f07e9024b3ca
+  # GIT_TAG origin/docking
+  # GIT_SHALLOW 1
   SOURCE_DIR ${CMAKE_BINARY_DIR}/deps/imgui
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
@@ -22,8 +23,9 @@ FetchContent_Declare(
 FetchContent_Declare(
   imgui-filebrowser
   GIT_REPOSITORY https://github.com/AirGuanZ/imgui-filebrowser.git
-  GIT_TAG origin/master
-  GIT_SHALLOW 1
+  GIT_TAG 47a1884524d6a3df5d99f70ecc82e1ed0ccd26cf
+  # GIT_TAG origin/master
+  # GIT_SHALLOW 1
   SOURCE_DIR ${CMAKE_BINARY_DIR}/deps/imgui-filebrowser
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""

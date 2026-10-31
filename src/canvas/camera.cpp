@@ -41,6 +41,20 @@ void Camera::UpdateViewCenter() {
   cen_ = o - z * dist_;
 }
 
+void Camera::SetPosition(const glm::mat4 pos) {
+  pos_ = pos;
+  UpdateViewMatrix();
+  UpdateViewCenter();
+}
+
+void Camera::SetDistance(const glm::f32 dist) {
+  if (dist_ <= near_)
+    return;
+  dist_ = dist;
+  UpdateProjMatrix();
+  UpdateViewCenter();
+}
+
 void Camera::SetAspect(glm::f32 x, glm::f32 y) {
   aspect_ = x / y;
   UpdateProjMatrix();

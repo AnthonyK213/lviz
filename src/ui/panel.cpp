@@ -71,6 +71,24 @@ void Panel::Render() {
         view3d->ZoomAll();
     }
 
+    if (ImGui::Button("Top view")) {
+      ui::View3d *view3d = getView3d(parent_);
+      if (view3d) {
+        lviz::canvas::Camera *camera = view3d->GetCamera();
+        if (camera) {
+          const glm::vec3 &cen = camera->GetCenter();
+          glm::f32 dist = camera->GetDistance();
+          glm::f32 near = camera->GetNear();
+          dist = (::std::max)(dist + cen.z, near * 5.0f);
+          camera->SetPosition(glm::mat4{glm::vec4(1.0f, 0.0f, 0.0f, 0.0f),
+                                        glm::vec4(0.0f, 1.0f, 0.0f, 0.0f),
+                                        glm::vec4(0.0f, 0.0f, 1.0f, 0.0f),
+                                        glm::vec4(cen.x, cen.y, dist, 1.0f)});
+          camera->SetDistance(dist);
+        }
+      }
+    }
+
     if (ImGui::Button("Clear scene")) {
       ui::View3d *view3d = getView3d(parent_);
       if (view3d)
