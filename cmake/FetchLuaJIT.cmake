@@ -20,6 +20,10 @@ FetchContent_Declare(
   SOURCE_DIR ${CMAKE_BINARY_DIR}/deps/luajit-cmake
   )
 
+if(WIN32)
+  set(BUILD_SHARED_LIBS ON)
+endif()
+
 FetchContent_GetProperties(LuaJIT_Source)
 if(NOT luajit_source_POPULATED)
   FetchContent_Populate(LuaJIT_Source)
@@ -43,4 +47,8 @@ if(NOT luajit_POPULATED)
   if(WIN32)
     set_target_properties(libluajit PROPERTIES OUTPUT_NAME "lua51")
   endif()
+endif()
+
+if(WIN32)
+  set(BUILD_SHARED_LIBS OFF)
 endif()

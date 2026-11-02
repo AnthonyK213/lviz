@@ -22,11 +22,7 @@ if(EXISTS "${LOC_PATH}")
   build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles.")
 endif()
 
-if(WIN32)
-  option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
-else()
-  option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
-endif()
+option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
 
 option(LVIZ_ENABLE_ASAN "Enable AddressSanitizer" OFF)
 if(LVIZ_ENABLE_ASAN)
