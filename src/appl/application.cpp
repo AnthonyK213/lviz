@@ -3,6 +3,8 @@
 #include "../bind/bind.h"
 #include "../util/app_path.h"
 
+#include <uv.h>
+
 #include <iostream>
 
 namespace lviz {
@@ -46,6 +48,7 @@ Application::Application()
     }
   }
 
+  bind::BindUV(state_->GetLuaState());
   bind::BindGP(state_->GetLuaState());
   bind::BindCanvas(state_->GetLuaState());
   bind::BindAppl(state_->GetLuaState(), manager_.get());
@@ -65,6 +68,7 @@ Application::~Application() {
 void Application::Run() {
   while (window_->IsRunning()) {
     window_->WaitEvents();
+    uv_run(uv_default_loop(), UV_RUN_NOWAIT);
     window_->Render();
     window_->HandleInput();
   }

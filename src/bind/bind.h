@@ -51,6 +51,8 @@ void BindUI(lua_State *L, window::GLWindow *gl_win);
 
 void BindIO(lua_State *L);
 
+void BindUV(lua_State *L);
+
 } // namespace bind
 } // namespace lviz
 

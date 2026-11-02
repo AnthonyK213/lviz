@@ -46,13 +46,15 @@ set(OpenGL_GL_PREFERENCE "GLVND")
 # find_package(OpenGL REQUIRED)
 # message("OpenGL: ${OPENGL_gl_LIBRARY}")
 
-set(LUAJIT_DIR ${CMAKE_BINARY_DIR}/deps/LuaJIT_Source CACHE STRING "Path of LuaJIT 2.1 source dir")
+set(LUAJIT_DIR ${CMAKE_BINARY_DIR}/deps/LuaJIT_Source CACHE PATH "" FORCE)
 
 include(cmake/FetchGLFW.cmake)
 include(cmake/FetchGLM.cmake)
 include(cmake/FetchImGui.cmake)
+include(cmake/FetchLibuv.cmake)
 include(cmake/FetchLuaJIT.cmake)
 include(cmake/FetchLuaBridge3.cmake)
+include(cmake/FetchLuv.cmake)
 include(cmake/FetchFreeType.cmake)
 include(cmake/FetchFonts.cmake)
 

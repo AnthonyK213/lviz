@@ -67,6 +67,7 @@ if(APPLE)
   target_link_libraries(
     lviz
     PRIVATE
+    libluv_a
     -Wl,-export_dynamic
     luajit::lib
     luajit::header
@@ -75,6 +76,7 @@ elseif(UNIX)
   target_link_libraries(
     lviz
     PRIVATE
+    libluv_a
     -Wl,-E
     luajit::lib
     luajit::header
@@ -83,6 +85,7 @@ else()
   target_link_libraries(
     lviz
     PRIVATE
+    libluv_a
     luajit::lib
     luajit::header
     )
