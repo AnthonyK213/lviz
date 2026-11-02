@@ -12,7 +12,11 @@ set(BUILD_STATIC_LIBS ON CACHE BOOL "" FORCE)
 
 set(WITH_SHARED_LIBUV ON CACHE BOOL "" FORCE)
 
-set(LIBUV_INCLUDE_DIR "${libuv_SOURCE_DIR}/src" CACHE PATH "" FORCE)
+set(Libuv_FOUND TRUE CACHE BOOL "" FORCE)
+set(LIBUV_FOUND TRUE CACHE BOOL "" FORCE)
+set(Libuv_INCLUDE_DIR "${libuv_SOURCE_DIR}/include" CACHE PATH "" FORCE)
+set(LIBUV_INCLUDE_DIR "${libuv_SOURCE_DIR}/include" CACHE PATH "" FORCE)
+set(Libuv_LIBRARIES uv_a CACHE STRING "" FORCE)
 set(LIBUV_LIBRARIES uv_a CACHE STRING "" FORCE)
 
 set(WITH_LUA_ENGINE "LuaJIT" CACHE STRING "" FORCE)
@@ -20,7 +24,7 @@ set(LUA_BUILD_TYPE "System" CACHE STRING "" FORCE)
 
 set(LuaJIT_FOUND TRUE CACHE BOOL "" FORCE)
 set(LUAJIT_FOUND TRUE CACHE BOOL "" FORCE)
-set(LuaJIT_INCLUDE_DIRS "${LUAJIT_DIR}/src" CACHE PATH "" FORCE)
+set(LuaJIT_INCLUDE_DIR "${LUAJIT_DIR}/src" CACHE PATH "" FORCE)
 set(LUAJIT_INCLUDE_DIR "${LUAJIT_DIR}/src" CACHE PATH "" FORCE)
 set(LuaJIT_LIBRARIES luajit::lib luajit::header CACHE STRING "" FORCE)
 set(LUAJIT_LIBRARIES luajit::lib luajit::header CACHE STRING "" FORCE)
@@ -31,6 +35,7 @@ set(LUA_LIBRARIES luajit::lib luajit::header CACHE STRING "" FORCE)
 FetchContent_GetProperties(luv)
 if(NOT luv_POPULATED)
   FetchContent_Populate(luv)
+  list(PREPEND CMAKE_MODULE_PATH "${luv_SOURCE_DIR}/cmake/Modules")
   add_subdirectory(
     ${luv_SOURCE_DIR}
     ${luv_BINARY_DIR}
