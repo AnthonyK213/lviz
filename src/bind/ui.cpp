@@ -2,12 +2,18 @@
 
 #include "../window/gl_window.h"
 
+namespace lviz {
+extern void g_reset_frames_to_render();
+} // namespace lviz
+
 void lviz::bind::BindUI(lua_State *L, window::GLWindow *gl_win) {
   ui::Log *log_buf = gl_win->GetLog();
   ui::View3d *view3d = gl_win->GetView3d();
 
   luabridge::getGlobalNamespace(L)
       .beginNamespace("lviz")
+      .beginNamespace("ui")
+      .addFunction("Update", []() { g_reset_frames_to_render(); })
       .beginNamespace("view3d")
       .addFunction(
           "Display",
@@ -18,6 +24,7 @@ void lviz::bind::BindUI(lua_State *L, window::GLWindow *gl_win) {
       .endNamespace()
       .beginNamespace("log")
       .addFunction("Clear", [log_buf]() { log_buf->Clear(); })
+      .endNamespace()
       .endNamespace()
       .endNamespace();
 }

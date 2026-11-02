@@ -8,6 +8,13 @@
 #include <iostream>
 
 namespace lviz {
+int g_frames_to_render = 0;
+void g_reset_frames_to_render() {
+  g_frames_to_render = 3;
+}
+} // namespace lviz
+
+namespace lviz {
 namespace appl {
 
 Application::Application()
@@ -66,9 +73,13 @@ Application::~Application() {
 }
 
 void Application::Run() {
+  g_reset_frames_to_render();
   while (window_->IsRunning()) {
     window_->WaitEvents();
     uv_run(uv_default_loop(), UV_RUN_NOWAIT);
+    if (g_frames_to_render <= 0)
+      continue;
+    g_frames_to_render--;
     window_->Render();
     window_->HandleInput();
   }

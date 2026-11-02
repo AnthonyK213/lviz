@@ -7,23 +7,42 @@
 #include <GLFW/glfw3.h>
 
 namespace lviz {
+extern void g_reset_frames_to_render();
+} // namespace lviz
+
+namespace lviz {
 namespace render {
+
+static void onWindowRefreshCallback(GLFWwindow *w) {
+  g_reset_frames_to_render();
+}
+
+static void onCurserPosCallback(GLFWwindow *, double, double) {
+  g_reset_frames_to_render();
+}
+
+static void onMouseButtonCallback(GLFWwindow *, int, int, int) {
+  g_reset_frames_to_render();
+}
 
 static void onKeyCallback(GLFWwindow *window, int key, int scancode, int action,
                           int mods) {
   auto p_win = static_cast<window::Window *>(glfwGetWindowUserPointer(window));
   p_win->OnKey(key, scancode, action, mods);
+  g_reset_frames_to_render();
 }
 
 static void onScrollCallback(GLFWwindow *window, double xoffset,
                              double yoffset) {
   auto p_win = static_cast<window::Window *>(glfwGetWindowUserPointer(window));
   p_win->OnScroll(yoffset);
+  g_reset_frames_to_render();
 }
 
 static void onWindowSizeCallback(GLFWwindow *window, int width, int height) {
   auto p_win = static_cast<window::Window *>(glfwGetWindowUserPointer(window));
   p_win->OnResize(width, height);
+  g_reset_frames_to_render();
 }
 
 static void onWindowCloseCallback(GLFWwindow *window) {
@@ -53,6 +72,9 @@ bool GLContext::Init(window::Window *win) {
   win->SetNativeWindow(gl_win);
 
   glfwSetWindowUserPointer(gl_win, win);
+  glfwSetWindowRefreshCallback(gl_win, onWindowRefreshCallback);
+  glfwSetCursorPosCallback(gl_win, onCurserPosCallback);
+  glfwSetMouseButtonCallback(gl_win, onMouseButtonCallback);
   glfwSetKeyCallback(gl_win, onKeyCallback);
   glfwSetScrollCallback(gl_win, onScrollCallback);
   glfwSetFramebufferSizeCallback(gl_win, onWindowSizeCallback);

@@ -1,17 +1,22 @@
 ---@meta _
 error("Cannot require a meta file")
 
-lviz.log = {}
+lviz.ui = {}
 
 ---
-function lviz.log.Clear() end
+function lviz.ui.Update() end
 
-lviz.view3d = {}
+lviz.ui.log = {}
+
+---
+function lviz.ui.log.Clear() end
+
+lviz.ui.view3d = {}
 
 ---
 ---@param obj lviz.canvas.Presentable
 ---@return boolean
-function lviz.view3d.Display(obj) end
+function lviz.ui.view3d.Display(obj) end
 
 ---
-function lviz.view3d.Clear() end
+function lviz.ui.view3d.Clear() end

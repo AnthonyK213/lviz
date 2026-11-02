@@ -62,7 +62,7 @@ void GLWindow::SetNativeWindow(void *win) {
 }
 
 void GLWindow::WaitEvents() const {
-  glfwWaitEvents();
+  glfwWaitEventsTimeout(0.01);
 }
 
 void GLWindow::OnScroll(double delta) {

@@ -1,5 +1,5 @@
-lviz.log.Clear()
-lviz.view3d.Clear()
+lviz.ui.log.Clear()
+lviz.ui.view3d.Clear()
 
 local H = 10
 
@@ -32,6 +32,9 @@ local facets = {
 }
 
 for _, facet in ipairs(facets) do
-  local triangle = lviz.canvas.Triangle(vertices[facet[1]], vertices[facet[2]], vertices[facet[3]])
-  lviz.view3d.Display(triangle)
+  local triangle = lviz.canvas.Triangle(
+    vertices[facet[1]],
+    vertices[facet[2]],
+    vertices[facet[3]])
+  lviz.ui.view3d.Display(triangle)
 end
