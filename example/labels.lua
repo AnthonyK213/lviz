@@ -1,3 +1,4 @@
+lviz.ui.log.Clear()
 lviz.ui.view3d.Clear()
 
 lviz.ui.view3d.Display(lviz.canvas.Label("The quick brown fox...", lviz.gp.Pnt(), 137));
