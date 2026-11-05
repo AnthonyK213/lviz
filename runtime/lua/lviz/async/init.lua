@@ -6,19 +6,7 @@ local M = {}
 ---Spawns a new asynchronous action.
 ---@param action function
 function M.spawn(action)
-  local f = action
-
-  local co_cur = coroutine.running()
-  if co_cur then
-    f = function()
-      action()
-      lviz.uv.new_async(function()
-        coroutine.resume(co_cur)
-      end):send()
-    end
-  end
-
-  local co_new = coroutine.create(f)
+  local co_new = coroutine.create(action)
   coroutine.resume(co_new)
 end
 
