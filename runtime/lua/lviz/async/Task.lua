@@ -27,7 +27,12 @@ end
 ---@param fn function
 local function defer_fn(timeout, fn)
   local timer = lviz.uv.new_timer()
-  lviz.uv.timer_start(timer, timeout, 0, fn)
+  timer:start(timeout, 0, function()
+    if not timer:is_closing() then
+      timer:close()
+    end
+    fn()
+  end)
 end
 
 ---@class lviz.async.Task : lviz.async.Awaitable
